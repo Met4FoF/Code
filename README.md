@@ -21,3 +21,11 @@ If you have not locally changed any of the files in the folders you will simply 
 ## Coming soon
 
 All planned developments of the project's code and this repository you can find in the repository's [project board](https://github.com/Met4FoF/Code/projects/3).
+
+## Additional information
+
+Additional information around code writing and software development in the project you can find in the repository's [wiki](https://github.com/Met4FoF/Code/wiki).
+
+## Data management
+
+All publishable research data sets produced for or used in the project you can find in the related [zenodo community](https://zenodo.org/communities/met4fof/).
