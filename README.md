@@ -24,7 +24,7 @@ Working on existing submodules' code is just the same as on a base respository. 
 
 ```$ cd ~/your/local/folder/Met4FoF_Code/submodule_folder```
 
-and start editing, committing and pushing in the submodule as if you were in a separate git respository. Of course pushing to a remote repository at GitHub requires the according access rights for the submodules repository. More on this topic you can find in the [ProGit book](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+and start editing, committing and pushing in the submodule as if you were in a separate Git respository. Of course pushing to a remote repository at GitHub requires the according access rights for the submodule's repository. More on this topic you can find in the [Pro Git book](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
 ## Coming soon
 
