@@ -6,7 +6,7 @@ This repository combines all the code written for or used in the EMPIR project 1
 
 To clone the repository locally, you go to any folder on your machine (i.e. `~/your/local/folder/`) and execute
 
-`git clone --recurse-submodules https://github.com/Met4FoF/Code Met4FoF_Code`
+```$ git clone --recurse-submodules https://github.com/Met4FoF/Code Met4FoF_Code```
 
 where `Met4FoF_Code` in the command stands for the folder you want the repository to go into. This folder does not need to exist before you execute the command. It will be created as a subfolder and your local repository will be created inside of that subfolder. If you do not specify a folder, the repository will be cloned to the subfolder `Code`, which is the repository's name.
 
@@ -14,9 +14,17 @@ where `Met4FoF_Code` in the command stands for the folder you want the repositor
 
 Whenever you want to get the latest changes, navigate into your local repository folder (i.e. `~/your/local/folder/Met4FoF_Code`) and execute
 
-`git submodule update --remote`.
+```$ git submodule update --remote```.
 
 If you have not locally changed any of the files in the folders you will simply update all your local copies and get the latest version of all files on [github.com/Met4FoF/Code](https://github.com/Met4FoF/Code).
+
+## Working on the code
+
+Working on existing submodules' code is just the same as on a base respository. You switch to the submodule's folder inside your repository
+
+```$ cd ~/your/local/folder/Met4FoF_Code/submodule_folder```
+
+and start editing, committing and pushing in the submodule as if you were in a separate git respository. Of course pushing to a remote repository at GitHub requires the according access rights for the submodules repository. More on this topic you can find in the [ProGit book](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
 ## Coming soon
 
