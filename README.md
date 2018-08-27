@@ -2,6 +2,10 @@
 
 This repository combines all the code written for or used in the EMPIR project 17IND12 *Metrology for the Factory of the Future* to enable pulling/cloning all the code and all coding related documents at once.
 
+## Installing Git
+
+The following commands assume you already have Git installed. In case you do not have Git installed go to [https://git-scm.com/book/en/v2/Getting-Started-Installing-Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and follow the instructions for your operating system. After successful installation open Git Bash in Windows or the command line and run the given commands.
+
 ## Getting the code
 
 To clone the repository locally, you go to any folder on your machine (i.e. `~/your/local/folder/`) and execute
