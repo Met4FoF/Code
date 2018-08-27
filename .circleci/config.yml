@@ -36,14 +36,12 @@ jobs:
             - ./venv
           key: v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
         
-      # run tests!
-      # we use nose as the test-runner
-      # https://nose.readthedocs.io
+      # Run tests! We use pytest's test-runner (https://pytest.org)
       - run:
           name: run tests
           command: |
             . venv/bin/activate
-            nosetests
+            py.test -v
 
       - store_artifacts:
           path: test-reports
