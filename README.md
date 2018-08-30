@@ -1,4 +1,5 @@
 # Met4FoF Code
+[![CircleCI](https://circleci.com/gh/Met4FoF/Code.svg?style=svg&circle-token=3566560a243f21fa06fafbe49e92ac2a6d3fc250)](https://circleci.com/gh/Met4FoF/Code)
 
 This repository combines all the code written for or used in the EMPIR project 17IND12 *Metrology for the Factory of the Future* to enable pulling/cloning all the code and all coding related documents at once.
 
