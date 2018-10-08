@@ -14,11 +14,11 @@ easily readable and usable production code.
 ## Support on coding
 As all project partners agreed on making the code written for the project
 publicly available, we have implemented state of the art tools on a publicly
-available repository [*Met4FoF/Code*](..). These tools are supporting or
-automating code review processes and identify certain common issues with
+available repository [*Met4FoF/Code*](../README.md). These tools are supporting
+or automating code review processes and identify certain common issues with
 scientific open-source code. We will permanently evaluate them while the project
- advances and enhance, extend or exchange them if needed to ensure publication
- of high quality code only.  
+advances and enhance, extend or exchange them if needed to ensure publication of
+high quality code only.  
 
 ## Contribution
 There are several ways of contributing to the software development processes in
@@ -38,7 +38,7 @@ Basically there are two ways of contributing code.
     development coordinator](https://github.com/BjoernLudwigPTB). After checking
     the code's compliance with the [project's coding guidelines
     ](coding_guidelines.md) your code will then be published as part of the
-    super-project [*Met4FoF/Code*](https://github.com/Met4FoF/Code).
+    super-project [*Met4FoF/Code*](../README.md).
 
 1. Use an internal **GitHub** repository in the [super-project](#super-project)
 
@@ -50,7 +50,7 @@ Basically there are two ways of contributing code.
     development coordinator](https://github.com/BjoernLudwigPTB). After checking
     the code's compliance with the [project's coding guidelines
     ](coding_guidelines.md) your code will then be published as part of the
-    super-project [*Met4FoF/Code*](..).
+    super-project [*Met4FoF/Code*](../README.md).
 
 ## Glossary
 
@@ -66,6 +66,6 @@ Everything outside the scope of the **GitHub** organization [*Met4FoF*
 ](https://github.com/Met4FoF) is denoted as *external*.
 
 * ### super-project
-The **GitHub** repository [*Code*](..) of the
+The **GitHub** repository [*Code*](../README.md) of the
 **GitHub** organization [*Met4FoF*](https://github.com/Met4FoF) is denoted as
 *super-project*.
