@@ -37,7 +37,7 @@ All planned developments of the project's code and this repository you can find 
 
 ## Additional information
 
-Additional information around code writing and software development in the project you can find in the repository's [wiki](https://github.com/Met4FoF/Code/wiki).
+Additional information around code writing and software development in the project you can find in the repository's [wiki](https://github.com/Met4FoF/Code/wiki) and in the [guides](guides/README.md).
 
 ## Data management
 
