@@ -17,9 +17,15 @@ where `Met4FoF_Code` in the command stands for the folder you want the repositor
 
 ## Updating the code
 
-Whenever you want to get the latest changes, navigate into your local repository folder (i.e. `~/your/local/folder/Met4FoF_Code`) and execute
+Whenever you want to get the latest changes, navigate into your local repository folder (i.e. `~/your/local/folder/Met4FoF_Code`) and execute the two commands
 
-```$ git submodule update --remote```.
+```$ git pull origin master```
+
+to get the latest version of this explanatory file and the [guides](guides/README.md) and/or
+
+```$ git submodule update --remote --recursive```
+
+to update all included repositories to the latest official project related version.
 
 If you have not locally changed any of the files in the folders you will simply update all your local copies and get the latest version of all files on [github.com/Met4FoF/Code](https://github.com/Met4FoF/Code).
 
