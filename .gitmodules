@@ -4,3 +4,6 @@
 [submodule "PySensorNetwork"]
 	path = PySensorNetwork
 	url = https://github.com/Met4FoF/PySensorNetwork.git
+[submodule "agentMet4FoF"]
+	path = agentMet4FoF
+	url = https://github.com/bangxiangyong/agentMet4FoF.git
