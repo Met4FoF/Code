@@ -1,6 +1,6 @@
 [submodule "PyDynamic"]
 	path = PyDynamic
-	url = https://github.com/eichstaedtPTB/PyDynamic.git
+	url = https://github.com/PTB-PSt1/PyDynamic.git
 [submodule "PySensorNetwork"]
 	path = PySensorNetwork
 	url = https://github.com/Met4FoF/PySensorNetwork.git
