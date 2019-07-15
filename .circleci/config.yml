@@ -41,8 +41,8 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            py.test -v
+            pytest -v >> pytest.log
 
       - store_artifacts:
-          path: test-reports
+          path: pytest.log
           destination: test-reports
