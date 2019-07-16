@@ -55,8 +55,9 @@ jobs:
           name: Run PyDynamic tests
           command: |
             . venv/bin/activate
-            pytest -v --junitxml=test-reports/PyDynamic --cov-config=PyDynamic/
-            .coveragerc --cov=PyDynamic/ PyDynamic/ > test-reports/PyDynamic.log
+            pytest -v --junitxml=test-reports/PyDynamic \
+            --cov-config=.coveragerc --cov=PyDynamic/ PyDynamic/ > \
+            test-reports/PyDynamic.log
             codecov
 
       # Since there are no tests yet, we wait for them to uncomment this.
