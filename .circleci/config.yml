@@ -21,7 +21,8 @@ jobs:
       - run:
           name: Create test result folder
           command: |
-            mkdir test-reports
+            mkdir &testresultfolder test-reports
+            mkdir *testresultfolder/PyDynamic
 
       # Download and cache dependencies
       - restore_cache:
@@ -54,8 +55,8 @@ jobs:
           name: Run PyDynamic tests
           command: |
             . venv/bin/activate
-            pytest -v --cov-config=PyDynamic/.coveragerc --cov=PyDynamic/ \
-            PyDynamic/ > test-reports/PyDynamic.log
+            pytest -v --junitxml=test-reports/PyDynamic --cov-config=PyDynamic/
+            .coveragerc --cov=PyDynamic/ PyDynamic/ > test-reports/PyDynamic.log
             codecov
 
       # Since there are no tests yet, we wait for them to uncomment this.
