@@ -1,28 +1,35 @@
-# Python CircleCI 2.0 configuration file
+# Python CircleCI 2.1 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      # use `-browsers` prefix for selenium tests, e.g. `3.6-browsers`
-      - image: circleci/python:3.6
+      - image: circleci/python:3
 
     working_directory: ~/repo
 
     steps:
+      # Checkout code
       - checkout
+      # Update and initialize submodules
       - run: git submodule sync
       - run: git submodule update --init
+
+      # Create folder for test results.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-reports
 
       # Download and cache dependencies
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+            - v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
+              - {{ - checksum "agentMet4FoF/requirements.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - v1-dependencies-
 
       - run:
           name: install dependencies
@@ -31,18 +38,43 @@ jobs:
             . venv/bin/activate
             pip install -r PyDynamic/requirements.txt
 
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+         name: Install dependencies
+         command: |
+           python3 -m venv venv
+           . venv/bin/activate
+           pip install -r agentMet4FoF/requirements.txt
+           pip install -r PyDynamic/requirements.txt
+           pip install coverage pytest-cov codecov
+
       - save_cache:
           paths:
             - ./venv
-          key: v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-        
-      # Run tests! We use pytest's test-runner (https://pytest.org)
+          key: >-
+            v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
+            - {{ - checksum "agentMet4FoF/requirements.txt" }}
+
+      # Run tests with coverage report and upload results to Codecov! We use
+      # pytest's test-runner (https://pytest.org)
       - run:
-          name: run tests
+          name: Run PyDynamic tests
           command: |
             . venv/bin/activate
-            py.test -v
+            pytest -v --cov=PyDynamic/ PyDynamic/ > test-reports/PyDynamic.log
+            codecov
 
+      - run:
+          name: Run agentMet4FoF tests
+          command: |
+            . venv/bin/activate
+            pytest -v --cov=agentMet4FoF/ agentMet4FoF/ > test-reports/agentMet4FoF.log
+            codecov
+
+      # Store test results.
       - store_artifacts:
-          path: test-reports
-          destination: test-reports
+         path: test-reports
+         destination: test-reports
+
+      - store_test_results:
+         path: test-reports
