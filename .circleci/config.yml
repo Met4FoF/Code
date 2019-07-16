@@ -68,8 +68,7 @@ jobs:
           name: Run agentMet4FoF tests
           command: |
             . venv/bin/activate
-            pytest -v --cov=agentMet4FoF/ agentMet4FoF/ > test-reports/agentMet4FoF.log
-            codecov
+            pytest -v agentMet4FoF/ > test-reports/agentMet4FoF.log
 
       # Store test results.
       - store_artifacts:
