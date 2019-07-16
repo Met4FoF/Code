@@ -27,7 +27,7 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-              - {{ - checksum "agentMet4FoF/requirements.txt" }}
+              {{ checksum "agentMet4FoF/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - v1-dependencies-
 
@@ -51,9 +51,9 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key:
-            'v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}\
-              -{{ - checksum "agentMet4FoF/requirements.txt" }}'
+          key: >-
+            v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
+            {{ checksum "agentMet4FoF/requirements.txt" }}
 
       # Run tests with coverage report and upload results to Codecov! We use
       # pytest's test-runner (https://pytest.org)
