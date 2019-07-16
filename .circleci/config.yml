@@ -51,9 +51,9 @@ jobs:
       - save_cache:
           paths:
             - ./venv
-          key: >-
-            v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-            - {{ - checksum "agentMet4FoF/requirements.txt" }}
+          key:
+            'v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}\
+              -{{ - checksum "agentMet4FoF/requirements.txt" }}'
 
       # Run tests with coverage report and upload results to Codecov! We use
       # pytest's test-runner (https://pytest.org)
@@ -64,11 +64,13 @@ jobs:
             pytest -v --cov=PyDynamic/ PyDynamic/ > test-reports/PyDynamic.log
             codecov
 
-      - run:
-          name: Run agentMet4FoF tests
-          command: |
-            . venv/bin/activate
-            pytest -v agentMet4FoF/ > test-reports/agentMet4FoF.log
+      # Since there are no tests yet, we wait for them to uncomment this.
+      #- run:
+      #    name: Run agentMet4FoF tests
+      #    command: |
+      #      . venv/bin/activate
+      #      pytest -v --cov=agentMet4FoF/ agentMet4FoF/ > - test-reports/agentMet4FoF.log
+      #      codecov
 
       # Store test results.
       - store_artifacts:
