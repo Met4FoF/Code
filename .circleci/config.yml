@@ -27,6 +27,8 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
+            # Specify the unique identifier for the cache in a multiline string,
+            # where the second line will be separated by a space from the first.
             - v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
               {{ checksum "agentMet4FoF/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
