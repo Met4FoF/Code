@@ -23,6 +23,7 @@ jobs:
           command: |
             mkdir test-reports
             mkdir test-reports/PyDynamic
+            mkdir test-reports/agentMet4FoF
 
       # Download and cache dependencies
       - restore_cache:
@@ -62,14 +63,15 @@ jobs:
             test-reports/PyDynamic.log
             codecov
 
-      # Since there are no tests yet, we wait for them to uncomment this.
-      #- run:
-      #    name: Run agentMet4FoF tests
-      #    command: |
-      #      . venv/bin/activate
-      #      pytest -v --cov=agentMet4FoF/ agentMet4FoF/ > \
-      #      test-reports/agentMet4FoF.log
-      #      codecov
+
+      # Run tests with coverage report! We use pytest's test-runner.
+      - run:
+          name: Run agentMet4FoF tests
+          command: |
+            . venv/bin/activate
+            pytest -v --junitxml=test-reports/agentMet4FoF/pytest.xml \
+            --cov-config=.coveragerc --cov=agentMet4FoF/ agentMet4FoF/ > \
+            test-reports/agentMet4FoF.log
 
       # Store test results.
       - store_artifacts:
