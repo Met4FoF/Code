@@ -60,8 +60,7 @@ jobs:
             pytest -v --junitxml=test-reports/PyDynamic/pytest.xml \
             --cov-config=PyDynamic/.coveragerc --cov=PyDynamic/ PyDynamic/ > \
             test-reports/PyDynamic/PyDynamic.log
-            bash <(curl -s https://codecov.io/bash) -c \
-            -f test-reports/PyDynamic/coverage.xml -F PyDynamic
+            bash <(curl -s https://codecov.io/bash) -c -F PyDynamic
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
