@@ -70,10 +70,12 @@ jobs:
             --cov-config=.coveragerc --cov=agentMet4FoF/ agentMet4FoF/ > \
             test-reports/agentMet4FoF.log
 
-      # Upload coverage report
+      # Upload coverage report.
       - run:
           name: Upload coverage reports
-          command: bash <(curl -s https://codecov.io/bash)
+          command: |
+            . venv/bin/activate
+            bash <(curl -s https://codecov.io/bash)
 
       # Store test results.
       - store_artifacts:
