@@ -67,15 +67,10 @@ jobs:
           name: Run agentMet4FoF tests
           command: |
             . venv/bin/activate
-            pytest -v --cov-report \
-            xml:test-reports/agentMet4FoF/coverage.xml --cov-report term \
-            --junitxml=test-reports/agentMet4FoF/pytest.xml \
-            --cov-config=.coveragerc --cov=agentMet4FoF/ agentMet4FoF/ > \
-            test-reports/agentMet4FoF/agentMet4FoF.log
-            cp test-reports/agentMet4FoF/coverage.xml \
-            test-reports/agentMet4FoF/agentMet4FoF.xml
-            bash <(curl -s https://codecov.io/bash) -c \
-            -f test-reports/agentMet4FoF/coverage.xml -F agentMet4FoF -X fix
+            pytest -v --junitxml=test-reports/agentMet4FoF/pytest.xml \
+            --cov-config=agentMet4FoF/.coveragerc --cov=agentMet4FoF/
+            agentMet4FoF/ > test-reports/agentMet4FoF/agentMet4FoF.log
+            bash <(curl -s https://codecov.io/bash) -c -F agentMet4FoF
 
       # Store test results.
       - store_artifacts:
