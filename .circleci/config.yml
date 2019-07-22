@@ -63,7 +63,7 @@ jobs:
             --cov-config=.coveragerc --cov=PyDynamic/ PyDynamic/ > \
             test-reports/PyDynamic/PyDynamic.log
             bash <(curl -s https://codecov.io/bash) -c \
-            -f test-reports/PyDynamic/coverage.xml -F PyDynamic
+            -f test-reports/PyDynamic/coverage.xml -F PyDynamic -X fix
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
@@ -76,14 +76,7 @@ jobs:
             --cov-config=.coveragerc --cov=agentMet4FoF/ agentMet4FoF/ > \
             test-reports/agentMet4FoF/agentMet4FoF.log
             bash <(curl -s https://codecov.io/bash) -c \
-            -f test-reports/agentMet4FoF/coverage.xml -F agentMet4FoF
-
-      # Upload coverage report.
-      - run:
-          name: Upload coverage reports
-          command: |
-            . venv/bin/activate
-            bash <(curl -s https://codecov.io/bash)
+            -f test-reports/agentMet4FoF/coverage.xml -F agentMet4FoF -X fix
 
       # Store test results.
       - store_artifacts:
