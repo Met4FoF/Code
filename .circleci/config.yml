@@ -42,7 +42,6 @@ jobs:
            python3 -m venv venv
            . venv/bin/activate
            pip install -r requirements.txt
-           pip install coverage pytest-cov
 
       - save_cache:
           paths:
@@ -58,9 +57,7 @@ jobs:
           command: |
             . venv/bin/activate
             pytest -v --junitxml=test-reports/PyDynamic/pytest.xml \
-            --cov-config=PyDynamic/.coveragerc --cov=/ / > \
-            test-reports/PyDynamic/PyDynamic.log
-            bash <(curl -s https://codecov.io/bash) -c -F PyDynamic
+            PyDynamic/ > test-reports/PyDynamic/PyDynamic.log
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
@@ -68,9 +65,7 @@ jobs:
           command: |
             . venv/bin/activate
             pytest -v --junitxml=test-reports/agentMet4FoF/pytest.xml \
-            --cov-config=agentMet4FoF/.coveragerc --cov=/ \
             agentMet4FoF/ > test-reports/agentMet4FoF/agentMet4FoF.log
-            bash <(curl -s https://codecov.io/bash) -c -F agentMet4FoF
 
       # Store test results.
       - store_artifacts:
