@@ -57,7 +57,8 @@ jobs:
           name: Run PyDynamic tests
           command: |
             . venv/bin/activate
-            pytest -v --junitxml=test-reports/PyDynamic/pytest.xml \
+            pytest -v --cov-report xml:PyDynamic.xml --cov-report term \
+            --junitxml=test-reports/PyDynamic/pytest.xml \
             --cov-config=.coveragerc --cov=PyDynamic/ PyDynamic/ > \
             test-reports/PyDynamic.log
 
@@ -66,7 +67,8 @@ jobs:
           name: Run agentMet4FoF tests
           command: |
             . venv/bin/activate
-            pytest -v --junitxml=test-reports/agentMet4FoF/pytest.xml \
+            pytest -v --cov-report xml:agentMet4FoF.xml --cov-report term \
+            --junitxml=test-reports/agentMet4FoF/pytest.xml \
             --cov-config=.coveragerc --cov=agentMet4FoF/ agentMet4FoF/ > \
             test-reports/agentMet4FoF.log
 
