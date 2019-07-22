@@ -57,24 +57,28 @@ jobs:
           name: Run PyDynamic tests
           command: |
             . venv/bin/activate
-            pytest -v --cov-report xml --cov-report term \
+            pytest -v --cov-report xml:PyDynamic.xml --cov-report term \
             --junitxml=test-reports/PyDynamic/pytest.xml \
             --cov-config=.coveragerc --cov=PyDynamic/ PyDynamic/ > \
             test-reports/PyDynamic.log
             ls
-            bash <(curl -s https://codecov.io/bash)
+            more PyDynamic.xml
+            bash <(curl -s https://codecov.io/bash) -c -f PyDynamic.xml \
+            -F PyDynamic
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
           name: Run agentMet4FoF tests
           command: |
             . venv/bin/activate
-            pytest -v --cov-report xml --cov-report term \
+            pytest -v --cov-report xml:agentMet4FoF.xml --cov-report term \
             --junitxml=test-reports/agentMet4FoF/pytest.xml \
             --cov-config=.coveragerc --cov=agentMet4FoF/ agentMet4FoF/ > \
             test-reports/agentMet4FoF.log
             ls
-            bash <(curl -s https://codecov.io/bash)
+            more agentMet4FoF.xml
+            bash <(curl -s https://codecov.io/bash) -c -f agentMet4FoF.xml \
+            -F agentMet4FoF
 
       # Upload coverage report.
       - run:
