@@ -57,15 +57,11 @@ jobs:
           name: Run PyDynamic tests
           command: |
             . venv/bin/activate
-            pytest -v --cov-report \
-            xml:test-reports/PyDynamic/coverage.xml --cov-report term \
-            --junitxml=test-reports/PyDynamic/pytest.xml \
-            --cov-config=.coveragerc --cov=PyDynamic/ PyDynamic/ > \
+            pytest -v --junitxml=test-reports/PyDynamic/pytest.xml \
+            --cov-config=PyDynamic/.coveragerc --cov=PyDynamic/ PyDynamic/ > \
             test-reports/PyDynamic/PyDynamic.log
-            cp test-reports/PyDynamic/coverage.xml \
-            test-reports/PyDynamic/PyDynamic.xml
             bash <(curl -s https://codecov.io/bash) -c \
-            -f test-reports/PyDynamic/coverage.xml -F PyDynamic -X fix
+            -f test-reports/PyDynamic/coverage.xml -F PyDynamic
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
