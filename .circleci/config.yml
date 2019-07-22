@@ -62,6 +62,8 @@ jobs:
             --junitxml=test-reports/PyDynamic/pytest.xml \
             --cov-config=.coveragerc --cov=PyDynamic/ PyDynamic/ > \
             test-reports/PyDynamic/PyDynamic.log
+            cp test-reports/PyDynamic/coverage.xml \
+            test-reports/PyDynamic/PyDynamic.xml
             bash <(curl -s https://codecov.io/bash) -c \
             -f test-reports/PyDynamic/coverage.xml -F PyDynamic -X fix
 
@@ -75,6 +77,8 @@ jobs:
             --junitxml=test-reports/agentMet4FoF/pytest.xml \
             --cov-config=.coveragerc --cov=agentMet4FoF/ agentMet4FoF/ > \
             test-reports/agentMet4FoF/agentMet4FoF.log
+            cp test-reports/agentMet4FoF/coverage.xml \
+            test-reports/agentMet4FoF/agentMet4FoF.xml
             bash <(curl -s https://codecov.io/bash) -c \
             -f test-reports/agentMet4FoF/coverage.xml -F agentMet4FoF -X fix
 
