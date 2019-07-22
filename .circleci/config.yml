@@ -50,8 +50,7 @@ jobs:
             v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
             {{ checksum "agentMet4FoF/requirements.txt" }}
 
-      # Run tests with coverage report and upload results to Codecov! We use
-      # pytest's test-runner (https://pytest.org)
+      # Run tests with coverage report! We use pytest's test-runner.
       - run:
           name: Run PyDynamic tests
           command: |
