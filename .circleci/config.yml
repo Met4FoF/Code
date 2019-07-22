@@ -73,7 +73,7 @@ jobs:
       # Upload coverage report
       - run:
           name: Upload coverage reports
-          command: bash < (curl -s https://codecov.io/bash)
+          command: bash <(curl -s https://codecov.io/bash)
 
       # Store test results.
       - store_artifacts:
