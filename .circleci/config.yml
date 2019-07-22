@@ -66,7 +66,7 @@ jobs:
           command: |
             . venv/bin/activate
             pytest -v --junitxml=test-reports/agentMet4FoF/pytest.xml \
-            --cov-config=agentMet4FoF/.coveragerc --cov=agentMet4FoF/ \
+            --cov-config=.coveragerc --cov=agentMet4FoF/ \
             agentMet4FoF/ > test-reports/agentMet4FoF/agentMet4FoF.log
 
       # Store test results.
