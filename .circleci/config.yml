@@ -68,7 +68,7 @@ jobs:
           command: |
             . venv/bin/activate
             pytest -v --junitxml=test-reports/agentMet4FoF/pytest.xml \
-            --cov-config=agentMet4FoF/.coveragerc --cov=agentMet4FoF/
+            --cov-config=agentMet4FoF/.coveragerc --cov=agentMet4FoF/ \
             agentMet4FoF/ > test-reports/agentMet4FoF/agentMet4FoF.log
             bash <(curl -s https://codecov.io/bash) -c -F agentMet4FoF
 
