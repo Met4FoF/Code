@@ -3,6 +3,11 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2.1
+
+# Specify to use the Codecov Orb
+orbs:
+  codecov: codecov/codecov@1.0.2
+
 jobs:
   build:
     docker:
@@ -41,9 +46,8 @@ jobs:
          command: |
            python3 -m venv venv
            . venv/bin/activate
-           pip install -r agentMet4FoF/requirements.txt
-           pip install -r PyDynamic/requirements.txt
-           pip install coverage pytest-cov codecov
+           pip install -r requirements.txt
+           pip install coverage pytest-cov
 
       - save_cache:
           paths:
@@ -61,7 +65,11 @@ jobs:
             pytest -v --junitxml=test-reports/PyDynamic/pytest.xml \
             --cov-config=.coveragerc --cov=PyDynamic/ PyDynamic/ > \
             test-reports/PyDynamic.log
-            codecov
+
+      # Upload PyDynamic coverage report
+      - codecov/upload:
+          name: Upload agentMet4FoF coverage report
+          file: test-reports/PyDynamic.log
 
 
       # Run tests with coverage report! We use pytest's test-runner.
@@ -72,6 +80,11 @@ jobs:
             pytest -v --junitxml=test-reports/agentMet4FoF/pytest.xml \
             --cov-config=.coveragerc --cov=agentMet4FoF/ agentMet4FoF/ > \
             test-reports/agentMet4FoF.log
+
+      # Upload PyDynamic coverage report
+      - codecov/upload:
+          name: Upload agentMet4FoF coverage report
+          file: test-reports/agentMet4FoF.log
 
       # Store test results.
       - store_artifacts:
