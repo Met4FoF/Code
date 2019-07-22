@@ -57,6 +57,7 @@ jobs:
           command: |
             . venv/bin/activate
             pytest -v --junitxml=test-reports/PyDynamic/pytest.xml \
+            --cov-config=PyDynamic/.coveragerc --cov=PyDynamic/ \
             PyDynamic/ > test-reports/PyDynamic/PyDynamic.log
 
       # Run tests with coverage report! We use pytest's test-runner.
@@ -65,6 +66,7 @@ jobs:
           command: |
             . venv/bin/activate
             pytest -v --junitxml=test-reports/agentMet4FoF/pytest.xml \
+            --cov-config=agentMet4FoF/.coveragerc --cov=agentMet4FoF/ \
             agentMet4FoF/ > test-reports/agentMet4FoF/agentMet4FoF.log
 
       # Store test results.
