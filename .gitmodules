@@ -4,3 +4,9 @@
 [submodule "PySensorNetwork"]
 	path = PySensorNetwork
 	url = https://github.com/Met4FoF/PySensorNetwork.git
+[submodule "agentMet4FoF"]
+	path = agentMet4FoF
+	url = https://github.com/bangxiangyong/agentMet4FoF.git
+[submodule "ZeMA-machine-learning-tutorials"]
+	path = ZeMA-machine-learning-tutorials
+	url = https://github.com/harislulic/ZeMA-machine-learning-tutorials.git
