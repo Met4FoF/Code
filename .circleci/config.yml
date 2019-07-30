@@ -66,6 +66,7 @@ jobs:
             . venv/bin/activate
             pytest -v --junitxml=test-reports/agentMet4FoF/pytest.xml \
             --cov-config=.coveragerc --cov=agentMet4FoF/ \
+            --ignore=agentMet4FoF/tests/test_zema_emc_ml.py \
             agentMet4FoF/ > test-reports/agentMet4FoF/agentMet4FoF.log
 
       # Store test results.
