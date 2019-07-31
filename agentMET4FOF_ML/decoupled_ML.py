@@ -2,55 +2,51 @@
 from AgentMET4FOF import AgentMET4FOF, AgentNetwork, MonitorAgent, DataStreamAgent
 from DataStreamMET4FOF import extract_x_y
 
-#ML Dependencies
-from skmultiflow.data import WaveformGenerator
-from skmultiflow.bayes import NaiveBayes
-from skmultiflow.trees import HoeffdingTree
-from sklearn.model_selection import StratifiedKFold
+#ML dependencies
 import numpy as np
-#We demonstrate the use of pre-made agents for machine learning : DataStream agent and ML_Model agent
-#The agents are compatible with scikit-multiflow package
-#Here we demonstrate the implementation of multi-data streams and multi machine learning models in parallel
+from skmultiflow.data import SineGenerator
+from skmultiflow.trees import HoeffdingTree
 
-class ML_Model(AgentMET4FOF):
-    def init_parameters(self, mode="prequential", ml_model= HoeffdingTree(), split_type=None):
-        self.mode = mode
-        self.ml_model = ml_model
-        self.results = []
-        if split_type is not None:
-            self.split_type = split_type
-        else:
-            self.split_type = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)
+
+#Here we demonstrate a slightly more complicated scenario :
+#We separate the ML into different agents: Predictor, Trainer and Evaluator
+#This has the advantage in actual hardware deployment where Predictor Agent is most likely
+#to be deployed on limited computing resource compared to Trainer Agent which may be more resourceful
+#However, it is important to note that - the predictor and trainer has not been synchronized
+#upon receiving the data from the generator!
+class Predictor(AgentMET4FOF):
+    def init_parameters(self, ml_model= None):
+        self.ml_model =ml_model
 
     def on_received_message(self, message):
-        #handle data structure to extract features & target
-        try:
-            x,y = extract_x_y(message)
-        except:
-            raise Exception
 
-        # prequential: test & train
-        if self.mode == "prequential":
-            y_pred = self.ml_model.predict(x)
-            self.ml_model.partial_fit(x, y)
-            res = self.compute_accuracy(y_pred=y_pred, y_true=y)
-            self.results.append(res)
+        #handle Trainer Agent
+        if message['senderType'] == "Trainer":
+            try:
+                data = message['data']
+                if 'ml_model' in data.keys():
+                    self.ml_model = data['ml_model']
+                    return 0
+            except:
+                raise Exception
 
-        # holdout: test & train
-        elif self.mode == "holdout":
-            res_temp = []
-            # begin kfold
-            for train_index, test_index in self.split_type.split(x, y):
-                x_train, x_test = x[train_index], x[test_index]
-                y_train, y_test = y[train_index], y[test_index]
-                self.ml_model.partial_fit(x_train, y_train)
-                y_pred = self.ml_model.predict(x_test)
-                res = self.compute_accuracy(y_pred=y_pred, y_true=y_test)
-                res_temp.append(res)
-            self.results.append(np.mean(res_temp))
+        #handle x & y data
+        else:
+            if self.ml_model is not None:
+                x , y_true = extract_x_y(message)
+                y_pred = self.ml_model.predict(x)
+                self.send_output({'y_pred':y_pred, 'y_true':y_true})
 
-        self.send_output(self.results[-1])
+class Trainer(AgentMET4FOF):
+    def init_parameters(self, ml_model= HoeffdingTree()):
+        self.ml_model = ml_model
 
+    def on_received_message(self, message):
+        x,y = extract_x_y(message)
+        self.ml_model.partial_fit(x, y)
+        self.send_output({'ml_model':self.ml_model})
+
+class Evaluator(AgentMET4FOF):
     # classifier accuracy - user defined
     def compute_accuracy(self, y_pred, y_true):
         res = y_pred == y_true
@@ -58,29 +54,42 @@ class ML_Model(AgentMET4FOF):
         accuracy = np.sum(num_accurate) / len(num_accurate) * 100
         return accuracy
 
-if __name__ == '__main__':
+    def on_received_message(self, message):
+        if message['senderType'] == "Predictor":
+            data = message['data']
+            y_pred = data['y_pred']
+            y_true = data['y_true']
+            res = self.compute_accuracy(y_pred=y_pred, y_true=y_true)
+            self.send_output(res)
 
-    #start agent network
+
+def main():
+    # start agent network server
     agentNetwork = AgentNetwork()
-
-    #add agents
-    data_stream_agent_1 = agentNetwork.add_agent(agentType=DataStreamAgent)
-    ml_agent_hoeffdingTree = agentNetwork.add_agent(agentType=ML_Model)
-    ml_agent_neuralNets = agentNetwork.add_agent(agentType=ML_Model)
+    # init agents
+    gen_agent = agentNetwork.add_agent(agentType=DataStreamAgent)
+    trainer_agent = agentNetwork.add_agent(agentType=Trainer)
+    predictor_agent = agentNetwork.add_agent(agentType=Predictor)
+    evaluator_agent = agentNetwork.add_agent(agentType=Evaluator)
     monitor_agent_1 = agentNetwork.add_agent(agentType=MonitorAgent)
-
-    #init parameters
-    data_stream_agent_1.init_parameters(stream=WaveformGenerator(), pretrain_size = 1000, batch_size= 100)
-    ml_agent_hoeffdingTree.init_parameters(ml_model=HoeffdingTree())
-    ml_agent_neuralNets.init_parameters(ml_model=NaiveBayes())
-
-    #connect agents
-    agentNetwork.bind_agents(data_stream_agent_1, ml_agent_hoeffdingTree)
-    agentNetwork.bind_agents(data_stream_agent_1, ml_agent_neuralNets)
-    agentNetwork.bind_agents(ml_agent_hoeffdingTree, monitor_agent_1)
-    agentNetwork.bind_agents(ml_agent_neuralNets, monitor_agent_1)
-
+    monitor_agent_2 = agentNetwork.add_agent(agentType=MonitorAgent)
+    gen_agent.init_parameters(stream=SineGenerator(), pretrain_size=1000,
+                              batch_size=1)
+    trainer_agent.init_parameters(ml_model=HoeffdingTree())
+    # connect agents : We can connect multiple agents to any particular agent
+    # However the agent needs to implement handling multiple input types
+    agentNetwork.bind_agents(gen_agent, trainer_agent)
+    agentNetwork.bind_agents(gen_agent, predictor_agent)
+    agentNetwork.bind_agents(trainer_agent, predictor_agent)
+    agentNetwork.bind_agents(predictor_agent, evaluator_agent)
+    agentNetwork.bind_agents(evaluator_agent, monitor_agent_1)
+    agentNetwork.bind_agents(predictor_agent, monitor_agent_2)
+    # set all agents states to "Running"
     agentNetwork.set_running_state()
 
+    # allow for shutting down the network after execution
+    return agentNetwork
 
 
+if __name__ == '__main__':
+    main()
