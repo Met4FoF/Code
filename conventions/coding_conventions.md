@@ -80,4 +80,5 @@ open-source repository of the project.
     https://stackoverflow.com/questions/2290016/git-commit-messages-50-72-formatting
     )
 
-    For examples look at the commit messages of this repository.
+    For examples look at [the commit messages of this repository
+    ](https://github.com/Met4FoF/Code/commits).
