@@ -3,8 +3,14 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2.1
+workflows:
+  build_and_test:
+    jobs:
+      - build_and_test_PyDynamic
+      - build_and_test_agentMET4FOF
+
 jobs:
-  build:
+  build_and_test_PyDynamic:
     docker:
       - image: circleci/python:3
 
@@ -14,16 +20,14 @@ jobs:
       # Checkout code
       - checkout
       # Update and initialize submodules
-      - run: git submodule sync
-      - run: git submodule update --init
+      - run: git submodule sync PyDynamic
+      - run: git submodule update --init PyDynamic
 
       # Create folder for test results.
       - run:
           name: Create test result folder
           command: |
             mkdir test-reports
-            mkdir test-reports/PyDynamic
-            mkdir test-reports/agentMET4FOF
 
       # Download and cache dependencies
       - restore_cache:
@@ -31,7 +35,65 @@ jobs:
             # Specify the unique identifier for the cache in a multiline string,
             # where the second line will be separated by a space from the first.
             - v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-              {{ checksum "agentMET4FOF/requirements.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - v1-dependencies-
+
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r PyDynamic/requirements.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
+
+      # Run tests with coverage report! We use pytest's test-runner.
+      - run:
+          name: Run PyDynamic tests
+          command: |
+            . venv/bin/activate
+            pytest -v --junitxml=test-reports/pytest.xml \
+            --cov-config=PyDynamic/.coveragerc --cov=PyDynamic/ \
+            PyDynamic/ > test-reports/PyDynamic.log
+
+      # Store test results.
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports/PyDynamic
+
+      - store_test_results:
+          path: test-reports
+
+  build_and_test_agentMET4FOF:
+    docker:
+      - image: circleci/python:3
+
+    working_directory: ~/repo
+
+    steps:
+      # Checkout code
+      - checkout
+      # Update and initialize submodules
+      - run: git submodule sync agentMET4FOF
+      - run: git submodule update --init agentMET4FOF
+
+      # Create folder for test results.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-reports
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache in a multiline string,
+            # where the second line will be separated by a space from the first.
+            - v1-dependencies-{{ checksum "agentMET4FOF/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - v1-dependencies-
 
@@ -41,39 +103,29 @@ jobs:
          command: |
            python3 -m venv venv
            . venv/bin/activate
-           pip install -r requirements.txt
+           pip install -r agentMET4FOF/requirements.txt
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-            {{ checksum "agentMET4FOF/requirements.txt" }}
-
-      # Run tests with coverage report! We use pytest's test-runner.
-      - run:
-          name: Run PyDynamic tests
-          command: |
-            . venv/bin/activate
-            pytest -v --junitxml=test-reports/PyDynamic/pytest.xml \
-            --cov-config=PyDynamic/.coveragerc --cov=PyDynamic/ \
-            PyDynamic/ > test-reports/PyDynamic/PyDynamic.log
+            v1-dependencies-{{ checksum "agentMET4FOF/requirements.txt" }}
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
           name: Run agentMET4FOF tests
           command: |
             . venv/bin/activate
-            pytest -v --junitxml=test-reports/agentMET4FOF/pytest.xml \
+            pytest -v --junitxml=test-reports/pytest.xml \
             --cov-config=.coveragerc --cov=agentMET4FOF/ \
             --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
             --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
-            agentMET4FOF/ > test-reports/agentMET4FOF/agentMET4FOF.log
+            agentMET4FOF/ > test-reports/agentMET4FOF.log
 
       # Store test results.
       - store_artifacts:
          path: test-reports
-         destination: test-reports
+         destination: test-reports/agentMET4FOF
 
       - store_test_results:
          path: test-reports
