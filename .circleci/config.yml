@@ -23,7 +23,7 @@ jobs:
           command: |
             mkdir test-reports
             mkdir test-reports/PyDynamic
-            mkdir test-reports/agentMet4FoF
+            mkdir test-reports/agentMET4FOF
 
       # Download and cache dependencies
       - restore_cache:
@@ -31,7 +31,7 @@ jobs:
             # Specify the unique identifier for the cache in a multiline string,
             # where the second line will be separated by a space from the first.
             - v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-              {{ checksum "agentMet4FoF/requirements.txt" }}
+              {{ checksum "agentMET4FOF/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - v1-dependencies-
 
@@ -48,7 +48,7 @@ jobs:
             - ./venv
           key: >-
             v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-            {{ checksum "agentMet4FoF/requirements.txt" }}
+            {{ checksum "agentMET4FOF/requirements.txt" }}
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
@@ -61,13 +61,13 @@ jobs:
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
-          name: Run agentMet4FoF tests
+          name: Run agentMET4FOF tests
           command: |
             . venv/bin/activate
-            pytest -v --junitxml=test-reports/agentMet4FoF/pytest.xml \
-            --cov-config=.coveragerc --cov=agentMet4FoF/ \
-            --ignore=agentMet4FoF/tests/test_zema_emc_ml.py \
-            agentMet4FoF/ > test-reports/agentMet4FoF/agentMet4FoF.log
+            pytest -v --junitxml=test-reports/agentMET4FOF/pytest.xml \
+            --cov-config=.coveragerc --cov=agentMET4FOF/ \
+            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
+            agentMET4FOF/ > test-reports/agentMET4FOF/agentMET4FOF.log
 
       # Store test results.
       - store_artifacts:
