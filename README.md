@@ -36,15 +36,15 @@ Working on existing submodules' code is just the same as on a base respository. 
 
 `$ cd ~/your/local/folder/Met4FoF_Code/submodule_folder`
 
-and start editing, committing and pushing in the submodule as if you were in a separate Git respository. Of course pushing to a remote repository at GitHub requires the according access rights for the submodule's repository. More on this topic you can find in the [Pro Git book](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+and start editing, committing and pushing in the submodule as if you were in a separate Git respository. Of course pushing to a remote repository on GitHub requires first to [setup the remote host in your local copy](https://help.github.com/en/articles/adding-a-remote) and the according access rights for the submodule's remote repository. More on this topic you can find in the [Pro Git book](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
 ## Coming soon
 
-All planned developments of the project's code and this repository you can find in the repository's [project board](https://github.com/Met4FoF/Code/projects/3).
+All planned developments of the project's code and this repository you can find in the repository's [project board](https://github.com/Met4FoF/Code/projects/3) and the submodules' project boards and their GitHub issues.
 
 ## Additional information
 
-Additional information around code writing and software development in the project you can find in the repository's [wiki](https://github.com/Met4FoF/Code/wiki) and in the [coding conventions](conventions/README.md).
+Additional information around code writing and software development in the project you can find in the repository's [wiki](https://github.com/Met4FoF/Code/wiki), in the [coding conventions](conventions/README.md) and in our related [Blog post](https://www.ptb.de/empir2018/met4fof/information-communication/blog/detail-view/?tx_news_pi1%5Bnews%5D=38&tx_news_pi1%5Bcontroller%5D=News&tx_news_pi1%5Baction%5D=detail&cHash=ce963c7573572d40ef0f496449ef8aff) on the [project homepage](https://www.ptb.de/empir2018/met4fof/home/).
 
 ## Data management
 
