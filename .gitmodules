@@ -10,3 +10,6 @@
 [submodule "agentMET4FOF"]
 	path = agentMET4FOF
 	url = https://github.com/bangxiangyong/agentMET4FOF.git
+[submodule "Met4FoF-SmartUpUnit"]
+	path = Met4FoF-SmartUpUnit
+	url = https://github.com/Met4FoF/Met4FoF-SmartUpUnit.git
