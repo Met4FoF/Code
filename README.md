@@ -4,6 +4,8 @@
 
 This repository combines all the code written for or used in the EMPIR project 17IND12 *Metrology for the Factory of the Future* to enable pulling/cloning all the code and all coding related documents at once.
 
+You find the project partner's code in the according subfolders of the repository which on [GitHub](https://github.com/Met4FoF/Code/) directly link to the upstream repositories and after cloning locally contain the upstreams' content.
+
 ## Installing Git
 
 The following commands assume you already have Git installed. In case you do not have Git installed go to [https://git-scm.com/book/en/v2/Getting-Started-Installing-Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and follow the instructions for your operating system. After successful installation open Git Bash in Windows or the command line and run the given commands.
