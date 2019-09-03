@@ -13,3 +13,6 @@
 [submodule "Met4FoF-SmartUpUnit"]
 	path = Met4FoF-SmartUpUnit
 	url = https://github.com/Met4FoF/Met4FoF-SmartUpUnit.git
+[submodule "Strathcylde_AFRC_machine_learning_tutorials"]
+	path = Strathcylde_AFRC_machine_learning_tutorials
+	url = https://github.com/harislulic/Strathcylde_AFRC_machine_learning_tutorials.git
