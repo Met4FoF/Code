@@ -58,11 +58,11 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            if [ ! -d "/home/circleci/conda/envs/" ]; then
-              conda env update --file environment.yml  --prune
+            if [ -d "$HOME/conda/envs/" ] then
+                conda env update --file environment.yml  --prune
             else
-              conda update -q conda
-              conda env create -f environment.yml
+                conda update -q conda
+                conda env create -f environment.yml
             fi
             source activate Met4FoF_Code
             conda list
