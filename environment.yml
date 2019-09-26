@@ -4,7 +4,7 @@ channels:
 dependencies:
     - python >= 3
     - ipykernel
-    - jupyter=1.0.0
+    - jupyter
     - numpy
     - scikit-learn
     - scikit-multiflow
@@ -17,8 +17,8 @@ dependencies:
     - multiprocess
     - h5py
     - requests
-    - pytest=5.0.1
-    - sympy=1.4
+    - pytest
+    - sympy
     # pip dependencies have to be provided in `requirements.txt` syntax
     - pip:
         - osbrain
