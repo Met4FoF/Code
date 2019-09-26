@@ -1,0 +1,26 @@
+name: Met4FoF_Code
+channels:
+    - conda-forge
+dependencies:
+    - python >= 3
+    - ipykernel
+    - jupyter=1.0.0
+    - numpy
+    - scikit-learn
+    - scikit-multiflow
+    - scipy
+    - matplotlib
+    - pandas
+    - seaborn
+    - dash
+    - networkx
+    - multiprocess
+    - h5py
+    - requests
+    - pytest=5.0.1
+    - sympy=1.4
+    # pip dependencies have to be provided in `requirements.txt` syntax
+    - pip:
+        - osbrain
+        - dash-cytoscape
+        - plotly
