@@ -26,10 +26,8 @@ jobs:
       - run:
           name: Initialize submodules
           command: |
-            git submodule sync PyDynamic
-            git submodule update --init PyDynamic
-            git submodule sync agentMET4FOF
-            git submodule update --init agentMET4FOF
+            git submodule sync PyDynamic agentMET4FOF
+            git submodule update --init PyDynamic agentMET4FOF
 
       # Create folder for test results.
       - run:
