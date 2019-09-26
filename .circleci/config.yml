@@ -83,6 +83,7 @@ jobs:
             pytest -v --junitxml=test-reports/agentMET4FOF.xml \
             --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
             --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
+            --ignore=agentMET4FOF/tests/test_memory_monitor_agent.py \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
       # Store test results.
