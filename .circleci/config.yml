@@ -35,14 +35,14 @@ jobs:
 #          name: Create test result folder
 #          command: |
 #            mkdir test-reports
-#
-#      # Download and cache dependencies
-#      - restore_cache:
-#          keys:
-#            # Specify the unique identifier for the cache.
-#            - conda-dependencies-{{ checksum "environment.yml" }}
-#            # Fallback to using the latest cache if no exact match is found.
-#            - conda-dependencies-
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - conda-dependencies-{{ checksum "environment.yml" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - conda-dependencies-
 
       # Install Miniconda.
       - run:
@@ -54,23 +54,19 @@ jobs:
             bash $HOME/miniconda.sh -b -p $HOME/conda
             export PATH=$HOME/conda/bin:$PATH
             conda init
+
+      # Install dependencies.
+      - run:
+          name: Install dependencies
+          command: |
             conda env create -f environment.yml
 
-#      # Install dependencies.
-#      - run:
-#          name: Install dependencies
-#          command: |
-#            python3 -m venv venv
-#            . venv/bin/activate
-#            pip install -r requirements.txt
-#            pip install pytest
-#
-#      - save_cache:
-#          paths:
-#            - ./venv
-#          key: >-
-#            conda-dependencies-{{ checksum "environment.yml" }}
-#
+      - save_cache:
+          paths:
+            - $HOME/conda/envs
+          key: >-
+            conda-dependencies-{{ checksum "environment.yml" }}
+
 #      # Run tests! We use pytest's test-runner.
 #      - run:
 #          name: Run tests
