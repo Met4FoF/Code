@@ -6,12 +6,12 @@ version: 2.1
 workflows:
   build_environments:
     jobs:
-#      - build_venv_environment
+      - build_venv_environment
       - build_conda_environment
-#  build_and_test:
-#    jobs:
-#      - build_and_test_PyDynamic
-#      - build_and_test_agentMET4FOF
+  build_and_test:
+    jobs:
+      - build_and_test_PyDynamic
+      - build_and_test_agentMET4FOF
 
 jobs:
   build_conda_environment:
