@@ -22,6 +22,14 @@ jobs:
     steps:
       # Checkout code
       - checkout
+      # Initialize submodules
+      - run:
+          name: Initialize submodules
+          command: |
+            git submodule sync PyDynamic
+            git submodule update --init PyDynamic
+            git submodule sync agentMET4FOF
+            git submodule update --init agentMET4FOF
 
       # Create folder for test results.
       - run:
