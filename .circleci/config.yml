@@ -13,6 +13,81 @@ workflows:
       - build_and_test_agentMET4FOF
 
 jobs:
+  build_conda_environment:
+    docker:
+      - image: circleci/python:3
+
+    working_directory: ~/repo
+
+    steps:
+      # Checkout code
+      - checkout
+#      # Initialize submodules
+#      - run:
+#          name: Initialize submodules
+#          command: |
+#            git submodule sync PyDynamic agentMET4FOF
+#            git submodule update --init PyDynamic agentMET4FOF
+#
+#      # Create folder for test results.
+#      - run:
+#          name: Create test result folder
+#          command: |
+#            mkdir test-reports
+#
+#      # Download and cache dependencies
+#      - restore_cache:
+#          keys:
+#            # Specify the unique identifier for the cache.
+#            - conda-dependencies-{{ checksum "environment.yml" }}
+#            # Fallback to using the latest cache if no exact match is found.
+#            - conda-dependencies-
+
+      # Install Miniconda.
+      - run:
+          name: Install Miniconda
+          command: |
+            wget "https://repo.anaconda.com/miniconda/
+            Miniconda3-latest-Linux-x86_64.sh" -O miniconda.sh
+            bash miniconda.sh -b -p miniconda
+            conda init
+            conda create -f environment.yml
+
+#      # Install dependencies.
+#      - run:
+#          name: Install dependencies
+#          command: |
+#            python3 -m venv venv
+#            . venv/bin/activate
+#            pip install -r requirements.txt
+#            pip install pytest
+#
+#      - save_cache:
+#          paths:
+#            - ./venv
+#          key: >-
+#            conda-dependencies-{{ checksum "environment.yml" }}
+#
+#      # Run tests! We use pytest's test-runner.
+#      - run:
+#          name: Run tests
+#          command: |
+#            . venv/bin/activate
+#            pytest -v --junitxml=test-reports/PyDynamic.xml \
+#            PyDynamic/ > test-reports/PyDynamic.log
+#            pytest -v --junitxml=test-reports/agentMET4FOF.xml \
+#            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
+#            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
+#            agentMET4FOF/ > test-reports/agentMET4FOF.log
+#
+#      # Store test results.
+#      - store_artifacts:
+#          path: test-reports
+#          destination: test-reports/conda_tests
+#
+#      - store_test_results:
+#          path: test-reports
+
   build_venv_environment:
     docker:
       - image: circleci/python:3
