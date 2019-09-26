@@ -4,12 +4,74 @@
 #
 version: 2.1
 workflows:
+  build_environments:
+    jobs:
+      - build_venv_environment
   build_and_test:
     jobs:
       - build_and_test_PyDynamic
       - build_and_test_agentMET4FOF
 
 jobs:
+  build_venv_environment:
+    docker:
+      - image: circleci/python:3
+
+    working_directory: ~/repo
+
+    steps:
+      # Checkout code
+      - checkout
+
+      # Create folder for test results.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-reports
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - vvenv-dependencies-{{ checksum "requirements.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - vvenv-dependencies-
+
+      # Install dependencies.
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+            pip install pytest
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            vvenv-dependencies-{{ checksum "requirements.txt" }}
+
+      # Run tests! We use pytest's test-runner.
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            pytest -v --junitxml=test-reports/PyDynamic.xml \
+            PyDynamic/ > test-reports/PyDynamic.log
+            pytest -v --junitxml=test-reports/agentMET4FOF.xml \
+            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
+            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
+            agentMET4FOF/ > test-reports/agentMET4FOF.log
+
+      # Store test results.
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports/venv_tests
+
+      - store_test_results:
+          path: test-reports
+
   build_and_test_PyDynamic:
     docker:
       - image: circleci/python:3
