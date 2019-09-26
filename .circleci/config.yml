@@ -64,6 +64,7 @@ jobs:
               conda update -q conda
               conda env create -f environment.yml
             fi
+            source activate Met4FoF_Code
             conda list
 
       - save_cache:
