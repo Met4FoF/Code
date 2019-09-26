@@ -53,12 +53,13 @@ jobs:
             mkdir -p $HOME/.conda
             bash $HOME/miniconda.sh -b -p $HOME/conda
             echo 'export PATH=$HOME/conda/bin:$PATH' >> $BASH_ENV
-            $HOME/conda/bin/conda init
 
       # Create environment.
       - run:
           name: Install dependencies
-          command: conda env create -f environment.yml
+          command: |
+            conda init
+            conda env create -f environment.yml
 
       - save_cache:
           paths:
