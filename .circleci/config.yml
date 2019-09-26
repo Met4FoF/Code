@@ -53,7 +53,7 @@ jobs:
             mkdir -p $HOME/.conda
             bash $HOME/miniconda.sh -b -p $HOME/conda
             echo 'export PATH=$HOME/conda/bin:$PATH' >> $BASH_ENV
-            conda init
+            $HOME/conda/bin/conda init
 
       # Create environment.
       - run:
