@@ -36,14 +36,6 @@ jobs:
           command: |
             mkdir test-reports
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - conda-dependencies-{{ checksum "environment.yml" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - conda-dependencies-
-
       # Install Miniconda.
       - run:
           name: Install Miniconda
@@ -54,12 +46,25 @@ jobs:
             bash $HOME/miniconda.sh -b -p $HOME/conda
             echo 'export PATH=$HOME/conda/bin:$PATH' >> $BASH_ENV
 
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - conda-dependencies-{{ checksum "environment.yml" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - conda-dependencies-
+
       # Create environment.
       - run:
           name: Install dependencies
           command: |
-            conda update -q conda
-            conda env create -f environment.yml
+            if [ ! -d "/home/circleci/conda/envs/" ]; then
+              conda env update --file environment.yml  --prune
+            else
+              conda update -q conda
+              conda env create -f environment.yml
+            fi
+            conda list
 
       - save_cache:
           paths:
