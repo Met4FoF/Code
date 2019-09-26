@@ -54,6 +54,7 @@ jobs:
             bash $HOME/miniconda.sh -b -p $HOME/conda
             export PATH=$HOME/conda/bin:$PATH
             conda init
+            less $HOME/.bashrc
 
       # Install dependencies.
       - run:
