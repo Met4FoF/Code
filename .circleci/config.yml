@@ -23,18 +23,18 @@ jobs:
     steps:
       # Checkout code
       - checkout
-#      # Initialize submodules
-#      - run:
-#          name: Initialize submodules
-#          command: |
-#            git submodule sync PyDynamic agentMET4FOF
-#            git submodule update --init PyDynamic agentMET4FOF
-#
-#      # Create folder for test results.
-#      - run:
-#          name: Create test result folder
-#          command: |
-#            mkdir test-reports
+      # Initialize submodules
+      - run:
+          name: Initialize submodules
+          command: |
+            git submodule sync PyDynamic agentMET4FOF
+            git submodule update --init PyDynamic agentMET4FOF
+
+      # Create folder for test results.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-reports
 
       # Download and cache dependencies
       - restore_cache:
@@ -54,11 +54,10 @@ jobs:
             bash $HOME/miniconda.sh -b -p $HOME/conda
             echo 'export PATH=$HOME/conda/bin:$PATH' >> $BASH_ENV
 
-      # Install dependencies.
+      # Create environment.
       - run:
           name: Install dependencies
-          command: |
-            conda env create -f environment.yml
+          command: conda env create -f environment.yml
 
       - save_cache:
           paths:
@@ -66,25 +65,25 @@ jobs:
           key: >-
             conda-dependencies-{{ checksum "environment.yml" }}
 
-#      # Run tests! We use pytest's test-runner.
-#      - run:
-#          name: Run tests
-#          command: |
-#            . venv/bin/activate
-#            pytest -v --junitxml=test-reports/PyDynamic.xml \
-#            PyDynamic/ > test-reports/PyDynamic.log
-#            pytest -v --junitxml=test-reports/agentMET4FOF.xml \
-#            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
-#            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
-#            agentMET4FOF/ > test-reports/agentMET4FOF.log
-#
-#      # Store test results.
-#      - store_artifacts:
-#          path: test-reports
-#          destination: test-reports/conda_tests
-#
-#      - store_test_results:
-#          path: test-reports
+      # Run tests! We use pytest's test-runner.
+      - run:
+          name: Run tests
+          command: |
+            conda activate Met4FoF_Code
+            pytest -v --junitxml=test-reports/PyDynamic.xml \
+            PyDynamic/ > test-reports/PyDynamic.log
+            pytest -v --junitxml=test-reports/agentMET4FOF.xml \
+            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
+            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
+            agentMET4FOF/ > test-reports/agentMET4FOF.log
+
+      # Store test results.
+      - store_artifacts:
+          path: test-reports
+          destination: test-reports
+
+      - store_test_results:
+          path: test-reports
 
   build_venv_environment:
     docker:
@@ -146,7 +145,7 @@ jobs:
       # Store test results.
       - store_artifacts:
           path: test-reports
-          destination: test-reports/venv_tests
+          destination: test-reports
 
       - store_test_results:
           path: test-reports
