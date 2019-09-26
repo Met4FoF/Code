@@ -54,7 +54,7 @@ jobs:
             bash $HOME/miniconda.sh -b -p $HOME/conda
             export PATH=$HOME/conda/bin:$PATH
             conda init
-            conda create -f environment.yml
+            conda env create -f environment.yml
 
 #      # Install dependencies.
 #      - run:
