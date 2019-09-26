@@ -57,7 +57,9 @@ jobs:
       # Create environment.
       - run:
           name: Install dependencies
-          command: conda env create -f environment.yml
+          command: |
+            conda update -q conda
+            conda env create -f environment.yml
 
       - save_cache:
           paths:
@@ -69,8 +71,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            conda init
-            conda activate Met4FoF_Code
+            source activate Met4FoF_Code
             pytest -v --junitxml=test-reports/PyDynamic.xml \
             PyDynamic/ > test-reports/PyDynamic.log
             pytest -v --junitxml=test-reports/agentMET4FOF.xml \
