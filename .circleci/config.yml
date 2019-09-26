@@ -59,7 +59,7 @@ jobs:
           name: Install dependencies
           command: |
             if [ -d "$HOME/conda/envs/" ] then
-              conda env update --file environment.yml --prune
+              conda env update --prune --file environment.yml
             else
               conda update -q conda
               conda env create -f environment.yml
