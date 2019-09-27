@@ -160,6 +160,7 @@ jobs:
           name: Build package
           command: |
             conda config --set anaconda_upload no
+            source activate
             conda activate conda-build
             conda-skeleton pypi --extra-specs scipy PyDynamic
             conda-build pydynamic/ --output
