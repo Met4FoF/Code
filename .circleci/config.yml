@@ -166,7 +166,7 @@ jobs:
             conda-build pydynamic/ --output
             conda create -n test_pydynamic conda
             conda activate test_pydynamic
-            conda install --use-local pydynamic
+            conda install -c file://$BUILD_PATH pydynamic
 
 #      # Test package.
 #      - run:
