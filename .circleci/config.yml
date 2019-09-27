@@ -140,6 +140,7 @@ jobs:
       - run:
           name: Create environment
           command: |
+            conda update -n base -c defaults conda
             if [ -d "/home/circleci/conda/envs/conda-build" ]; then
                 source activate conda-build
                 conda update -q conda anaconda-client conda-build
