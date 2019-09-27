@@ -6,15 +6,19 @@ version: 2.1
 workflows:
   build_environments:
     jobs:
-      - build_venv_environment
-      - build_conda_environment
-  build_and_test:
-    jobs:
-      - build_and_test_PyDynamic
-      - build_and_test_agentMET4FOF
+#      - build_venv_env
+      - build_conda_env
+      - deploy_conda_env:
+          context: Conda Cloud Met4FoF
+          requires:
+            - build_conda_env
+#  build_and_test_code:
+#    jobs:
+#      - build_and_test_PyDynamic
+#      - build_and_test_agentMET4FOF
 
 jobs:
-  build_conda_environment:
+  build_conda_env:
     docker:
       - image: circleci/python:3
 
@@ -56,7 +60,7 @@ jobs:
 
       # Create environment.
       - run:
-          name: Install dependencies
+          name: Create environment
           command: |
             if [ -d "/home/circleci/conda/envs/" ]; then
                 conda env update --prune --file environment.yml
@@ -72,6 +76,15 @@ jobs:
             - /home/circleci/conda/envs
           key: >-
             conda-dependencies-{{ checksum "environment.yml" }}
+
+      # Persist the miniconda installation and environment into the workspace
+      # for use in downstream job.
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory.
+          root: .
+          # Must be relative path from root
+          paths:
+            - miniconda3
 
       # Run tests! We use pytest's test-runner.
       - run:
@@ -94,7 +107,46 @@ jobs:
       - store_test_results:
           path: test-reports
 
-  build_venv_environment:
+  deploy_conda_env:
+    docker:
+      - image: circleci/buildpack-deps:disco
+
+    working_directory: ~/repo
+
+    steps:
+
+      # Attach workflow workspace to retrieve saved image.
+      - attach_workspace:
+          at: /home/circleci/miniconda3
+
+      # Test persistence of workspace.
+      - run: ls /home/circleci/miniconda3
+
+      # Test Miniconda installation.
+      - run:
+          name: Test Miniconda installation
+          command: |
+            source activate Met4FoF_Code
+            conda list
+
+#      # Checkout code.
+#      - checkout
+#
+#      # Deploy conda environment.
+#      - run:
+#          name: Deploy Anaconda environment
+#          command: |
+#            echo $CONDA_PASS | anaconda login \
+#              --username $DOCKER_USER --password-stdin
+#
+#            docker push $DOCKER_USER/$IMAGE_NAME:$TAG
+#            wget "https://repo.anaconda.com/miniconda/\
+#            Miniconda3-latest-Linux-x86_64.sh" -O /home/circleci/miniconda.sh
+#            mkdir -p /home/circleci/.conda
+#            bash /home/circleci/miniconda.sh -b -p /home/circleci/conda
+#            echo 'export PATH=/home/circleci/conda/bin:$PATH' >> $BASH_ENV
+
+  build_venv_env:
     docker:
       - image: circleci/python:3
 
