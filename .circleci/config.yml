@@ -159,10 +159,8 @@ jobs:
       - run:
           name: Build package
           command: |
-            source activate conda-build
-            conda --version
-            conda list
             conda config --set anaconda_upload no
+            conda activate conda-build
             conda-skeleton pypi --extra-specs scipy PyDynamic
             conda-build pydynamic/ --output
             conda create -n test_pydynamic conda
