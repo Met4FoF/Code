@@ -160,7 +160,8 @@ jobs:
       - run:
           name: Test package
           command: |
-            conda create -n test_pydynamic --use-local pydynamic
+            conda create -n test_pydynamic \
+            -c file:///home/circleci/conda/envs/conda-build/conda-bld/ pydynamic
 
       # Deploy package.
       - run:
