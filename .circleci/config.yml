@@ -166,6 +166,7 @@ jobs:
             conda-skeleton pypi --extra-specs scipy PyDynamic
             conda-build pydynamic/ --output
             conda create -n test_pydynamic conda
+            conda activate test_pydynamic
             conda install --use-local pydynamic
 
 #      # Test package.
