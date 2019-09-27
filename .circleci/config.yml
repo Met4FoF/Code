@@ -156,13 +156,18 @@ jobs:
             conda-skeleton pypi --extra-specs scipy PyDynamic
             conda-build pydynamic/
 
+      # Test package.
+      - run:
+          name: Test package
+          command: |
+            conda create -n test_pydynamic --use-local pydynamic
+
       # Deploy package.
       - run:
           name: Deploy package
           command: |
             source activate conda-build
-            echo $CONDA_PASS | anaconda login \
-              --username $CONDA_USER
+            anaconda login --username $CONDA_USER --password $CONDA_PASS
 
 
 #      # Checkout code.
