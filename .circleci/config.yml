@@ -7,11 +7,11 @@ workflows:
   build_environments:
     jobs:
 #      - build_venv_env
-      - build_conda_env
+#      - build_conda_env
       - deploy_conda_env:
           context: Anaconda Cloud Met4FoF
-          requires:
-            - build_conda_env
+#          requires:
+#            - build_conda_env
 #  build_and_test_code:
 #    jobs:
 #      - build_and_test_PyDynamic
@@ -114,22 +114,42 @@ jobs:
 
     steps:
 
-      # Attach workflow workspace to retrieve Miniconda installation.
-      - attach_workspace:
-          at: /home/circleci/
-
-      # Finalize Miniconda persistence.
-      - run: echo 'export PATH=/home/circleci/conda/bin:$PATH' >> $BASH_ENV
-
-      # Test persistence of workspace.
-      - run: ls /home/circleci/conda
-
-      # Test Miniconda installation.
+      # Install Miniconda.
       - run:
-          name: Test Miniconda installation
+          name: Install Miniconda
           command: |
-            source activate Met4FoF_Code
-            conda list
+            wget "https://repo.anaconda.com/miniconda/\
+            Miniconda3-latest-Linux-x86_64.sh" -O /home/circleci/miniconda.sh
+            mkdir -p /home/circleci/.conda
+            bash /home/circleci/miniconda.sh -b -p /home/circleci/conda
+            echo 'export PATH=/home/circleci/conda/bin:$PATH' >> $BASH_ENV
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - conda-build-dependencies
+
+      # Create environment.
+      - run:
+          name: Create environment
+          command: |
+            if [ -d "/home/circleci/conda/envs/conda-build" ]; then
+                source activate conda-build
+                conda update -q conda anaconda-client conda-build
+            else
+                conda update -q conda
+                conda create -n conda-build conda anaconda-client conda-build
+                source activate conda-build
+            fi
+
+      - save_cache:
+          paths:
+            - /home/circleci/conda/envs/conda-build
+          key: >-
+            conda-build-dependencies
+
+
 
 #      # Checkout code.
 #      - checkout
