@@ -85,18 +85,18 @@ jobs:
           paths:
             - .
 
-      # Run tests! We use pytest's test-runner.
-      - run:
-          name: Run tests
-          command: |
-            source activate Met4FoF_Code
-            pytest -v --junitxml=test-reports/PyDynamic.xml \
-            PyDynamic/ > test-reports/PyDynamic.log
-            pytest -v --junitxml=test-reports/agentMET4FOF.xml \
-            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
-            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
-            --ignore=agentMET4FOF/tests/test_memory_monitor_agent.py \
-            agentMET4FOF/ > test-reports/agentMET4FOF.log
+#      # Run tests! We use pytest's test-runner.
+#      - run:
+#          name: Run tests
+#          command: |
+#            source activate Met4FoF_Code
+#            pytest -v --junitxml=test-reports/PyDynamic.xml \
+#            PyDynamic/ > test-reports/PyDynamic.log
+#            pytest -v --junitxml=test-reports/agentMET4FOF.xml \
+#            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
+#            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
+#            --ignore=agentMET4FOF/tests/test_memory_monitor_agent.py \
+#            agentMET4FOF/ > test-reports/agentMET4FOF.log
 
       # Store test results.
       - store_artifacts:
