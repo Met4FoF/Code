@@ -84,7 +84,7 @@ jobs:
           root: /home/circleci
           # Must be relative path from root
           paths:
-            - miniconda3
+            - conda
 
       # Run tests! We use pytest's test-runner.
       - run:
@@ -115,12 +115,15 @@ jobs:
 
     steps:
 
-      # Attach workflow workspace to retrieve saved image.
+      # Attach workflow workspace to retrieve Miniconda installation.
       - attach_workspace:
-          at: /home/circleci/miniconda3
+          at: /home/circleci/conda
+
+      # Finalize Miniconda persistence.
+      - run: echo 'export PATH=/home/circleci/conda/bin:$PATH' >> $BASH_ENV
 
       # Test persistence of workspace.
-      - run: ls /home/circleci/miniconda3
+      - run: ls /home/circleci/conda
 
       # Test Miniconda installation.
       - run:
