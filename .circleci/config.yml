@@ -7,7 +7,7 @@ version: 2.1
 executors:
   conda-publisher:
     environment:
-      BUILD_PATH: /home/circleci/conda/envs/conda-build/conda-bld/
+      BUILD_PATH: /home/circleci/conda/envs/conda-build/conda-bld/linux-64/pydynamic*.tar.bz2
     docker:
       - image: circleci/buildpack-deps:disco
 
@@ -167,8 +167,8 @@ jobs:
       - run:
           name: Test package
           command: |
-            conda create -n test_pydynamic \
-            -c file:///home/circleci/conda/envs/conda-build/conda-bld/ pydynamic
+            conda create -n test_pydynamic
+            conda install $BUILD_PATH
 #            conda create -n test_pydynamic -c file://$BUILD_PATH pydynamic
 
       # Deploy package.
@@ -176,8 +176,8 @@ jobs:
           name: Deploy package
           command: |
             source activate conda-build
-            anaconda -t $CONDA_PASS upload --user CONDA_USER
-            "$ENV_PATHlinux-64/pydynamic*.tar.bz2"
+            anaconda -t $CONDA_PASS upload --no-register --user CONDA_USER \
+            $BUILD_PATH
 
 
 #      # Checkout code.
