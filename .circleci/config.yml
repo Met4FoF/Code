@@ -154,7 +154,7 @@ jobs:
             source activate conda-build
             conda config --set anaconda_upload no
             conda-skeleton pypi --extra-specs scipy PyDynamic
-            conda-build pydynamic/
+            conda-build pydynamic/ --output
 
       # Test package.
       - run:
@@ -168,7 +168,7 @@ jobs:
           name: Deploy package
           command: |
             source activate conda-build
-            anaconda login --username $CONDA_USER --password $CONDA_PASS
+            anaconda -t $CONDA_PASS upload --user CONDA_USER pydynamic
 
 
 #      # Checkout code.
