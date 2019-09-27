@@ -116,7 +116,7 @@ jobs:
 
       # Attach workflow workspace to retrieve Miniconda installation.
       - attach_workspace:
-          at: /home/circleci/conda
+          at: /home/circleci/
 
       # Finalize Miniconda persistence.
       - run: echo 'export PATH=/home/circleci/conda/bin:$PATH' >> $BASH_ENV
