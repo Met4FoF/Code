@@ -7,9 +7,7 @@ version: 2.1
 executors:
   conda-publisher:
     environment:
-      BUILD_PATH: >-
-        /home/circleci/conda/envs/conda-build/conda-bld/linux-64
-        /pydynamic*.tar.bz2
+      BUILD_PATH: /home/circleci/conda/envs/conda-build/conda-bld/linux-64/pydynamic*.tar.bz2
     docker:
       - image: circleci/buildpack-deps:disco
 
