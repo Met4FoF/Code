@@ -162,14 +162,15 @@ jobs:
             conda config --set anaconda_upload no
             conda-skeleton pypi --extra-specs scipy PyDynamic
             conda-build pydynamic/ --output
+            conda create -n test_pydynamic -c local pydynamic
 
-      # Test package.
-      - run:
-          name: Test package
-          command: |
-            conda create -n test_pydynamic
-            conda install $BUILD_PATH
-#            conda create -n test_pydynamic -c file://$BUILD_PATH pydynamic
+#      # Test package.
+#      - run:
+#          name: Test package
+#          command: |
+#            conda create -n test_pydynamic
+#            conda install $BUILD_PATH
+##            conda create -n test_pydynamic -c file://$BUILD_PATH pydynamic
 
       # Deploy package.
       - run:
