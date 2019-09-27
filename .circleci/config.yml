@@ -3,6 +3,14 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2.1
+
+executors:
+  conda-publisher:
+    environment:
+      BUILD_PATH: /home/circleci/conda/envs/conda-build/conda-bld/
+    docker:
+      - image: circleci/buildpack-deps:disco
+
 workflows:
   build_environments:
     jobs:
@@ -107,8 +115,7 @@ jobs:
           path: test-reports
 
   deploy_conda_env:
-    docker:
-      - image: circleci/buildpack-deps:disco
+    executor: conda-publisher
 
     working_directory: ~/
 
@@ -160,15 +167,15 @@ jobs:
       - run:
           name: Test package
           command: |
-            conda create -n test_pydynamic \
-            -c file:///home/circleci/conda/envs/conda-build/conda-bld/ pydynamic
+            conda create -n test_pydynamic -c "file://$ENV_PATH" pydynamic
 
       # Deploy package.
       - run:
           name: Deploy package
           command: |
             source activate conda-build
-            anaconda -t $CONDA_PASS upload --user CONDA_USER pydynamic
+            anaconda -t $CONDA_PASS upload --user CONDA_USER
+            "$ENV_PATHlinux-64/pydynamic*.tar.bz2"
 
 
 #      # Checkout code.
