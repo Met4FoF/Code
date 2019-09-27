@@ -162,7 +162,7 @@ jobs:
             conda config --set anaconda_upload no
             conda-skeleton pypi --extra-specs scipy PyDynamic
             conda-build pydynamic/ --output
-            conda create -n test_pydynamic -c local pydynamic
+            conda create -n test_pydynamic -c file:///home/circleci/conda/envs/conda-build/conda-bld/ pydynamic
 
 #      # Test package.
 #      - run:
