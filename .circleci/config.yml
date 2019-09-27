@@ -80,10 +80,10 @@ jobs:
       # for use in downstream job.
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory.
-          root: /home/circleci
+          root: /home/circleci/conda
           # Must be relative path from root
           paths:
-            - conda
+            - .
 
       # Run tests! We use pytest's test-runner.
       - run:
