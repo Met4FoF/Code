@@ -9,7 +9,7 @@ workflows:
 #      - build_venv_env
       - build_conda_env
       - deploy_conda_env:
-          context: Conda Cloud Met4FoF
+          context: Anaconda Cloud Met4FoF
           requires:
             - build_conda_env
 #  build_and_test_code:
