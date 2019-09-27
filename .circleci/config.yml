@@ -110,10 +110,9 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:disco
 
-    working_directory: ~/repo
+    working_directory: ~/
 
     steps:
-
       # Install Miniconda.
       - run:
           name: Install Miniconda
@@ -140,7 +139,6 @@ jobs:
             else
                 conda update -q conda
                 conda create -n conda-build conda anaconda-client conda-build
-                source activate conda-build
             fi
 
       - save_cache:
@@ -149,6 +147,22 @@ jobs:
           key: >-
             conda-build-dependencies
 
+      # Build package.
+      - run:
+          name: Build package
+          command: |
+            source activate conda-build
+            conda config --set anaconda_upload no
+            conda-skeleton pypi --extra-specs scipy PyDynamic
+            conda-build pydynamic/
+
+      # Deploy package.
+      - run:
+          name: Deploy package
+          command: |
+            source activate conda-build
+            echo $CONDA_PASS | anaconda login \
+              --username $CONDA_USER
 
 
 #      # Checkout code.
