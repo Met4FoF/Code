@@ -159,10 +159,13 @@ jobs:
           name: Build package
           command: |
             source activate conda-build
+            conda --version
+            conda list
             conda config --set anaconda_upload no
             conda-skeleton pypi --extra-specs scipy PyDynamic
             conda-build pydynamic/ --output
-            conda create -n test_pydynamic -c file:///home/circleci/conda/envs/conda-build/conda-bld/ pydynamic
+            conda create -n test_pydynamic conda
+            conda install --use-local pydynamic
 
 #      # Test package.
 #      - run:
