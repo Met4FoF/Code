@@ -16,11 +16,11 @@ workflows:
   build_environments:
     jobs:
 #      - build_venv_env
-      - build_and_test_conda_env
+#      - build_and_test_conda_env
       - deploy_conda_env:
           context: Anaconda Cloud Met4FoF
-          requires:
-            - build_and_test_conda_env
+#          requires:
+#            - build_and_test_conda_env
 #  test_submodules:
 #    jobs:
 #      - test_PyDynamic
@@ -76,7 +76,8 @@ jobs:
                 conda update -n base -c defaults conda
                 conda env create -f environment.yml
             fi
-            conda env export -n Met4FoF_Code -f Met4FoF_Code-environment.yml
+            conda env export --no-builds -n Met4FoF_Code -f \
+            Met4FoF_Code-environment.yml
 
       - save_cache:
           paths:
