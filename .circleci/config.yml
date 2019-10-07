@@ -140,7 +140,6 @@ jobs:
       - run:
           name: Deploy package
           command: |
-#            source activate
             anaconda -t $CONDA_PASS upload --no-register --user $CONDA_USER \
             /tmp/workspace/Met4FoF_Code-environment.yml
 
