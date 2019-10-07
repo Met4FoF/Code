@@ -77,7 +77,6 @@ jobs:
                 conda env create -f environment.yml
             fi
             conda env export -n Met4FoF_Code -f Met4FoF_Code-environment.yml
-            cat Met4FoF_Code-environment.yml
 
       - save_cache:
           paths:
@@ -98,6 +97,12 @@ jobs:
             --ignore=agentMET4FOF/tests/test_memory_monitor_agent.py \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
+      # Permanently store the built image to test and potentially deploy it.
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./Met4FoF_Code-environment.yml
+
       # Store test results.
       - store_artifacts:
           path: test-reports
@@ -112,8 +117,9 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Checkout code
-      - checkout
+      # Attach workflow workspace to retrieve saved image.
+      - attach_workspace:
+          at: /tmp/workspace
 
 #      # Install Miniconda.
 #      - run:
@@ -136,7 +142,7 @@ jobs:
           command: |
 #            source activate
             anaconda -t $CONDA_PASS upload --no-register --user $CONDA_USER \
-            Met4FoF_Code-environment.yml
+            /tmp/workspace/Met4FoF_Code-environment.yml
 
   build_venv_env:
     docker:
