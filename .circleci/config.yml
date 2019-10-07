@@ -16,9 +16,9 @@ workflows:
   build_environments:
     jobs:
 #      - build_venv_env
-#      - build_conda_env
-      - deploy_conda_env:
-          context: Anaconda Cloud Met4FoF
+      - build_conda_env
+#      - deploy_conda_env:
+#          context: Anaconda Cloud Met4FoF
 #          requires:
 #            - build_conda_env
 #  build_and_test_code:
@@ -74,7 +74,7 @@ jobs:
             if [ -d "/home/circleci/conda/envs/" ]; then
                 conda env update --prune --file environment.yml
             else
-                conda update -q conda
+                conda update -n base -c defaults conda
                 conda env create -f environment.yml
             fi
             source activate Met4FoF_Code
@@ -145,20 +145,6 @@ jobs:
             - /home/circleci/conda/envs/conda-build
           key: >-
             conda-build-dependencies
-
-      # Build package.
-      - run:
-          name: Build package
-          command: |
-            conda config --set anaconda_upload no
-            source activate
-            conda activate conda-build
-            conda-skeleton pypi --extra-specs scipy PyDynamic
-            conda-build pydynamic/ --output
-            conda create -n test_pydynamic conda
-            conda activate test_pydynamic
-            ls -lsa /home/circleci/conda/envs/conda-build/conda-bld/linux-64
-            conda install -c file://$BUILD_PATH pydynamic
 
 #      # Test package.
 #      - run:
