@@ -84,15 +84,15 @@ jobs:
           key: >-
             conda-dependencies-{{ checksum "environment.yml" }}
 
-      # Persist the miniconda installation and environment into the workspace
-      # for use in downstream job.
-      - persist_to_workspace:
-          # Must be an absolute path, or relative path from working_directory.
-          root: /home/circleci/
-          # Must be relative path from root
-          paths:
-            - conda
-
+      # Run tests! We use pytest's test-runner.
+      - run:
+          name: Run tests
+          command: |
+            source activate Met4FoF_Code
+            pytest -v --junitxml=test-reports/PyDynamic.xml \
+            PyDynamic/ > test-reports/PyDynamic.log
+            pytest -v --junitxml=test-reports/agentMET4FOF.xml \
+            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
 #      # Run tests! We use pytest's test-runner.
 #      - run:
 #          name: Run tests
