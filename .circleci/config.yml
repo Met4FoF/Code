@@ -76,6 +76,8 @@ jobs:
                 conda update -n base -c defaults conda
                 conda env create -f environment.yml
             fi
+            conda env export -n Met4FoF_Code -f Met4FoF_Code-environment.yml
+            cat Met4FoF_Code-environment.yml
 
       - save_cache:
           paths:
@@ -110,6 +112,9 @@ jobs:
     working_directory: ~/
 
     steps:
+      # Checkout code
+      - checkout
+
       # Install Miniconda.
       - run:
           name: Install Miniconda
@@ -120,37 +125,16 @@ jobs:
             bash /home/circleci/miniconda.sh -b -p /home/circleci/conda
             echo 'export PATH=/home/circleci/conda/bin:$PATH' >> $BASH_ENV
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - conda-dependencies-{{ checksum "environment.yml" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - conda-dependencies-
-
-      # Create environment.
+      # Install Anaconda client.
       - run:
-          name: Create environment
-          command: |
-            if [ -d "/home/circleci/conda/envs/" ]; then
-                conda env update --prune --file environment.yml
-            else
-                conda update -n base -c defaults conda
-                conda env create -f environment.yml
-            fi
-            conda env export -n Met4FoF_Code -f Met4FoF_Code-environment.yml
-
-      - save_cache:
-          paths:
-            - /home/circleci/conda/envs/
-          key: >-
-            conda-dependencies-{{ checksum "environment.yml" }}
+          name: Install Anaconda client
+          command: conda install anaconda-client
 
       # Deploy package.
       - run:
           name: Deploy package
           command: |
-            source activate conda-build
+            source activate
             anaconda -t $CONDA_PASS upload --no-register --user CONDA_USER \
             Met4FoF_Code-environment.yml
 
