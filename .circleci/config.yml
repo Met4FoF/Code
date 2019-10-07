@@ -135,7 +135,7 @@ jobs:
           name: Deploy package
           command: |
             source activate
-            anaconda -t $CONDA_PASS upload --no-register --user CONDA_USER \
+            anaconda -t $CONDA_PASS upload --no-register --user $CONDA_USER \
             Met4FoF_Code-environment.yml
 
   build_venv_env:
