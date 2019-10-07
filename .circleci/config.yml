@@ -76,8 +76,6 @@ jobs:
                 conda update -n base -c defaults conda
                 conda env create -f environment.yml
             fi
-            conda env export --no-builds -n Met4FoF_Code -f \
-            Met4FoF_Code-environment.yml
 
       - save_cache:
           paths:
@@ -102,7 +100,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - ./Met4FoF_Code-environment.yml
+            - ./environment.yml
 
       # Store test results.
       - store_artifacts:
@@ -130,7 +128,7 @@ jobs:
           name: Deploy package
           command: |
             anaconda -t $CONDA_PASS upload --user $CONDA_USER \
-            /tmp/workspace/Met4FoF_Code-environment.yml
+            /tmp/workspace/environment.yml
 
   build_venv_env:
     docker:
