@@ -7,9 +7,10 @@ version: 2.1
 executors:
   conda-publisher:
     environment:
-      BUILD_PATH: /home/circleci/conda/envs/conda-build/conda-bld/linux-64/pydynamic*.tar.bz2
+      BUILD_PATH: /home/circleci/conda/envs/conda-build/conda-bld/linux-64/
+#      BUILD_PATH: /home/circleci/conda/envs/conda-build/conda-bld/linux-64/pydynamic*.tar.bz2
     docker:
-      - image: circleci/buildpack-deps:disco
+      - image: circleci/python:3
 
 workflows:
   build_environments:
@@ -93,18 +94,9 @@ jobs:
             PyDynamic/ > test-reports/PyDynamic.log
             pytest -v --junitxml=test-reports/agentMET4FOF.xml \
             --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
-#      # Run tests! We use pytest's test-runner.
-#      - run:
-#          name: Run tests
-#          command: |
-#            source activate Met4FoF_Code
-#            pytest -v --junitxml=test-reports/PyDynamic.xml \
-#            PyDynamic/ > test-reports/PyDynamic.log
-#            pytest -v --junitxml=test-reports/agentMET4FOF.xml \
-#            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
-#            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
-#            --ignore=agentMET4FOF/tests/test_memory_monitor_agent.py \
-#            agentMET4FOF/ > test-reports/agentMET4FOF.log
+            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
+            --ignore=agentMET4FOF/tests/test_memory_monitor_agent.py \
+            agentMET4FOF/ > test-reports/agentMET4FOF.log
 
       # Store test results.
       - store_artifacts:
@@ -166,6 +158,7 @@ jobs:
             conda-build pydynamic/ --output
             conda create -n test_pydynamic conda
             conda activate test_pydynamic
+            ls -lsa /home/circleci/conda/envs/conda-build/conda-bld/linux-64
             conda install -c file://$BUILD_PATH pydynamic
 
 #      # Test package.
