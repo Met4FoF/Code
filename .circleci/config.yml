@@ -76,11 +76,10 @@ jobs:
                 conda update -n base -c defaults conda
                 conda env create -f environment.yml
             fi
-            source activate Met4FoF_Code
 
       - save_cache:
           paths:
-            - /home/circleci/conda/envs
+            - /home/circleci/conda/envs/
           key: >-
             conda-dependencies-{{ checksum "environment.yml" }}
 
@@ -125,25 +124,27 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - conda-build-dependencies
+            - conda-dependencies-{{ checksum "environment.yml" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - conda-dependencies-
 
       # Create environment.
       - run:
           name: Create environment
           command: |
-            conda update -n base -c defaults conda
-            if [ -d "/home/circleci/conda/envs/conda-build" ]; then
-                source activate conda-build
-                conda update -q conda anaconda-client conda-build
+            if [ -d "/home/circleci/conda/envs/" ]; then
+                conda env update --prune --file environment.yml
             else
-                conda create -n conda-build conda anaconda-client conda-build
+                conda update -n base -c defaults conda
+                conda env create -f environment.yml
             fi
+            conda env export -n Met4FoF_Code -f Met4FoF_Code-environment.yml
 
       - save_cache:
           paths:
-            - /home/circleci/conda/envs/conda-build
+            - /home/circleci/conda/envs/
           key: >-
-            conda-build-dependencies
+            conda-dependencies-{{ checksum "environment.yml" }}
 
       # Deploy package.
       - run:
@@ -151,7 +152,7 @@ jobs:
           command: |
             source activate conda-build
             anaconda -t $CONDA_PASS upload --no-register --user CONDA_USER \
-            $BUILD_PATH
+            Met4FoF_Code-environment.yml
 
   build_venv_env:
     docker:
