@@ -137,7 +137,6 @@ jobs:
                 source activate conda-build
                 conda update -q conda anaconda-client conda-build
             else
-                conda update -q conda
                 conda create -n conda-build conda anaconda-client conda-build
             fi
 
