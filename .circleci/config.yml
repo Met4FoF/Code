@@ -127,7 +127,7 @@ jobs:
       - run:
           name: Deploy package
           command: |
-            anaconda -t $CONDA_PASS upload --user $CONDA_USER \
+            anaconda -t $CONDA_PASS upload --no-register --user $CONDA_USER \
             /tmp/workspace/environment.yml
 
   build_and_test_venv_env:
