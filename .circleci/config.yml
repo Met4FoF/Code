@@ -10,7 +10,7 @@ executors:
       - image: circleci/python:3
   conda-publisher:
     docker:
-      - image: circleci/buildpack-deps:disco
+      - image: continuumio/miniconda3
 
 workflows:
   build_environments:
@@ -115,15 +115,15 @@ jobs:
       # Checkout code
       - checkout
 
-      # Install Miniconda.
-      - run:
-          name: Install Miniconda
-          command: |
-            wget "https://repo.anaconda.com/miniconda/\
-            Miniconda3-latest-Linux-x86_64.sh" -O /home/circleci/miniconda.sh
-            mkdir -p /home/circleci/.conda
-            bash /home/circleci/miniconda.sh -b -p /home/circleci/conda
-            echo 'export PATH=/home/circleci/conda/bin:$PATH' >> $BASH_ENV
+#      # Install Miniconda.
+#      - run:
+#          name: Install Miniconda
+#          command: |
+#            wget "https://repo.anaconda.com/miniconda/\
+#            Miniconda3-latest-Linux-x86_64.sh" -O /home/circleci/miniconda.sh
+#            mkdir -p /home/circleci/.conda
+#            bash /home/circleci/miniconda.sh -b -p /home/circleci/conda
+#            echo 'export PATH=/home/circleci/conda/bin:$PATH' >> $BASH_ENV
 
       # Install Anaconda client.
       - run:
@@ -134,7 +134,7 @@ jobs:
       - run:
           name: Deploy package
           command: |
-            source activate
+#            source activate
             anaconda -t $CONDA_PASS upload --no-register --user $CONDA_USER \
             Met4FoF_Code-environment.yml
 
