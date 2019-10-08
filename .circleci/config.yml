@@ -8,19 +8,12 @@ executors:
   tester:
     docker:
       - image: circleci/python:3
-  conda-publisher:
-    docker:
-      - image: continuumio/miniconda3
 
 workflows:
-  build_environments:
+  build_and_test_virtual_environments:
     jobs:
-      - build_and_test_venv_env
       - build_and_test_conda_env
-      - deploy_conda_env:
-          context: Anaconda Cloud Met4FoF
-          requires:
-            - build_and_test_conda_env
+      - build_and_test_venv_env
   test_submodules:
     jobs:
       - test_PyDynamic
@@ -96,12 +89,6 @@ jobs:
             --ignore=agentMET4FOF/tests/test_memory_monitor_agent.py \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
-      # Permanently store the built image to test and potentially deploy it.
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./environment.yml
-
       # Store test results.
       - store_artifacts:
           path: test-reports
@@ -109,26 +96,6 @@ jobs:
 
       - store_test_results:
           path: test-reports
-
-  deploy_conda_env:
-    executor: conda-publisher
-
-    steps:
-      # Attach workflow workspace to retrieve saved image.
-      - attach_workspace:
-          at: /tmp/workspace
-
-      # Install Anaconda client.
-      - run:
-          name: Install Anaconda client
-          command: conda install anaconda-client
-
-      # Deploy package.
-      - run:
-          name: Deploy package
-          command: |
-            anaconda -t $CONDA_PASS upload --no-register --user $CONDA_USER \
-            /tmp/workspace/environment.yml
 
   build_and_test_venv_env:
     docker:
