@@ -85,6 +85,8 @@ jobs:
             PyDynamic/ > test-reports/PyDynamic.log
             pytest -v --junitxml=test-reports/agentMET4FOF.xml \
             --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
+            --deselect \
+            agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
       #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
@@ -150,6 +152,8 @@ jobs:
             PyDynamic/ > test-reports/PyDynamic.log
             pytest -v --junitxml=test-reports/agentMET4FOF.xml \
             --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
+            --deselect \
+            agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
       #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
@@ -270,6 +274,8 @@ jobs:
             pytest -v --junitxml=test-reports/pytest.xml \
             --cov-config=.coveragerc --cov=agentMET4FOF/ \
             --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
+            --deselect \
+            agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
       #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
