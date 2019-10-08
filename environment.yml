@@ -1,5 +1,6 @@
 name: Met4FoF_Code
 channels:
+    - defaults
     - conda-forge
 dependencies:
     - python >= 3
