@@ -89,8 +89,6 @@ jobs:
             agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
             --deselect \
             agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda
-            --deselect \
-            agentMET4FOF/tests/test_memory_monitor_agent.py::test_simpleAgent \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
       #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
