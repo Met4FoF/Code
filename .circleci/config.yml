@@ -85,9 +85,9 @@ jobs:
             PyDynamic/ > test-reports/PyDynamic.log
             pytest -v --junitxml=test-reports/agentMET4FOF.xml \
             --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
-#            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
+      #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
       # Store test results.
       - store_artifacts:
           path: test-reports
@@ -150,9 +150,9 @@ jobs:
             PyDynamic/ > test-reports/PyDynamic.log
             pytest -v --junitxml=test-reports/agentMET4FOF.xml \
             --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
-#            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
+      #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
       # Store test results.
       - store_artifacts:
           path: test-reports
@@ -270,9 +270,9 @@ jobs:
             pytest -v --junitxml=test-reports/pytest.xml \
             --cov-config=.coveragerc --cov=agentMET4FOF/ \
             --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
-#            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
+      #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
       # Store test results.
       - store_artifacts:
          path: test-reports
