@@ -7,7 +7,7 @@ version: 2.1
 executors:
   tester:
     docker:
-      - image: circleci/python:3
+      - image: circleci/python:3.7
 
 workflows:
   build_and_test_virtual_environments:
@@ -99,8 +99,7 @@ jobs:
           path: test-reports
 
   build_and_test_venv_env:
-    docker:
-      - image: circleci/python:3
+    executor: tester
 
     working_directory: ~/repo
 
@@ -134,7 +133,7 @@ jobs:
           name: Install dependencies
           command: |
             python3 -m venv venv
-            . venv/bin/activate
+            source venv/bin/activate
             pip install -r requirements.txt
             pip install pytest
 
@@ -149,7 +148,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            . venv/bin/activate
+            source venv/bin/activate
             pytest -v --junitxml=test-reports/pytest.xml \
             --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
             --deselect \
@@ -196,7 +195,7 @@ jobs:
           name: Install dependencies
           command: |
             python3 -m venv venv
-            . venv/bin/activate
+            source venv/bin/activate
             pip install -r PyDynamic/requirements.txt
             pip install pytest pytest-cov
 
@@ -210,7 +209,7 @@ jobs:
       - run:
           name: Run PyDynamic tests
           command: |
-            . venv/bin/activate
+            source venv/bin/activate
             pytest -v --junitxml=test-reports/pytest.xml \
             --cov-config=PyDynamic/.coveragerc --cov=PyDynamic/ \
             PyDynamic/ > test-reports/PyDynamic.log
@@ -254,7 +253,7 @@ jobs:
          name: Install dependencies
          command: |
            python3 -m venv venv
-           . venv/bin/activate
+           source venv/bin/activate
            pip install -r agentMET4FOF/requirements.txt
            pip install pytest pytest-cov
 
@@ -268,7 +267,7 @@ jobs:
       - run:
           name: Run agentMET4FOF tests
           command: |
-            . venv/bin/activate
+            source venv/bin/activate
             pytest -v --junitxml=test-reports/pytest.xml \
             --cov-config=.coveragerc --cov=agentMET4FOF/ \
             --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
@@ -276,7 +275,6 @@ jobs:
             agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
-      #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
       # Store test results.
       - store_artifacts:
          path: test-reports
