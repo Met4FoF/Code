@@ -99,8 +99,7 @@ jobs:
           path: test-reports
 
   build_and_test_venv_env:
-    docker:
-      - image: circleci/python:3
+    executor: tester
 
     working_directory: ~/repo
 
