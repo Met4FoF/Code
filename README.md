@@ -1,4 +1,6 @@
 # Met4FoF Code
+
+[![DOI](https://zenodo.org/badge/138772091.svg)](https://zenodo.org/badge/latestdoi/138772091)
 [![CircleCI](https://circleci.com/gh/Met4FoF/Code.svg?style=shield&circle-token=3566560a243f21fa06fafbe49e92ac2a6d3fc250)](https://circleci.com/gh/Met4FoF/Code)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0761272aabbc4010bba5921015ab084f)](https://www.codacy.com/app/PTB-PSt1/Code?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Met4FoF/Code&amp;utm_campaign=Badge_Grade)
 
@@ -34,11 +36,11 @@ If you have not locally changed any of the files in the folders you will simply 
 
 ## Working on the code
 
-Working on existing submodules' code is just the same as on a base respository. You switch to the submodule's folder inside your repository
+Working on existing submodules' code is just the same as on a base repository. You switch to the submodule's folder inside your repository
 
 `$ cd ~/your/local/folder/Met4FoF_Code/submodule_folder`
 
-and start editing, committing and pushing in the submodule as if you were in a separate Git respository. Of course pushing to a remote repository on GitHub requires first to [setup the remote host in your local copy](https://help.github.com/en/articles/adding-a-remote) and the according access rights for the submodule's remote repository. More on this topic you can find in the [Pro Git book](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
+and start editing, committing and pushing in the submodule as if you were in a separate Git repository. Of course pushing to a remote repository on GitHub requires first to [setup the remote host in your local copy](https://help.github.com/en/articles/adding-a-remote) and the according access rights for the submodule's remote repository. More on this topic you can find in the [Pro Git book](https://git-scm.com/book/en/v2/Git-Tools-Submodules).
 
 ## Coming soon
 
