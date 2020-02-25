@@ -56,6 +56,7 @@ jobs:
           keys:
             # Specify the unique identifier for the cache.
             - conda-dependencies-{{ checksum "environment.yml" }}
+                {{ checksum "requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - conda-dependencies-
 
@@ -75,6 +76,7 @@ jobs:
             - /home/circleci/conda/envs/
           key: >-
             conda-dependencies-{{ checksum "environment.yml" }}
+              {{ checksum "requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run:
@@ -123,8 +125,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - venv-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-              {{ checksum "agentMET4FOF/requirements.txt" }}
+            - venv-dependencies-{{ checksum "requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - venv-dependencies-
 
@@ -141,8 +142,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            venv-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-            {{ checksum "agentMET4FOF/requirements.txt" }}
+            venv-dependencies-{{ checksum "requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run:
