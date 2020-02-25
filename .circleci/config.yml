@@ -91,7 +91,6 @@ jobs:
             agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda \
             > test-reports/pytest.log
 
-      #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
       # Store test results.
       - store_artifacts:
           path: test-reports
