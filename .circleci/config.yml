@@ -23,7 +23,7 @@ workflows:
       - test_agentMET4FOF
   release:
     jobs:
-      - semantic-release
+      - semantic-release:
           # Create 'release' job to create a release and publish it on GitHub and
           # Zenodo.
           requires:
