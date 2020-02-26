@@ -17,12 +17,8 @@ workflows:
     jobs:
       - build_and_test_conda_env
       - build_and_test_venv_env
-  test_submodules:
-    jobs:
       - test_PyDynamic
       - test_agentMET4FOF
-  release:
-    jobs:
       - semantic-release:
           # Create 'release' job to create a release and publish it on GitHub and
           # Zenodo.
