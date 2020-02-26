@@ -27,14 +27,14 @@ workflows:
           # Create 'release' job to create a release and publish it on GitHub and
           # Zenodo.
           requires:
-            - build_and_test_conda_env
-            - build_and_test_venv_env
-            - test_PyDynamic
-            - test_agentMET4FOF
+              - build_and_test_conda_env
+              - build_and_test_venv_env
+              - test_PyDynamic
+              - test_agentMET4FOF
           filters:
-            branches:
-              # This assures the job only being triggered on branch master.
-              only: /master/
+              branches:
+                # This assures the job only being triggered on branch master.
+                only: /master/
 
 jobs:
   build_and_test_conda_env:
