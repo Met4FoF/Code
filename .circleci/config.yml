@@ -8,16 +8,29 @@ executors:
   tester:
     docker:
       - image: circleci/python:3.7
+  publisher:
+    docker:
+      - image: circleci/python:3.8
 
 workflows:
   build_and_test_virtual_environments:
     jobs:
       - build_and_test_conda_env
       - build_and_test_venv_env
-  test_submodules:
-    jobs:
       - test_PyDynamic
       - test_agentMET4FOF
+      - semantic-release:
+          # Create 'release' job to create a release and publish it on GitHub and
+          # Zenodo.
+          requires:
+              - build_and_test_conda_env
+              - build_and_test_venv_env
+              - test_PyDynamic
+              - test_agentMET4FOF
+          filters:
+              branches:
+                # This assures the job only being triggered on branch master.
+                only: /master/
 
 jobs:
   build_and_test_conda_env:
@@ -56,6 +69,7 @@ jobs:
           keys:
             # Specify the unique identifier for the cache.
             - conda-dependencies-{{ checksum "environment.yml" }}
+                {{ checksum "requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - conda-dependencies-
 
@@ -63,10 +77,10 @@ jobs:
       - run:
           name: Create environment
           command: |
+            conda update -n base -c defaults conda
             if [ -d "/home/circleci/conda/envs/" ]; then
                 conda env update --prune --file environment.yml
             else
-                conda update -n base -c defaults conda
                 conda env create -f environment.yml
             fi
 
@@ -75,6 +89,7 @@ jobs:
             - /home/circleci/conda/envs/
           key: >-
             conda-dependencies-{{ checksum "environment.yml" }}
+              {{ checksum "requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run:
@@ -89,7 +104,6 @@ jobs:
             agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda \
             > test-reports/pytest.log
 
-      #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
       # Store test results.
       - store_artifacts:
           path: test-reports
@@ -123,8 +137,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - venv-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-              {{ checksum "agentMET4FOF/requirements.txt" }}
+            - venv-dependencies-{{ checksum "requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - venv-dependencies-
 
@@ -134,6 +147,7 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
+            pip install --upgrade pip
             pip install -r requirements.txt
             pip install pytest
 
@@ -141,8 +155,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            venv-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-            {{ checksum "agentMET4FOF/requirements.txt" }}
+            venv-dependencies-{{ checksum "requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run:
@@ -196,6 +209,7 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
+            pip install --upgrade pip
             pip install -r PyDynamic/requirements.txt
             pip install pytest pytest-cov
 
@@ -254,6 +268,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
+           pip install --upgrade pip
            pip install -r agentMET4FOF/requirements.txt
            pip install pytest pytest-cov
 
@@ -282,3 +297,40 @@ jobs:
 
       - store_test_results:
          path: test-reports
+
+  semantic-release:
+    executor: publisher
+
+    working_directory: ~/repo
+
+    steps:
+      # Checkout code
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - publisher-dependencies
+
+      # Install dependencies.
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv venv
+            source venv/bin/activate
+            pip install --upgrade pip
+            pip install python-semantic-release
+
+      - save_cache:
+          paths:
+            - /home/circleci/conda/envs/
+          key: >-
+            publisher-dependencies
+
+      # Publish it!
+      - run:
+          name: Run semantic-release publish
+          command: |
+            source venv/bin/activate
+            semantic-release publish
