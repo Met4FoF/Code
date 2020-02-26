@@ -324,7 +324,7 @@ jobs:
 
       - save_cache:
           paths:
-            - /home/circleci/conda/envs/
+            - ./venv
           key: >-
             publisher-dependencies
 
