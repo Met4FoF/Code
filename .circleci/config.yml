@@ -199,7 +199,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
+            - v1-dependencies-{{ checksum "PyDynamic/requirements/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - v1-dependencies-
 
@@ -210,14 +210,14 @@ jobs:
             python3 -m venv venv
             source venv/bin/activate
             pip install --upgrade pip
-            pip install -r PyDynamic/requirements.txt
-            pip install pytest pytest-cov
+            pip install -r PyDynamic/requirements/requirements.txt
+            pip install -r PyDynamic/requirements/dev-requirements.txt
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
+            v1-dependencies-{{ checksum "PyDynamic/requirements/requirements.txt" }}
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
