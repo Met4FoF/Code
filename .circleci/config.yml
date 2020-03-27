@@ -78,7 +78,6 @@ jobs:
           name: Create environment
           command: |
             conda update -n base -c defaults conda
-            conda install numpy
             if [ -d "/home/circleci/conda/envs/" ]; then
                 conda env update --prune --file environment.yml
             else
