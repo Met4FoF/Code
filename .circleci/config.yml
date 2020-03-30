@@ -98,6 +98,7 @@ jobs:
             source activate Met4FoF_Code
             pytest -v --junitxml=test-reports/pytest.xml \
             --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
+            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
             --deselect \
             agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
             --deselect \
