@@ -311,7 +311,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - publisher-dependencies
+            - publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Install dependencies.
       - run:
@@ -320,13 +320,13 @@ jobs:
             python3 -m venv venv
             source venv/bin/activate
             pip install --upgrade pip
-            pip install python-semantic-release
+            pip install -r dev-requirements.txt
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            publisher-dependencies
+            publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Publish it!
       - run:
