@@ -13,8 +13,9 @@
 # In[4]:
 
 
-import numpy as np
 import pickle
+
+import numpy as np
 
 data_path = "dataset/ZEMA_Hydraulic/"
 

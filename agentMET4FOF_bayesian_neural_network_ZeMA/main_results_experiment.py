@@ -1,8 +1,11 @@
-from agentMET4FOF.agentMET4FOF.agents import AgentNetwork
-import numpy as np
-import matplotlib.pyplot as plt
 import os
+
+import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
+
+from agentMET4FOF.agentMET4FOF.agents import AgentNetwork
+
 
 #investigate uncertainty & accuracy relationship
 def get_p_accuracy_certainty(y_res,uncertainty_threshold=10):

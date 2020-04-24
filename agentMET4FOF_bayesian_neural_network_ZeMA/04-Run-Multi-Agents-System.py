@@ -9,22 +9,15 @@
 # In[1]:
 
 
-import osbrain
-from osbrain.agent import run_agent
-from osbrain.agent import Agent
-
-import pandas as pd
-from datetime import datetime
-
+import pickle
+import random
 import time
 
-import pickle
 import numpy as np
-import random
-from copy import copy
+import osbrain
+from osbrain.agent import run_agent
 
-from agentMET4FOF_bayesian_neural_network_ZeMA.Agent_models.agents import Sensor, Aggregator, Predictor, \
-	DecisionMaker, SensorNetwork
+from agentMET4FOF_bayesian_neural_network_ZeMA.Agent_models.agents import SensorNetwork
 
 # TYPES OF AGENT
 # 0 - SENSOR NETWORK

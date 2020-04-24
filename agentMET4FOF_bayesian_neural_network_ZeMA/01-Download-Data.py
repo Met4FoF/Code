@@ -14,7 +14,11 @@ data_url='https://zenodo.org/record/1323611/files/data.zip?download=1'
 # In[14]:
 
 
-import os, requests, zipfile, io
+import io
+import os
+import requests
+import zipfile
+
 
 def download_and_extract(url, destination, force=False):
     response = requests.get(url)

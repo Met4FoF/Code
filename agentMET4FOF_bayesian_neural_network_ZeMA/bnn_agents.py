@@ -1,31 +1,16 @@
-from agentMET4FOF.agentMET4FOF.agents import AgentMET4FOF
-from agentMET4FOF.examples.ZEMA_EMC.zema_feature_extract import FFT_BFC, Pearson_FeatureSelection
-
 import numpy as np
-import time
-
-from matplotlib import pyplot as plt
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn import linear_model
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import train_test_split
-
-from sklearn.metrics import f1_score
-from sklearn.metrics import confusion_matrix
-
-from scipy.stats import skew
-from scipy.stats import kurtosis
-from scipy.fftpack import fft
-
 import pandas as pd
-
 import torch
+from matplotlib import pyplot as plt
+from scipy.fftpack import fft
+from scipy.stats import kurtosis, skew
+from sklearn.metrics import confusion_matrix, f1_score
+from sklearn.preprocessing import RobustScaler
 from torch.autograd import Variable
-from sklearn.preprocessing import StandardScaler, MinMaxScaler,RobustScaler
 
-from agentMET4FOF_bayesian_neural_network_ZeMA.ML_models.BBBlayers import BBBLinearFactorial
-from agentMET4FOF_bayesian_neural_network_ZeMA.ML_models.BBBlayers import GaussianVariationalInference
+from agentMET4FOF.agentMET4FOF.agents import AgentMET4FOF
+from agentMET4FOF_bayesian_neural_network_ZeMA.ML_models.BBBlayers import \
+    BBBLinearFactorial, GaussianVariationalInference
 
 
 class StatsFeaturesAgent(AgentMET4FOF):

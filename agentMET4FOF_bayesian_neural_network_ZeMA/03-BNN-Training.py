@@ -10,30 +10,16 @@
 # In[1]:
 
 
-import torch
 import pickle
-from sklearn.model_selection import KFold
-from sklearn.preprocessing import StandardScaler, MinMaxScaler,RobustScaler
 import random
-from torch.autograd import Variable
+from copy import copy
+
 import numpy as np
-from sklearn.metrics import confusion_matrix
-from sklearn.utils.multiclass import unique_labels
-import matplotlib.pyplot as plt
-import pandas as pd
-from copy import copy 
-from ML_models.BBBlayers import BBBLinearFactorial
-from ML_models.BBBlayers import GaussianVariationalInference
-from ML_models.BNN_Wrapper import BNN_Wrapper
-from ML_models.BNN_Wrapper import BNN_Full
-import seaborn as sns
-
-from scipy.stats import skew
-from scipy.stats import kurtosis 
+import torch
+from ML_models.BNN_Wrapper import BNN_Full, BNN_Wrapper
 from scipy.stats import sem
-from scipy.fftpack import fft
-from sklearn.metrics import f1_score
-
+from sklearn.model_selection import KFold
+from torch.autograd import Variable
 
 # ## Load data and label outputs
 

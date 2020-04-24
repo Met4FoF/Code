@@ -15,21 +15,17 @@ portNumber = 8054
 # In[2]:
 
 
-import osbrain
-from osbrain.agent import run_agent
-from osbrain import NSProxy
-
 # -*- coding: utf-8 -*-
 import dash
 import dash_core_components as dcc
-import dash_html_components as html
 import dash_cytoscape as cyto
 import dash_daq as daq
-import plotly.graph_objs as go
+import dash_html_components as html
 import networkx as nx
 import numpy as np
+import plotly.graph_objs as go
+from osbrain import NSProxy
 
-import pickle
 external_css = ["https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css",
                 "https://fonts.googleapis.com/css?family=Raleway:400,400i,700,700i",
                 "https://fonts.googleapis.com/css?family=Product+Sans:400,400i,700,700i"]

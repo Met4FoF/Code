@@ -1,19 +1,20 @@
-from agentMET4FOF.agentMET4FOF.agents import AgentMET4FOF, AgentNetwork, MonitorAgent
-from agentMET4FOF.agentMET4FOF.streams import SineGenerator
-
-#Here we define a new agent SineGeneratorAgent, and override the functions : init_parameters & agent_loop
-#init_parameters() is used to setup the data stream and necessary parameters
-#agent_loop() is an infinite loop, and will read from the stream continuously,
-#then it sends the data to its output channel via send_output
-#Each agent has internal current_state which can be used as a switch by the AgentNetwork
-import torch
-import numpy as np
 import matplotlib.pyplot as plt
-
-from sklearn import svm, datasets
-from sklearn.model_selection import train_test_split
+import numpy as np
+# Here we define a new agent SineGeneratorAgent, and override the functions :
+# init_parameters & agent_loop
+# init_parameters() is used to setup the data stream and necessary parameters
+# agent_loop() is an infinite loop, and will read from the stream continuously,
+# then it sends the data to its output channel via send_output
+# Each agent has internal current_state which can be used as a switch by the
+# AgentNetwork
+import torch
+from sklearn import datasets, svm
 from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
 from sklearn.utils.multiclass import unique_labels
+
+from agentMET4FOF.agentMET4FOF.agents import AgentMET4FOF, AgentNetwork, MonitorAgent
+
 
 class Cuda_Agent(AgentMET4FOF):
     def init_parameters(self):

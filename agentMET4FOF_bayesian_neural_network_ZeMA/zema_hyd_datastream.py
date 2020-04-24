@@ -1,12 +1,13 @@
+import os
+import pickle
 import sys
+import zipfile
+
 import numpy as np
+import requests
 
 from agentMET4FOF.agentMET4FOF.streams import DataStreamMET4FOF
 
-import os
-import requests
-import zipfile
-import pickle
 
 class ZEMA_Hyd_DataStream(DataStreamMET4FOF):
     url = ""

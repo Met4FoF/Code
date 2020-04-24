@@ -1,9 +1,8 @@
-import numpy as np
 import matplotlib.pyplot as plt
-
-from sklearn import svm, datasets
-from sklearn.model_selection import train_test_split
+import numpy as np
+from sklearn import datasets, svm
 from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
 from sklearn.utils.multiclass import unique_labels
 
 # import some data to play with

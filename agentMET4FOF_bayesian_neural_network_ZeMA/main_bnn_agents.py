@@ -1,14 +1,12 @@
-from agentMET4FOF.agentMET4FOF.agents import AgentNetwork,AgentMET4FOF, MonitorAgent, \
-    DataStreamAgent
+import numpy as np
+import torch.multiprocessing as mp
+
+from agentMET4FOF.agentMET4FOF.agents import AgentNetwork, DataStreamAgent, MonitorAgent
+from agentMET4FOF.examples.ZEMA_EMC.zema_agents import TrainTestSplitAgent
+from agentMET4FOF_bayesian_neural_network_ZeMA.bnn_agents import BNN_Agent, BNN_Model, \
+    EvaluatorAgent, StatsFeaturesAgent
 from agentMET4FOF_bayesian_neural_network_ZeMA.zema_hyd_datastream import \
     ZEMA_Hyd_DataStream
-from agentMET4FOF_bayesian_neural_network_ZeMA.bnn_agents import StatsFeaturesAgent, \
-    BNN_Agent, BNN_Model, EvaluatorAgent
-from agentMET4FOF.examples.ZEMA_EMC.zema_agents import TrainTestSplitAgent, \
-    FFT_BFCAgent, Pearson_FeatureSelectionAgent, LDA_Agent, Regression_Agent
-
-import torch.multiprocessing as mp
-import numpy as np
 
 np.random.seed(100)
 
