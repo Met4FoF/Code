@@ -1,15 +1,15 @@
-import torch
 import math
-import numpy as np
-import torch.nn as nn
 
-import torch.multiprocessing as mp
+import numpy as np
+import torch
+import torch.nn as nn
 
 
 class Distribution(object):
     """
     Base class for torch-based probability distributions.
     """
+
     def pdf(self, x):
         raise NotImplementedError
 
@@ -39,8 +39,10 @@ class Normal(Distribution):
         super(Normal, self).__init__()
 
     def logpdf(self, x):
-        c = - float(0.5 * math.log(2 * math.pi))
-        return c - 0.5 * self.logvar - (x - self.mu).pow(2) / (2 * torch.exp(self.logvar))
+        c = -float(0.5 * math.log(2 * math.pi))
+        return (
+            c - 0.5 * self.logvar - (x - self.mu).pow(2) / (2 * torch.exp(self.logvar))
+        )
 
     def pdf(self, x):
         return torch.exp(self.logpdf(x))
@@ -54,7 +56,7 @@ class Normal(Distribution):
         return self.mu + torch.exp(0.5 * self.logvar) * eps
 
     def entropy(self):
-        return 0.5 * math.log(2. * math.pi * math.e) + 0.5 * self.logvar
+        return 0.5 * math.log(2.0 * math.pi * math.e) + 0.5 * self.logvar
 
 
 class FixedNormal(Distribution):
@@ -65,8 +67,10 @@ class FixedNormal(Distribution):
         super(FixedNormal, self).__init__()
 
     def logpdf(self, x):
-        c = - float(0.5 * math.log(2 * math.pi))
-        return c - 0.5 * self.logvar - (x - self.mu).pow(2) / (2 * math.exp(self.logvar))
+        c = -float(0.5 * math.log(2 * math.pi))
+        return (
+            c - 0.5 * self.logvar - (x - self.mu).pow(2) / (2 * math.exp(self.logvar))
+        )
 
 
 class Normalout(Distribution):
@@ -79,7 +83,7 @@ class Normalout(Distribution):
         super(Normalout, self).__init__()
 
     def logpdf(self, x):
-        c = - float(0.5 * math.log(2 * math.pi))
+        c = -float(0.5 * math.log(2 * math.pi))
         return c - 0.5 * self.std - (x - self.mu).pow(2) / (2 * torch.exp(self.std))
 
     def pdf(self, x):
@@ -94,7 +98,7 @@ class Normalout(Distribution):
         return self.mu + torch.exp(0.5 * self.std) * eps
 
     def entropy(self):
-        return 0.5 * math.log(2. * math.pi * math.e) + 0.5 * self.std
+        return 0.5 * math.log(2.0 * math.pi * math.e) + 0.5 * self.std
 
 
 class FixedMixtureNormal(nn.Module):
@@ -103,16 +107,22 @@ class FixedMixtureNormal(nn.Module):
         super(FixedMixtureNormal, self).__init__()
         # Ensure convex combination
         assert sum(pi) - 1 < 0.0001
-        self.mu = nn.Parameter(torch.from_numpy(np.array(mu)).float(), requires_grad=False)
-        self.logvar = nn.Parameter(torch.from_numpy(np.array(logvar)).float(), requires_grad=False)
-        self.pi = nn.Parameter(torch.from_numpy(np.array(pi)).float(), requires_grad=False)
+        self.mu = nn.Parameter(
+            torch.from_numpy(np.array(mu)).float(), requires_grad=False
+        )
+        self.logvar = nn.Parameter(
+            torch.from_numpy(np.array(logvar)).float(), requires_grad=False
+        )
+        self.pi = nn.Parameter(
+            torch.from_numpy(np.array(pi)).float(), requires_grad=False
+        )
 
     def _component_logpdf(self, x):
         ndim = len(x.size())
         shape_expand = ndim * (None,)
         x = x.unsqueeze(-1)
 
-        c = - float(0.5 * math.log(2 * math.pi))
+        c = -float(0.5 * math.log(2 * math.pi))
         mu = self.mu[shape_expand]
         logvar = self.logvar[shape_expand]
         pi = self.pi[shape_expand]

@@ -1,16 +1,18 @@
 import math
+
 import torch
+import torch.nn.functional as F
 from torch import nn
 from torch.nn import Parameter
-import torch.nn.functional as F
-from .BBBdistributions import Normal, Normalout, distribution_selector
 from torch.nn.modules.utils import _pair
+
+from .BBBdistributions import distribution_selector, Normal, Normalout
 
 USE_CUDA = False
 cuda = USE_CUDA
 
-class FlattenLayer(nn.Module):
 
+class FlattenLayer(nn.Module):
     def __init__(self, num_features):
         super(FlattenLayer, self).__init__()
         self.num_features = num_features
@@ -26,13 +28,25 @@ class _ConvNd(nn.Module):
     in the layer.
     """
 
-    def __init__(self, in_channels, out_channels, kernel_size, stride,
-                 padding, dilation, output_padding, groups, p_logvar_init=-3, p_pi=1.0, q_logvar_init=-5):
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        kernel_size,
+        stride,
+        padding,
+        dilation,
+        output_padding,
+        groups,
+        p_logvar_init=-3,
+        p_pi=1.0,
+        q_logvar_init=-5,
+    ):
         super(_ConvNd, self).__init__()
         if in_channels % groups != 0:
-            raise ValueError('in_channels must be divisible by groups')
+            raise ValueError("in_channels must be divisible by groups")
         if out_channels % groups != 0:
-            raise ValueError('out_channels must be divisible by groups')
+            raise ValueError("out_channels must be divisible by groups")
 
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -48,16 +62,24 @@ class _ConvNd(nn.Module):
         self.q_logvar_init = q_logvar_init
 
         # approximate posterior weights...
-        self.qw_mean = Parameter(torch.Tensor(out_channels, in_channels // groups, kernel_size))
-        self.qw_logvar = Parameter(torch.Tensor(out_channels, in_channels // groups, kernel_size))
+        self.qw_mean = Parameter(
+            torch.Tensor(out_channels, in_channels // groups, kernel_size)
+        )
+        self.qw_logvar = Parameter(
+            torch.Tensor(out_channels, in_channels // groups, kernel_size)
+        )
 
         # optionally add bias
         # self.qb_mean = Parameter(torch.Tensor(out_channels))
         # self.qb_logvar = Parameter(torch.Tensor(out_channels))
 
         # ...and output...
-        self.conv_qw_mean = Parameter(torch.Tensor(out_channels, in_channels // groups, kernel_size))
-        self.conv_qw_std = Parameter(torch.Tensor(out_channels, in_channels // groups, kernel_size))
+        self.conv_qw_mean = Parameter(
+            torch.Tensor(out_channels, in_channels // groups, kernel_size)
+        )
+        self.conv_qw_std = Parameter(
+            torch.Tensor(out_channels, in_channels // groups, kernel_size)
+        )
 
         # ...as normal distributions
         self.qw = Normal(mu=self.qw_mean, logvar=self.qw_logvar)
@@ -80,7 +102,7 @@ class _ConvNd(nn.Module):
         # initialise (learnable) approximate posterior parameters
         n = self.in_channels
         n *= self.kernel_size
-        stdv = 1. / math.sqrt(n)
+        stdv = 1.0 / math.sqrt(n)
         self.qw_mean.data.uniform_(-stdv, stdv)
         self.qw_logvar.data.uniform_(-stdv, stdv).add_(self.q_logvar_init)
 
@@ -92,30 +114,50 @@ class _ConvNd(nn.Module):
         self.log_alpha.data.uniform_(-stdv, stdv)
 
     def extra_repr(self):
-        s = ('{in_channels}, {out_channels}, kernel_size={kernel_size}'
-             ', stride={stride}')
+        s = (
+            "{in_channels}, {out_channels}, kernel_size={kernel_size}"
+            ", stride={stride}"
+        )
         if self.padding != (0,) * len(self.padding):
-            s += ', padding={padding}'
+            s += ", padding={padding}"
         if self.dilation != (1,) * len(self.dilation):
-            s += ', dilation={dilation}'
+            s += ", dilation={dilation}"
         if self.output_padding != (0,) * len(self.output_padding):
-            s += ', output_padding={output_padding}'
+            s += ", output_padding={output_padding}"
         if self.groups != 1:
-            s += ', groups={groups}'
+            s += ", groups={groups}"
         if self.bias is None:
-            s += ', bias=False'
+            s += ", bias=False"
         return s.format(**self.__dict__)
 
+
 class BBBConv1d(_ConvNd):
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1,
-                 padding=0, dilation=1, groups=1):
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        kernel_size,
+        stride=1,
+        padding=0,
+        dilation=1,
+        groups=1,
+    ):
 
         kernel_size = kernel_size
         stride = stride
         padding = padding
         dilation = dilation
 
-        super(BBBConv1d, self).__init__(in_channels, out_channels, kernel_size, stride, padding, dilation, _pair(0), groups)
+        super(BBBConv1d, self).__init__(
+            in_channels,
+            out_channels,
+            kernel_size,
+            stride,
+            padding,
+            dilation,
+            _pair(0),
+            groups,
+        )
 
     def forward(self, input):
         raise NotImplementedError()
@@ -128,10 +170,25 @@ class BBBConv1d(_ConvNd):
         """
 
         # local reparameterization trick for convolutional layer
-        conv_qw_mean = F.conv1d(input=input, weight=self.qw_mean, stride=self.stride, padding=self.padding,
-                                dilation=self.dilation, groups=self.groups)
-        conv_qw_std = torch.sqrt(1e-8 + F.conv1d(input=input.pow(2), weight=torch.exp(self.log_alpha)*self.qw_mean.pow(2),
-                                                 stride=self.stride, padding=self.padding, dilation=self.dilation, groups=self.groups))
+        conv_qw_mean = F.conv1d(
+            input=input,
+            weight=self.qw_mean,
+            stride=self.stride,
+            padding=self.padding,
+            dilation=self.dilation,
+            groups=self.groups,
+        )
+        conv_qw_std = torch.sqrt(
+            1e-8
+            + F.conv1d(
+                input=input.pow(2),
+                weight=torch.exp(self.log_alpha) * self.qw_mean.pow(2),
+                stride=self.stride,
+                padding=self.padding,
+                dilation=self.dilation,
+                groups=self.groups,
+            )
+        )
 
         if cuda:
             conv_qw_mean.cuda()
@@ -139,7 +196,9 @@ class BBBConv1d(_ConvNd):
 
         # sample from output
         if cuda:
-            output = conv_qw_mean + conv_qw_std * (torch.randn(conv_qw_mean.size())).cuda()
+            output = (
+                conv_qw_mean + conv_qw_std * (torch.randn(conv_qw_mean.size())).cuda()
+            )
         else:
             output = conv_qw_mean + conv_qw_std * (torch.randn(conv_qw_mean.size()))
 
@@ -157,15 +216,32 @@ class BBBConv1d(_ConvNd):
 
 
 class BBBConv2d(_ConvNd):
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1,
-                 padding=0, dilation=1, groups=1):
+    def __init__(
+        self,
+        in_channels,
+        out_channels,
+        kernel_size,
+        stride=1,
+        padding=0,
+        dilation=1,
+        groups=1,
+    ):
 
         kernel_size = _pair(kernel_size)
         stride = _pair(stride)
         padding = _pair(padding)
         dilation = _pair(dilation)
 
-        super(BBBConv2d, self).__init__(in_channels, out_channels, kernel_size, stride, padding, dilation, _pair(0), groups)
+        super(BBBConv2d, self).__init__(
+            in_channels,
+            out_channels,
+            kernel_size,
+            stride,
+            padding,
+            dilation,
+            _pair(0),
+            groups,
+        )
 
     def forward(self, input):
         raise NotImplementedError()
@@ -178,10 +254,25 @@ class BBBConv2d(_ConvNd):
         """
 
         # local reparameterization trick for convolutional layer
-        conv_qw_mean = F.conv2d(input=input, weight=self.qw_mean, stride=self.stride, padding=self.padding,
-                                dilation=self.dilation, groups=self.groups)
-        conv_qw_std = torch.sqrt(1e-8 + F.conv2d(input=input.pow(2), weight=torch.exp(self.log_alpha)*self.qw_mean.pow(2),
-                                                 stride=self.stride, padding=self.padding, dilation=self.dilation, groups=self.groups))
+        conv_qw_mean = F.conv2d(
+            input=input,
+            weight=self.qw_mean,
+            stride=self.stride,
+            padding=self.padding,
+            dilation=self.dilation,
+            groups=self.groups,
+        )
+        conv_qw_std = torch.sqrt(
+            1e-8
+            + F.conv2d(
+                input=input.pow(2),
+                weight=torch.exp(self.log_alpha) * self.qw_mean.pow(2),
+                stride=self.stride,
+                padding=self.padding,
+                dilation=self.dilation,
+                groups=self.groups,
+            )
+        )
 
         if cuda:
             conv_qw_mean.cuda()
@@ -189,7 +280,9 @@ class BBBConv2d(_ConvNd):
 
         # sample from output
         if cuda:
-            output = conv_qw_mean + conv_qw_std * (torch.randn(conv_qw_mean.size())).cuda()
+            output = (
+                conv_qw_mean + conv_qw_std * (torch.randn(conv_qw_mean.size())).cuda()
+            )
         else:
             output = conv_qw_mean + conv_qw_std * (torch.randn(conv_qw_mean.size()))
 
@@ -212,7 +305,10 @@ class BBBLinearFactorial(nn.Module):
     a distribution over each of the weights and biases
     in the layer.
     """
-    def __init__(self, in_features, out_features, p_logvar_init=-3, p_pi=1.0, q_logvar_init=-5):
+
+    def __init__(
+        self, in_features, out_features, p_logvar_init=-3, p_pi=1.0, q_logvar_init=-5
+    ):
         # p_logvar_init, p_pi can be either
         # (list/tuples): prior model is a mixture of Gaussians components=len(p_pi)=len(p_logvar_init)
         # float: Gussian distribution
@@ -253,7 +349,7 @@ class BBBLinearFactorial(nn.Module):
 
     def reset_parameters(self):
         # initialize (trainable) approximate posterior parameters
-        stdv = 10. / math.sqrt(self.in_features)
+        stdv = 10.0 / math.sqrt(self.in_features)
         self.qw_mean.data.uniform_(-stdv, stdv)
         self.qw_logvar.data.uniform_(-stdv, stdv).add_(self.q_logvar_init)
         # self.qb_mean.data.uniform_(-stdv, stdv)
@@ -281,7 +377,10 @@ class BBBLinearFactorial(nn.Module):
             log_alpha = self.log_alpha
 
         fc_qw_mean = F.linear(input=input, weight=qw_mean)
-        fc_qw_si = torch.sqrt(1e-8 + F.linear(input=input.pow(2), weight=torch.exp(log_alpha)*qw_mean.pow(2)))
+        fc_qw_si = torch.sqrt(
+            1e-8
+            + F.linear(input=input.pow(2), weight=torch.exp(log_alpha) * qw_mean.pow(2))
+        )
 
         if cuda:
             fc_qw_mean = fc_qw_mean.cuda()
@@ -292,8 +391,6 @@ class BBBLinearFactorial(nn.Module):
             output = fc_qw_mean + fc_qw_si * torch.randn(fc_qw_mean.size()).cuda()
         else:
             output = fc_qw_mean + fc_qw_si * (torch.randn(fc_qw_mean.size()))
-
-
 
         w_sample = self.fc_qw.sample()
 
@@ -309,9 +406,14 @@ class BBBLinearFactorial(nn.Module):
         return output, kl
 
     def __repr__(self):
-        return self.__class__.__name__ + ' (' \
-               + str(self.in_features) + ' -> ' \
-               + str(self.out_features) + ')'
+        return (
+            self.__class__.__name__
+            + " ("
+            + str(self.in_features)
+            + " -> "
+            + str(self.out_features)
+            + ")"
+        )
 
 
 class GaussianVariationalInference(nn.Module):
