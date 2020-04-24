@@ -1,5 +1,5 @@
-from agentMET4FOF.agents import AgentMET4FOF
-from examples.ZEMA_EMC.zema_feature_extract import FFT_BFC, Pearson_FeatureSelection
+from agentMET4FOF.agentMET4FOF.agents import AgentMET4FOF
+from agentMET4FOF.examples.ZEMA_EMC.zema_feature_extract import FFT_BFC, Pearson_FeatureSelection
 
 import numpy as np
 import time
@@ -24,8 +24,8 @@ import torch
 from torch.autograd import Variable
 from sklearn.preprocessing import StandardScaler, MinMaxScaler,RobustScaler
 
-from examples.ZEMA_BNN.ML_models.BBBlayers import BBBLinearFactorial
-from examples.ZEMA_BNN.ML_models.BBBlayers import GaussianVariationalInference
+from agentMET4FOF_bayesian_neural_network_ZeMA.ML_models.BBBlayers import BBBLinearFactorial
+from agentMET4FOF_bayesian_neural_network_ZeMA.ML_models.BBBlayers import GaussianVariationalInference
 
 
 class StatsFeaturesAgent(AgentMET4FOF):

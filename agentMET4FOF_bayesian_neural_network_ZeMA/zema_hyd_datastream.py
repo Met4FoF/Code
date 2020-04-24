@@ -1,7 +1,7 @@
 import sys
 import numpy as np
 
-from agentMET4FOF.streams import DataStreamMET4FOF
+from agentMET4FOF.agentMET4FOF.streams import DataStreamMET4FOF
 
 import os
 import requests

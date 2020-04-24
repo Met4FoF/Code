@@ -1,4 +1,4 @@
-from agentMET4FOF.agents import AgentNetwork
+from agentMET4FOF.agentMET4FOF.agents import AgentNetwork
 import numpy as np
 import matplotlib.pyplot as plt
 import os

@@ -23,7 +23,7 @@ import numpy as np
 import random
 from copy import copy
 
-from .Agent_models.agents import Sensor, Aggregator, Predictor, \
+from agentMET4FOF_bayesian_neural_network_ZeMA.Agent_models.agents import Sensor, Aggregator, Predictor, \
 	DecisionMaker, SensorNetwork
 
 # TYPES OF AGENT

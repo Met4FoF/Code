@@ -36,5 +36,5 @@ def download_and_extract(url, destination, force=False):
 # In[15]:
 
 
-download_and_extract(data_url, 'Dataset/ZEMA_Hydraulic/')
+download_and_extract(data_url, 'dataset/ZEMA_Hydraulic/')
 

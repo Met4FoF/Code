@@ -16,12 +16,12 @@
 import numpy as np
 import pickle
 
-data_path = "Dataset/ZEMA_Hydraulic/"
+data_path = "dataset/ZEMA_Hydraulic/"
 
-filenames_input_data_10Hz = ["fs1","fs2"]       
+filenames_input_data_10Hz = ["FS1","FS2"]
 filenames_input_data_10Hz = [file + ".txt" for file in filenames_input_data_10Hz]
 
-filenames_input_data_100Hz = ["ps1","ps2","ps3","ps4","ps5","ps6","eps1"]       
+filenames_input_data_100Hz = ["PS1","PS2","PS3","PS4","PS5","PS6","EPS1"]
 filenames_input_data_100Hz = [file + ".txt" for file in filenames_input_data_100Hz]
   
 data_input_data_10Hz = np.zeros((2205,600,len(filenames_input_data_10Hz)))
@@ -35,8 +35,8 @@ for id_,file_name in enumerate(filenames_input_data_100Hz):
     input_data = np.loadtxt(data_path + file_name, delimiter = "\t")
     data_input_data_100Hz[:,:,id_] = input_data.copy()
 
-filenames_input_data_10Hz_resampled = ["res_"+file for file in filenames_input_data_10Hz]
-filenames_input_data_100Hz_resampled = ["res_"+file for file in filenames_input_data_100Hz]
+filenames_input_data_10Hz_resampled = ["RES_"+file for file in filenames_input_data_10Hz]
+filenames_input_data_100Hz_resampled = ["RES_"+file for file in filenames_input_data_100Hz]
 
 #resample 10Hz
 resample = np.linspace(0,600-1, num =60,dtype="int")
@@ -66,7 +66,9 @@ datarows = 2205
 seq_length = 60
 
 #deal with inputs data
-filenames_input_data_1Hz = ["ts1","ts2","ts3","ts4","vs1","se","res_fs1","res_fs2","res_ps1","res_ps2","res_ps3","res_ps4","res_ps5","res_ps6","res_eps1","ce","cp"]                           
+filenames_input_data_1Hz = ["TS1","TS2","TS3","TS4","VS1","SE","RES_FS1","RES_FS2",
+                            "RES_PS1","RES_PS2","RES_PS3","RES_PS4","RES_PS5",
+                            "RES_PS6","RES_EPS1","CE","CP"]
 filenames_input_data_1Hz = [file + ".txt" for file in filenames_input_data_1Hz]
 filename_target_data = "profile.txt" 
         
