@@ -11,11 +11,28 @@ This is an implementation of the agent-based approach for the [ZEMA dataset ![DO
 ](https://zenodo.org/badge/DOI/10.5281/zenodo.1323611.svg
 )](https://doi.org/10.5281/zenodo.1323611)
 on condition monitoring of a hydraulic system.
-README.md
+
 ## Getting started
+
+In case you are using PyCharm, you will already find proper run configurations at the
+appropriate place in the IDE. If not you can either proceed executing the Jupyter
+Notebooks or by running some of the script files.
+
+If you have any questions please get in touch with
+[the author](https://github.com/bangxiangyong).
+  
+### Jupyter Notebooks
 
 Run Code 01-03 to prepare the ML models, and run Code 04 to start and run the agents.
 While Code 04 is running, run Code 05 in separate terminal to visualize them.
+
+### Scripts
+
+The interesting parts you find in the files
+
+- `main_bnn_agents.py`
+- `cuda_agent.py`
+- `confusion_matrix_dev.py`
 
 ### Note
 
