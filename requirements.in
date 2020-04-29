@@ -1,2 +1,3 @@
 -r PyDynamic/requirements/requirements.txt
+-r PyDynamic/requirements/dev-requirements.txt
 -r agentMET4FOF/requirements.txt
