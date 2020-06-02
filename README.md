@@ -42,7 +42,7 @@ In the event of agents not terminating cleanly, run
 taskkill /f /im python.exe /t
 ```
 
-in Windows Command Prompt to terminate all  background python processes.
+in Windows Command Prompt to terminate all background python processes.
 
 ## References
 
