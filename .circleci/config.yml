@@ -96,8 +96,8 @@ jobs:
           name: Run tests
           command: |
             source activate Met4FoF_Code
-            pytest -v --junitxml=test-reports/pytest.xml \
-            > test-reports/pytest.log
+             --junitxml=test-reports/junit.xml \
+            --ignore-glob=**/**/tests/ > test-reports/pytest.log
 
       # Store test results.
       - store_artifacts:
@@ -157,7 +157,7 @@ jobs:
           name: Run tests
           command: |
             source venv/bin/activate
-            pytest -v --junitxml=test-reports/pytest.xml \
+            pytest -v --junitxml=test-reports/junit.xml \
             > test-reports/pytest.log
 
       # Store test results.
@@ -215,7 +215,7 @@ jobs:
           name: Run PyDynamic tests
           command: |
             source venv/bin/activate
-            pytest -v --junitxml=test-reports/pytest.xml \
+            pytest -v --junitxml=test-reports/junit.xml \
             --cov-config=PyDynamic/.coveragerc --cov=PyDynamic/ \
             PyDynamic/ > test-reports/PyDynamic.log
 
@@ -274,7 +274,7 @@ jobs:
           name: Run agentMET4FOF tests
           command: |
             source venv/bin/activate
-            pytest -v --junitxml=test-reports/pytest.xml \
+            pytest -v --junitxml=test-reports/junit.xml \
             --cov-config=.coveragerc --cov=agentMET4FOF/ \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
