@@ -16,3 +16,6 @@
 [submodule "Strathcylde_AFRC_machine_learning_tutorials"]
 	path = Strathcylde_AFRC_machine_learning_tutorials
 	url = https://github.com/harislulic/Strathcylde_AFRC_machine_learning_tutorials.git
+[submodule "datareceiver"]
+	path = datareceiver
+	url = https://github.com/Met4FoF/datareceiver.git
