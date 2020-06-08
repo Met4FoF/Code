@@ -22,3 +22,6 @@
 [submodule "agentMET4FOF_ml"]
 	path = agentMET4FOF_ml
 	url = https://github.com/Met4FoF/agentMET4FOF_ml.git
+[submodule "agentMET4FOF_bayesian_neural_network_ZeMA"]
+	path = agentMET4FOF_bayesian_neural_network_ZeMA
+	url = https://github.com/Met4FoF/agentMET4FOF_bayesian_neural_network_ZeMA
