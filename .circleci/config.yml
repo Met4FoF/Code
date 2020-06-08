@@ -96,8 +96,10 @@ jobs:
           name: Run tests
           command: |
             source activate Met4FoF_Code
-             --junitxml=test-reports/junit.xml \
-            --ignore-glob=**/**/tests/ > test-reports/pytest.log
+            pytest -v --junitxml=test-reports/junit.xml \
+            --ignore-glob=**/**/tests/ \
+            --ignore=Met4FoF-SmartUpUnit/tools/hv_plotting_test.py \
+            > test-reports/pytest.log
 
       # Store test results.
       - store_artifacts:
@@ -158,6 +160,7 @@ jobs:
           command: |
             source venv/bin/activate
             pytest -v --junitxml=test-reports/junit.xml \
+            --ignore=Met4FoF-SmartUpUnit/tools/hv_plotting_test.py \
             > test-reports/pytest.log
 
       # Store test results.
