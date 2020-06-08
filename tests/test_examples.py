@@ -1,5 +1,5 @@
-from agentMET4FOF_ML.coupled_ML import main as coupled_ml_main
-from agentMET4FOF_ML.decoupled_ML import main as decoupled_ml_main
+from agentMET4FOF_ml.coupled_ML import main as coupled_ml_main
+from agentMET4FOF_ml.decoupled_ML import main as decoupled_ml_main
 
 
 class TestML:
