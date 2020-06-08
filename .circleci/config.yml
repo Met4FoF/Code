@@ -45,8 +45,8 @@ jobs:
       - run:
           name: Initialize submodules
           command: |
-            git submodule sync PyDynamic agentMET4FOF
-            git submodule update --init PyDynamic agentMET4FOF
+            git submodule foreach \
+            'git submodule sync && git submodule update --recursive'
 
       # Create folder for test results.
       - run:
@@ -119,8 +119,8 @@ jobs:
       - run:
           name: Initialize submodules
           command: |
-            git submodule sync PyDynamic agentMET4FOF
-            git submodule update --init PyDynamic agentMET4FOF
+            git submodule foreach \
+            'git submodule sync && git submodule update --recursive'
 
       # Create folder for test results.
       - run:
@@ -158,12 +158,8 @@ jobs:
           command: |
             source venv/bin/activate
             pytest -v --junitxml=test-reports/pytest.xml \
-            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
-            --deselect \
-            agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
             > test-reports/pytest.log
 
-      #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
       # Store test results.
       - store_artifacts:
           path: test-reports
@@ -194,7 +190,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v1-dependencies-{{ checksum "PyDynamic/requirements/requirements.txt" }}
+            - v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py37.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - v1-dependencies-
 
@@ -205,14 +201,14 @@ jobs:
             python3 -m venv venv
             source venv/bin/activate
             pip install --upgrade pip
-            pip install -r PyDynamic/requirements/requirements.txt
-            pip install -r PyDynamic/requirements/dev-requirements.txt
+            pip install -r PyDynamic/requirements/requirements-py37.txt
+            pip install -r PyDynamic/requirements/dev-requirements-py37.txt
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            v1-dependencies-{{ checksum "PyDynamic/requirements/requirements.txt" }}
+            v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py37.txt" }}
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
@@ -280,8 +276,6 @@ jobs:
             source venv/bin/activate
             pytest -v --junitxml=test-reports/pytest.xml \
             --cov-config=.coveragerc --cov=agentMET4FOF/ \
-            --deselect tests/test_examples.py::TestZEMA_EMC \
-            --deselect tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
       # Store test results.
