@@ -46,7 +46,7 @@ jobs:
           name: Initialize submodules
           command: |
             git submodule foreach \
-            'git submodule sync && git submodule update --recursive'
+            'git submodule sync && git submodule update --init --recursive'
 
       # Create folder for test results.
       - run:
@@ -120,7 +120,7 @@ jobs:
           name: Initialize submodules
           command: |
             git submodule foreach \
-            'git submodule sync && git submodule update --recursive'
+            'git submodule sync && git submodule update --init --recursive'
 
       # Create folder for test results.
       - run:
