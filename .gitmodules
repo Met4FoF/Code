@@ -19,3 +19,6 @@
 [submodule "datareceiver"]
 	path = datareceiver
 	url = https://github.com/Met4FoF/datareceiver.git
+[submodule "agentMET4FOF_ml"]
+	path = agentMET4FOF_ml
+	url = https://github.com/Met4FoF/agentMET4FOF_ml.git
