@@ -134,7 +134,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - venv-dependencies-{{ checksum "requirements.txt" }}
+            - venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - venv-dependencies-
 
@@ -151,7 +151,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            venv-dependencies-{{ checksum "requirements.txt" }}
+            venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run:
@@ -193,7 +193,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py37.txt" }}
+            - v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - v1-dependencies-
 
@@ -203,15 +203,15 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
-            pip install --upgrade pip
-            pip install -r PyDynamic/requirements/requirements-py37.txt
-            pip install -r PyDynamic/requirements/dev-requirements-py37.txt
+            pip install --upgrade pip pip-tools
+            pip-sync PyDynamic/requirements/requirements-py38.txt \
+                PyDynamic/requirements/dev-requirements-py38.txt
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py37.txt" }}
+            v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
@@ -263,6 +263,7 @@ jobs:
            python3 -m venv venv
            source venv/bin/activate
            pip install --upgrade pip
+           pip install numpy
            pip install -r agentMET4FOF/requirements.txt
            pip install pytest pytest-cov
 
