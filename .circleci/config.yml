@@ -39,9 +39,9 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Checkout code
+      # Checkout code.
       - checkout
-      # Initialize submodules
+      # Initialize submodules.
       - run:
           name: Initialize submodules
           command: |
@@ -64,7 +64,7 @@ jobs:
             bash /home/circleci/miniconda.sh -b -p /home/circleci/conda
             echo 'export PATH=/home/circleci/conda/bin:$PATH' >> $BASH_ENV
 
-      # Download and cache dependencies
+      # Download and cache dependencies.
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
@@ -115,9 +115,9 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Checkout code
+      # Checkout code.
       - checkout
-      # Initialize submodules
+      # Initialize submodules.
       - run:
           name: Initialize submodules
           command: |
@@ -130,7 +130,7 @@ jobs:
           command: |
             mkdir test-reports
 
-      # Download and cache dependencies
+      # Download and cache dependencies.
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
@@ -178,9 +178,9 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Checkout code
+      # Checkout code.
       - checkout
-      # Update and initialize submodules
+      # Update and initialize submodules.
       - run: git submodule sync PyDynamic
       - run: git submodule update --init PyDynamic
 
@@ -190,7 +190,7 @@ jobs:
           command: |
             mkdir test-reports
 
-      # Download and cache dependencies
+      # Download and cache dependencies.
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
@@ -237,9 +237,9 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Checkout code
+      # Checkout code.
       - checkout
-      # Update and initialize submodules
+      # Update and initialize submodules.
       - run: git submodule sync agentMET4FOF
       - run: git submodule update --init agentMET4FOF
 
@@ -249,7 +249,7 @@ jobs:
           command: |
             mkdir test-reports
 
-      # Download and cache dependencies
+      # Download and cache dependencies.
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
@@ -297,10 +297,10 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Checkout code
+      # Checkout code.
       - checkout
 
-      # Download and cache dependencies
+      # Download and cache dependencies.
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
@@ -312,8 +312,8 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
-            pip install --upgrade pip
-            pip install -r dev-requirements.txt
+            pip install --upgrade pip pip-tools
+            pip-sync dev-requirements.txt
 
       - save_cache:
           paths:
