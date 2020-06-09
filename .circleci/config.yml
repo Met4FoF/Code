@@ -7,7 +7,7 @@ version: 2.1
 executors:
   tester:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.8
   publisher:
     docker:
       - image: circleci/python:3.8
@@ -144,9 +144,8 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
-            pip install --upgrade pip
-            pip install -r requirements.txt
-            pip install pytest
+            pip install --upgrade pip pip-tools
+            pip-sync dev-requirements.txt requirements.txt
 
       - save_cache:
           paths:
@@ -160,6 +159,7 @@ jobs:
           command: |
             source venv/bin/activate
             pytest -v --junitxml=test-reports/junit.xml \
+            --ignore-glob=**/**/tests/ \
             --ignore=Met4FoF-SmartUpUnit/tools/hv_plotting_test.py \
             > test-reports/pytest.log
 
