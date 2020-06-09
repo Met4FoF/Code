@@ -4,34 +4,54 @@
 #
 #    pip-compile dev-requirements.in
 #
-bleach==3.1.4             # via readme-renderer
-certifi==2019.11.28       # via -c requirements.txt (line 9), requests
-chardet==3.0.4            # via -c requirements.txt (line 10), requests
-click==7.0                # via -c requirements.txt (line 11), python-semantic-release
-colorama==0.4.3           # via ndebug
-docutils==0.16            # via readme-renderer
-gitdb2==2.0.6             # via gitpython
-gitpython==2.1.15         # via python-semantic-release
-idna==2.9                 # via -c requirements.txt (line 26), requests
-invoke==0.11.1            # via python-semantic-release
-ndebug==0.1.1             # via python-semantic-release
-pkginfo==1.5.0.1          # via twine
-pygments==2.5.2           # via -c requirements.txt (line 56), readme-renderer
-python-gitlab==1.10.0     # via python-semantic-release
-python-semantic-release==5.0.2  # via -r dev-requirements.in (line 3)
-readme-renderer==25.0     # via twine
-requests-toolbelt==0.9.1  # via twine
-requests==2.23.0          # via -c requirements.txt (line 63), python-gitlab, python-semantic-release, requests-toolbelt, twine
-semver==2.9.1             # via python-semantic-release
-six==1.13.0               # via -c requirements.txt (line 70), bleach, python-gitlab, readme-renderer
-smmap2==3.0.1             # via gitdb2
-smmap==3.0.1              # via smmap2
-toml==0.10.0              # via python-semantic-release
-tqdm==4.44.1              # via twine
-twine==1.15.0             # via python-semantic-release
-urllib3==1.25.8           # via -c requirements.txt (line 75), requests
-webencodings==0.5.1       # via bleach
-wheel==0.34.2             # via python-semantic-release
+astroid==2.4.2            # via pylint
+attrs==19.3.0             # via -c requirements.txt, hypothesis, pytest
+bleach==3.1.5             # via -c requirements.txt, readme-renderer
+certifi==2020.4.5.2       # via -c requirements.txt, requests
+cffi==1.14.0              # via -c requirements.txt, cryptography
+chardet==3.0.4            # via -c requirements.txt, requests
+click-log==0.3.2          # via -c requirements.txt, python-semantic-release
+click==7.1.2              # via -c requirements.txt, click-log, python-semantic-release
+cryptography==2.9.2       # via -c requirements.txt, secretstorage
+docutils==0.16            # via -c requirements.txt, readme-renderer
+gitdb==4.0.5              # via -c requirements.txt, gitpython
+gitpython==3.1.3          # via -c requirements.txt, python-semantic-release
+hypothesis==5.16.0        # via -c requirements.txt, -r dev-requirements.in
+idna==2.9                 # via -c requirements.txt, requests
+invoke==1.4.1             # via -c requirements.txt, python-semantic-release
+isort==4.3.21             # via pylint
+jeepney==0.4.3            # via -c requirements.txt, keyring, secretstorage
+keyring==21.2.1           # via -c requirements.txt, twine
+lazy-object-proxy==1.4.3  # via astroid
+mccabe==0.6.1             # via pylint
+more-itertools==8.3.0     # via -c requirements.txt, pytest
+packaging==20.4           # via -c requirements.txt, bleach, pytest
+pkginfo==1.5.0.1          # via -c requirements.txt, twine
+pluggy==0.13.1            # via -c requirements.txt, pytest
+py==1.8.1                 # via -c requirements.txt, pytest
+pycparser==2.20           # via -c requirements.txt, cffi
+pygments==2.5.2           # via -c requirements.txt, readme-renderer
+pylint==2.5.3             # via -r dev-requirements.in
+pyparsing==2.4.5          # via -c requirements.txt, packaging
+pytest==5.4.3             # via -c requirements.txt, -r dev-requirements.in
+python-gitlab==1.15.0     # via -c requirements.txt, python-semantic-release
+python-semantic-release==7.1.1  # via -c requirements.txt, -r dev-requirements.in
+readme-renderer==26.0     # via -c requirements.txt, twine
+requests-toolbelt==0.9.1  # via -c requirements.txt, twine
+requests==2.23.0          # via -c requirements.txt, python-gitlab, python-semantic-release, requests-toolbelt, twine
+secretstorage==3.1.2      # via -c requirements.txt, keyring
+semver==2.10.1            # via -c requirements.txt, python-semantic-release
+six==1.13.0               # via -c requirements.txt, astroid, bleach, cryptography, packaging, python-gitlab, readme-renderer
+smmap==3.0.4              # via -c requirements.txt, gitdb
+sortedcontainers==2.2.2   # via -c requirements.txt, hypothesis
+toml==0.10.0              # via -c requirements.txt, pylint, python-semantic-release
+tqdm==4.46.1              # via -c requirements.txt, twine
+twine==3.1.1              # via -c requirements.txt, python-semantic-release
+urllib3==1.25.9           # via -c requirements.txt, requests
+wcwidth==0.1.7            # via -c requirements.txt, pytest
+webencodings==0.5.1       # via -c requirements.txt, bleach
+wheel==0.34.2             # via -c requirements.txt, python-semantic-release
+wrapt==1.12.1             # via astroid
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

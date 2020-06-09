@@ -7,7 +7,7 @@ version: 2.1
 executors:
   tester:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.8.2
   publisher:
     docker:
       - image: circleci/python:3.8
@@ -45,8 +45,8 @@ jobs:
       - run:
           name: Initialize submodules
           command: |
-            git submodule sync PyDynamic agentMET4FOF
-            git submodule update --init PyDynamic agentMET4FOF
+            git submodule sync
+            git submodule update --init --recursive
 
       # Create folder for test results.
       - run:
@@ -88,15 +88,17 @@ jobs:
           paths:
             - /home/circleci/conda/envs/
           key: >-
-            conda-dependencies-{{ checksum "environment.yml" }}
-              {{ checksum "requirements.txt" }}
+            conda-dependencies-{{ checksum "environment.yml" }} {{ checksum "requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run:
           name: Run tests
           command: |
             source activate Met4FoF_Code
-            pytest -v --junitxml=test-reports/pytest.xml \
+            pytest -v --junitxml=test-reports/junit.xml \
+            --ignore-glob=**/**/tests/ \
+            --ignore=Met4FoF-SmartUpUnit/tools/hv_plotting_test.py \
+            --ignore=agentMET4FOF_ZeMA_emc/ \
             > test-reports/pytest.log
 
       # Store test results.
@@ -119,8 +121,8 @@ jobs:
       - run:
           name: Initialize submodules
           command: |
-            git submodule sync PyDynamic agentMET4FOF
-            git submodule update --init PyDynamic agentMET4FOF
+            git submodule sync
+            git submodule update --init --recursive
 
       # Create folder for test results.
       - run:
@@ -132,7 +134,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - venv-dependencies-{{ checksum "requirements.txt" }}
+            - venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - venv-dependencies-
 
@@ -142,28 +144,26 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
-            pip install --upgrade pip
-            pip install -r requirements.txt
-            pip install pytest
+            pip install --upgrade pip pip-tools numpy
+            pip-sync dev-requirements.txt requirements.txt
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            venv-dependencies-{{ checksum "requirements.txt" }}
+            venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run:
           name: Run tests
           command: |
             source venv/bin/activate
-            pytest -v --junitxml=test-reports/pytest.xml \
-            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
-            --deselect \
-            agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
+            pytest -v --junitxml=test-reports/junit.xml \
+            --ignore-glob=**/**/tests/ \
+            --ignore=Met4FoF-SmartUpUnit/tools/hv_plotting_test.py \
+            --ignore=agentMET4FOF_ZeMA_emc/ \
             > test-reports/pytest.log
 
-      #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
       # Store test results.
       - store_artifacts:
           path: test-reports
@@ -194,7 +194,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v1-dependencies-{{ checksum "PyDynamic/requirements/requirements.txt" }}
+            - v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - v1-dependencies-
 
@@ -204,22 +204,22 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
-            pip install --upgrade pip
-            pip install -r PyDynamic/requirements/requirements.txt
-            pip install -r PyDynamic/requirements/dev-requirements.txt
+            pip install --upgrade pip pip-tools
+            pip-sync PyDynamic/requirements/requirements-py38.txt \
+                PyDynamic/requirements/dev-requirements-py38.txt
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            v1-dependencies-{{ checksum "PyDynamic/requirements/requirements.txt" }}
+            v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
           name: Run PyDynamic tests
           command: |
             source venv/bin/activate
-            pytest -v --junitxml=test-reports/pytest.xml \
+            pytest -v --junitxml=test-reports/junit.xml \
             --cov-config=PyDynamic/.coveragerc --cov=PyDynamic/ \
             PyDynamic/ > test-reports/PyDynamic.log
 
@@ -264,6 +264,7 @@ jobs:
            python3 -m venv venv
            source venv/bin/activate
            pip install --upgrade pip
+           pip install numpy
            pip install -r agentMET4FOF/requirements.txt
            pip install pytest pytest-cov
 
@@ -278,10 +279,8 @@ jobs:
           name: Run agentMET4FOF tests
           command: |
             source venv/bin/activate
-            pytest -v --junitxml=test-reports/pytest.xml \
+            pytest -v --junitxml=test-reports/junit.xml \
             --cov-config=.coveragerc --cov=agentMET4FOF/ \
-            --deselect tests/test_examples.py::TestZEMA_EMC \
-            --deselect tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
       # Store test results.
