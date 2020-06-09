@@ -1,0 +1,27 @@
+# Python clutter #
+##################
+.pytest_cache/
+__pycache__/
+build/
+dist/
+*.egg-info/
+.coverage
+.coverage.*
+pytest.xml
+.hypothesis
+.ipynb_checkpoints
+venv
+
+# PyCharm clutter #
+###################
+
+.idea
+
+# agentMet4FoF runtime clutter #
+################################
+
+dataset
+pickles
+*.csv
+results/
+*.pkl
