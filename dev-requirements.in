@@ -1,3 +1,6 @@
 -c requirements.txt
 
 python-semantic-release
+pytest
+hypothesis
+pylint

@@ -2,8 +2,9 @@ name: Met4FoF_Code
 channels:
     - defaults
 dependencies:
-    - python = 3.7.7
+    - python = 3.8.2
     # pip dependencies have to be provided in `requirements.txt` syntax
     - pip:
+        - -r dev-requirements.txt
         - -r requirements.txt
 

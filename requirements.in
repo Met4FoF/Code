@@ -1,4 +1,4 @@
 -r PyDynamic/requirements/requirements.in
 -r PyDynamic/requirements/dev-requirements.in
--r agentMET4FOF/requirements.in
+-r agentMET4FOF/requirements.txt
 -r agentMET4FOF_ZeMA_emc/requirements.in
