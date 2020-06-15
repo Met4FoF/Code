@@ -28,3 +28,6 @@
 [submodule "agentMET4FOF_ZeMA_emc"]
 	path = agentMET4FOF_ZeMA_emc
 	url = https://github.com/Met4FoF/agentMET4FOF_ZeMA_emc.git
+[submodule "agentMET4FOF_anomaly_detection"]
+	path = agentMET4FOF_anomaly_detection
+	url = https://github.com/Met4FoF/agentMET4FOF_anomaly_detection.git
