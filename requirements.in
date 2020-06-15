@@ -2,3 +2,4 @@
 -r PyDynamic/requirements/dev-requirements.in
 -r agentMET4FOF/requirements.txt
 -r agentMET4FOF_ZeMA_emc/requirements.in
+-r agentMET4FOF_anomaly_detection/requirements.in

@@ -28,17 +28,19 @@ more-itertools==8.3.0     # via -c requirements.txt, pytest
 packaging==20.4           # via -c requirements.txt, bleach, pytest
 pkginfo==1.5.0.1          # via -c requirements.txt, twine
 pluggy==0.13.1            # via -c requirements.txt, pytest
+psutil==5.7.0             # via -r agentMET4FOF_anomaly_detection/dev-requirements.in
 py==1.8.1                 # via -c requirements.txt, pytest
 pycparser==2.20           # via -c requirements.txt, cffi
 pygments==2.5.2           # via -c requirements.txt, readme-renderer
 pylint==2.5.3             # via -r dev-requirements.in
 pyparsing==2.4.5          # via -c requirements.txt, packaging
-pytest==5.4.3             # via -c requirements.txt, -r dev-requirements.in
+pytest-timeout==1.4.0     # via -r agentMET4FOF_anomaly_detection/dev-requirements.in
+pytest==5.4.3             # via -c requirements.txt, -r agentMET4FOF_anomaly_detection/dev-requirements.in, -r dev-requirements.in, pytest-timeout
 python-gitlab==1.15.0     # via -c requirements.txt, python-semantic-release
 python-semantic-release==7.1.1  # via -c requirements.txt, -r dev-requirements.in
 readme-renderer==26.0     # via -c requirements.txt, twine
 requests-toolbelt==0.9.1  # via -c requirements.txt, twine
-requests==2.23.0          # via -c requirements.txt, python-gitlab, python-semantic-release, requests-toolbelt, twine
+requests==2.23.0          # via -c requirements.txt, -r agentMET4FOF_anomaly_detection/dev-requirements.in, python-gitlab, python-semantic-release, requests-toolbelt, twine
 secretstorage==3.1.2      # via -c requirements.txt, keyring
 semver==2.10.1            # via -c requirements.txt, python-semantic-release
 six==1.13.0               # via -c requirements.txt, astroid, bleach, cryptography, packaging, python-gitlab, readme-renderer
