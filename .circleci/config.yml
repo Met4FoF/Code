@@ -7,7 +7,7 @@ version: 2.1
 executors:
   tester:
     docker:
-      - image: circleci/python:3.8.2
+      - image: circleci/python:3.8
   publisher:
     docker:
       - image: circleci/python:3.8
@@ -19,6 +19,8 @@ workflows:
       - build_and_test_venv_env
       - test_PyDynamic
       - test_agentMET4FOF
+      - test_agentMET4FOF_ml
+      - test_agentMET4FOF_anomaly_detection
       - semantic-release:
           # Create 'release' job to create a release and publish it on GitHub and
           # Zenodo.
@@ -27,6 +29,8 @@ workflows:
               - build_and_test_venv_env
               - test_PyDynamic
               - test_agentMET4FOF
+              - test_agentMET4FOF_ml
+              - test_agentMET4FOF_anomaly_detection
           filters:
               branches:
                 # This assures the job only being triggered on branch master.
@@ -48,12 +52,6 @@ jobs:
             git submodule sync
             git submodule update --init --recursive
 
-      # Create folder for test results.
-      - run:
-          name: Create test result folder
-          command: |
-            mkdir test-reports
-
       # Install Miniconda.
       - run:
           name: Install Miniconda
@@ -68,8 +66,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - conda-dependencies-{{ checksum "environment.yml" }}
-                {{ checksum "requirements.txt" }}
+            - conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - conda-dependencies-
 
@@ -88,26 +85,8 @@ jobs:
           paths:
             - /home/circleci/conda/envs/
           key: >-
-            conda-dependencies-{{ checksum "environment.yml" }} {{ checksum "requirements.txt" }}
+            conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
 
-      # Run tests! We use pytest's test-runner.
-      - run:
-          name: Run tests
-          command: |
-            source activate Met4FoF_Code
-            pytest -v --junitxml=test-reports/junit.xml \
-            --ignore-glob=**/**/tests/ \
-            --ignore=Met4FoF-SmartUpUnit/tools/hv_plotting_test.py \
-            --ignore=agentMET4FOF_ZeMA_emc/ \
-            > test-reports/pytest.log
-
-      # Store test results.
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
-
-      - store_test_results:
-          path: test-reports
 
   build_and_test_venv_env:
     executor: tester
@@ -123,12 +102,6 @@ jobs:
           command: |
             git submodule sync
             git submodule update --init --recursive
-
-      # Create folder for test results.
-      - run:
-          name: Create test result folder
-          command: |
-            mkdir test-reports
 
       # Download and cache dependencies.
       - restore_cache:
@@ -153,24 +126,6 @@ jobs:
           key: >-
             venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
 
-      # Run tests! We use pytest's test-runner.
-      - run:
-          name: Run tests
-          command: |
-            source venv/bin/activate
-            pytest -v --junitxml=test-reports/junit.xml \
-            --ignore-glob=**/**/tests/ \
-            --ignore=Met4FoF-SmartUpUnit/tools/hv_plotting_test.py \
-            --ignore=agentMET4FOF_ZeMA_emc/ \
-            > test-reports/pytest.log
-
-      # Store test results.
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
-
-      - store_test_results:
-          path: test-reports
 
   test_PyDynamic:
     executor: tester
@@ -263,8 +218,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip
-           pip install numpy
+           pip install --upgrade pip numpy
            pip install -r agentMET4FOF/requirements.txt
            pip install pytest pytest-cov
 
@@ -287,6 +241,130 @@ jobs:
       - store_artifacts:
          path: test-reports
          destination: test-reports/agentMET4FOF
+
+      - store_test_results:
+         path: test-reports
+
+
+  test_agentMET4FOF_anomaly_detection:
+    executor: tester
+
+    working_directory: ~/repo
+
+    steps:
+      # Checkout code.
+      - checkout
+      # Update and initialize submodules.
+      - run: git submodule sync agentMET4FOF_anomaly_detection
+      - run: git submodule update --init --recursive agentMET4FOF_anomaly_detection
+
+      # Create folder for test results.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-reports
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - agentMET4FOF_anomaly_detection-dependencies-{{ checksum "agentMET4FOF_anomaly_detection/requirements.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - agentMET4FOF_anomaly_detection-dependencies-
+
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+         name: Install dependencies
+         command: |
+           python3 -m venv venv
+           source venv/bin/activate
+           pip install --upgrade pip pip-tools numpy
+           pip-sync agentMET4FOF_anomaly_detection/requirements.txt
+
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            agentMET4FOF_anomaly_detection-dependencies-{{ checksum "agentMET4FOF_anomaly_detection/requirements.txt" }}
+
+      # Run tests with coverage report! We use pytest's test-runner.
+      - run:
+          working_directory: $CIRCLE_WORKING_DIRECTORY/agentMET4FOF_anomaly_detection
+          name: Run agentMET4FOF_anomaly_detection tests
+          command: |
+            source $CIRCLE_WORKING_DIRECTORY/venv/bin/activate
+            pytest -v --junitxml=$CIRCLE_WORKING_DIRECTORY/test-reports/junit.xml \
+            --cov-config=.coveragerc --cov=. \
+            . > $CIRCLE_WORKING_DIRECTORY/test-reports/agentMET4FOF_anomaly_detection.log
+
+      # Store test results.
+      - store_artifacts:
+         path: test-reports
+         destination: test-reports/agentMET4FOF_anomaly_detection
+
+      - store_test_results:
+         path: test-reports
+
+
+
+
+  test_agentMET4FOF_ml:
+    executor: tester
+
+    working_directory: ~/repo
+
+    steps:
+      # Checkout code.
+      - checkout
+      # Update and initialize submodules.
+      - run: git submodule sync agentMET4FOF_ml
+      - run: git submodule update --init --recursive agentMET4FOF_ml
+
+      # Create folder for test results.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-reports
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - agentMET4FOF_ml-{{ checksum "agentMET4FOF_ml/requirements.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - agentMET4FOF_ml-
+
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+         name: Install dependencies
+         command: |
+           python3 -m venv venv
+           source venv/bin/activate
+           pip install --upgrade pip numpy
+           pip install -r agentMET4FOF_ml/requirements.txt
+
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            agentMET4FOF_ml-{{ checksum "agentMET4FOF_ml/requirements.txt" }}
+
+      # Run tests with coverage report! We use pytest's test-runner.
+      - run:
+          working_directory: $CIRCLE_WORKING_DIRECTORY/agentMET4FOF_ml
+          name: Run agentMET4FOF_ml tests
+          command: |
+            source $CIRCLE_WORKING_DIRECTORY/venv/bin/activate
+            pytest -v --junitxml=$CIRCLE_WORKING_DIRECTORY/test-reports/junit.xml \
+            --cov-config=.coveragerc --cov=. \
+            . > $CIRCLE_WORKING_DIRECTORY/test-reports/agentMET4FOF_ml.log
+
+      # Store test results.
+      - store_artifacts:
+         path: test-reports
+         destination: test-reports/agentMET4FOF_ml
 
       - store_test_results:
          path: test-reports
