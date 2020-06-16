@@ -31,3 +31,6 @@
 [submodule "agentMET4FOF_anomaly_detection"]
 	path = agentMET4FOF_anomaly_detection
 	url = https://github.com/Met4FoF/agentMET4FOF_anomaly_detection.git
+[submodule "connect-agentMET4FOF-smartupunit"]
+	path = connect-agentMET4FOF-smartupunit
+	url = https://github.com/bangxiangyong/connect-agentMET4FOF-smartupunit.git
