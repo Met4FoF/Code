@@ -231,7 +231,7 @@ jobs:
           name: Run agentMET4FOF tests
           command: |
             source venv/bin/activate
-            pytest -v --junitxml=test-reports/junit.xml \ \
+            pytest -v --junitxml=test-reports/junit.xml \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
       # Store test results.
