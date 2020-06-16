@@ -286,12 +286,11 @@ jobs:
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
-          working_directory: $CIRCLE_WORKING_DIRECTORY/agentMET4FOF_anomaly_detection
           name: Run agentMET4FOF_anomaly_detection tests
           command: |
-            source ../venv/bin/activate
-            pytest -v --junitxml=../test-reports/junit.xml \
-            . > ../test-reports/agentMET4FOF_anomaly_detection.log
+            source venv/bin/activate
+            pytest -v --junitxml=test-reports/junit.xml \
+            agentMET4FOF_anomaly_detection > test-reports/agentMET4FOF_anomaly_detection.log
 
       # Store test results.
       - store_artifacts:
@@ -345,12 +344,11 @@ jobs:
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
-          working_directory: $CIRCLE_WORKING_DIRECTORY/agentMET4FOF_ml
           name: Run agentMET4FOF_ml tests
           command: |
-            source ../venv/bin/activate
-            pytest -v --junitxml=../test-reports/junit.xml \
-            . > ../test-reports/agentMET4FOF_ml.log
+            source venv/bin/activate
+            pytest -v --junitxml=test-reports/junit.xml \
+            agentMET4FOF_ml > test-reports/agentMET4FOF_ml.log
 
       # Store test results.
       - store_artifacts:
