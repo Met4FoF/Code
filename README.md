@@ -7,7 +7,7 @@ under the project
 
 ## Purpose
 
-This is an implementation of and agent-based approach to machine learning utilizing
+This is an implementation of an agent-based approach to machine learning utilizing
  the external Python library [`scikit-multiflow`](https://scikit-multiflow.github.io/).
 
 ## Getting started
