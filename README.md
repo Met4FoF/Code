@@ -15,12 +15,39 @@ This is an implementation of and agent-based approach to machine learning utiliz
 First you need to create a virtual environment, install all dependencies and finally
  execute the examples. To install the dependencies you first have to install _numpy_
   and then the specified requirements from the `requirements.txt`.
-  
+
+### Create a virtual environment on Windows
+
+In your Windows command prompt execute the following to set up a virtual environment
+in a folder of your choice.
+
 ```shell
-$ python -m venv agentMET4FOF_ML_env
-$ source agentMET4FOF_ML_env/bin/activate
-(agentMET4FOF_ML_env) $ pip install --upgrade pip setuptools numpy
-(agentMET4FOF_ML_env) $ pip install -r requirements.txt
+> python -m venv agentMET4FOF_ml_env
+> agentMET4FOF_ml_env\Scripts\activate.bat
+(agentMET4FOF_ml_env) > pip install --upgrade pip numpy
+```
+
+And then install the required dependencies after navigating to the root of your clone. 
+
+```shell
+(agentMET4FOF_ml_env) > pip install -r requirements.txt
+```
+
+### Create a virtual environment on Mac and Linux
+
+In your terminal execute the following to set up a virtual environment in a folder of
+your choice.
+
+```shell
+$ python3 -m venv agentMET4FOF_ml_env
+$ source agentMET4FOF_ml_env/bin/activate
+(agentMET4FOF_ml_env) $ pip install --upgrade pip numpy
+```
+
+And then install the required dependencies after navigating to the root of your clone. 
+
+```shell
+(agentMET4FOF_ml_env) $ pip install -r requirements.txt
 ```
 
 In case you are using PyCharm, you will already find proper run configurations at the
@@ -32,17 +59,31 @@ If you have any questions please get in touch with
 
 ### Scripts
 
-The interesting parts you find in the subfolder [_agentMET4FOF_ML_](agentMET4FOF_ML).
+The interesting parts you find in the subfolder [_agentMET4FOF_ml_](agentMET4FOF_ml).
 
-### Note
+### Orphaned processes
 
-In the event of agents not terminating cleanly, run
+In the event of agents not terminating cleanly, you can end all Python processes
+running on your system (caution: the following commands affect **all** running Python
+ processes, not just those that emerged from the agents).
+
+#### Killing all Python processes in Windows
+
+In your Windows command prompt execute the following to terminate all python processes.
 
 ```shell
-taskkill /f /im python.exe /t
+> taskkill /f /im python.exe /t
+>
 ```
 
-in Windows Command Prompt to terminate all background python processes.
+#### Killing all Python processes on Mac and Linux
+
+In your terminal execute the following to terminate all python processes.
+
+```shell
+$ pkill python
+$
+```
 
 ## References
 
