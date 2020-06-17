@@ -1,7 +1,6 @@
-name: agentMET4FOF_bayesian_neural_network_ZeMA
+name: agentMET4FOF_ml
 channels:
     - defaults
-    - conda-forge
 dependencies:
     - python >=3.6
     # pip dependencies have to be provided in `requirements.txt` syntax
