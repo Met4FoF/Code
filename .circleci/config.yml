@@ -263,8 +263,8 @@ jobs:
       # Checkout code.
       - checkout
       # Update and initialize submodules.
-      - run: git submodule sync agentMET4FOF_anomaly_detection
-      - run: git submodule update --init --recursive agentMET4FOF_anomaly_detection
+      - run: git submodule sync tutorials/agentMET4FOF_anomaly_detection
+      - run: git submodule update --init --recursive tutorials/agentMET4FOF_anomaly_detection
 
       # Create folder for test results.
       - run:
@@ -321,8 +321,8 @@ jobs:
       # Checkout code.
       - checkout
       # Update and initialize submodules.
-      - run: git submodule sync agentMET4FOF_ml
-      - run: git submodule update --init --recursive agentMET4FOF_ml
+      - run: git submodule sync tutorials/agentMET4FOF_ml
+      - run: git submodule update --init --recursive tutorials/agentMET4FOF_ml
 
       # Create folder for test results.
       - run:
