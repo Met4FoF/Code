@@ -229,7 +229,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip numpy pytest
+           pip install --upgrade pip pytest
            pip install -r agentMET4FOF/requirements.txt
 
       - save_cache:
@@ -263,8 +263,8 @@ jobs:
       # Checkout code.
       - checkout
       # Update and initialize submodules.
-      - run: git submodule sync agentMET4FOF_anomaly_detection
-      - run: git submodule update --init --recursive agentMET4FOF_anomaly_detection
+      - run: git submodule sync tutorials/agentMET4FOF_anomaly_detection
+      - run: git submodule update --init --recursive tutorials/agentMET4FOF_anomaly_detection
 
       # Create folder for test results.
       - run:
@@ -276,7 +276,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - agentMET4FOF_anomaly_detection-dependencies-{{ checksum "agentMET4FOF_anomaly_detection/requirements.txt" }}
+            - agentMET4FOF_anomaly_detection-dependencies-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - agentMET4FOF_anomaly_detection-dependencies-
 
@@ -287,14 +287,14 @@ jobs:
            python3 -m venv venv
            source venv/bin/activate
            pip install --upgrade pip setuptools pip-tools
-           pip-sync agentMET4FOF_anomaly_detection/dev-requirements.txt agentMET4FOF_anomaly_detection/requirements.txt
+           pip-sync tutorials/agentMET4FOF_anomaly_detection/dev-requirements.txt tutorials/agentMET4FOF_anomaly_detection/requirements.txt
 
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            agentMET4FOF_anomaly_detection-dependencies-{{ checksum "agentMET4FOF_anomaly_detection/requirements.txt" }}
+            agentMET4FOF_anomaly_detection-dependencies-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
@@ -302,7 +302,7 @@ jobs:
           command: |
             source venv/bin/activate
             pytest -v --junitxml=test-reports/junit.xml \
-            agentMET4FOF_anomaly_detection > test-reports/agentMET4FOF_anomaly_detection.log
+            tutorials/agentMET4FOF_anomaly_detection > test-reports/agentMET4FOF_anomaly_detection.log
 
       # Store test results.
       - store_artifacts:
@@ -321,8 +321,8 @@ jobs:
       # Checkout code.
       - checkout
       # Update and initialize submodules.
-      - run: git submodule sync agentMET4FOF_ml
-      - run: git submodule update --init --recursive agentMET4FOF_ml
+      - run: git submodule sync tutorials/agentMET4FOF_ml
+      - run: git submodule update --init --recursive tutorials/agentMET4FOF_ml
 
       # Create folder for test results.
       - run:
@@ -334,7 +334,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - agentMET4FOF_ml-{{ checksum "agentMET4FOF_ml/requirements.txt" }}
+            - agentMET4FOF_ml-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - agentMET4FOF_ml-
 
@@ -345,14 +345,14 @@ jobs:
            python3 -m venv venv
            source venv/bin/activate
            pip install --upgrade pip numpy pytest
-           pip install -r agentMET4FOF_ml/requirements.txt
+           pip install -r tutorials/agentMET4FOF_ml/requirements.txt
 
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            agentMET4FOF_ml-{{ checksum "agentMET4FOF_ml/requirements.txt" }}
+            agentMET4FOF_ml-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
@@ -360,7 +360,7 @@ jobs:
           command: |
             source venv/bin/activate
             pytest -v --junitxml=test-reports/junit.xml \
-            agentMET4FOF_ml > test-reports/agentMET4FOF_ml.log
+            tutorials/agentMET4FOF_ml > test-reports/agentMET4FOF_ml.log
 
       # Store test results.
       - store_artifacts:
