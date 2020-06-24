@@ -34,3 +34,6 @@
 [submodule "connect-agentMET4FOF-smartupunit"]
 	path = tutorials/connect-agentMET4FOF-smartupunit
 	url = https://github.com/bangxiangyong/connect-agentMET4FOF-smartupunit.git
+[submodule "PyDynamic_tutorials"]
+	path = tutorials/PyDynamic_tutorials
+	url = https://github.com/PTB-PSt1/PyDynamic_tutorials.git
