@@ -7,17 +7,46 @@ version: 2.1
 executors:
   tester:
     docker:
-      - image: circleci/python:3.7
+      - image: circleci/python:3.8
+  publisher:
+    docker:
+      - image: circleci/python:3.8
 
 workflows:
   build_and_test_virtual_environments:
     jobs:
       - build_and_test_conda_env
       - build_and_test_venv_env
-  test_submodules:
-    jobs:
       - test_PyDynamic
       - test_agentMET4FOF
+      - test_agentMET4FOF_ml
+      - test_agentMET4FOF_anomaly_detection
+      - preview-release:
+          # Test the 'deploy' job to avoid trouble when Pull Requests get merged and
+          # to preview publishing actions and the new changelog.
+          requires:
+              - build_and_test_conda_env
+              - build_and_test_venv_env
+              - test_PyDynamic
+              - test_agentMET4FOF
+              - test_agentMET4FOF_ml
+              - test_agentMET4FOF_anomaly_detection
+      - confirm_release:
+          # This job allows for checking that the release we will create in the
+          # next step actually is the desired release, by observing the result of
+          # test_deploy.
+          type: approval
+          requires:
+            - preview-release
+          filters:
+            branches:
+              # This assures the job only being triggered on branch master.
+              only: /master/
+      - semantic-release:
+          # Create 'release' job to create a release and publish it on GitHub and
+          # Zenodo.
+          requires:
+              - confirm_release
 
 jobs:
   build_and_test_conda_env:
@@ -26,20 +55,14 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Checkout code
+      # Checkout code.
       - checkout
-      # Initialize submodules
+      # Initialize submodules.
       - run:
           name: Initialize submodules
           command: |
-            git submodule sync PyDynamic agentMET4FOF
-            git submodule update --init PyDynamic agentMET4FOF
-
-      # Create folder for test results.
-      - run:
-          name: Create test result folder
-          command: |
-            mkdir test-reports
+            git submodule sync
+            git submodule update --init --recursive
 
       # Install Miniconda.
       - run:
@@ -51,11 +74,11 @@ jobs:
             bash /home/circleci/miniconda.sh -b -p /home/circleci/conda
             echo 'export PATH=/home/circleci/conda/bin:$PATH' >> $BASH_ENV
 
-      # Download and cache dependencies
+      # Download and cache dependencies.
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - conda-dependencies-{{ checksum "environment.yml" }}
+            - conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - conda-dependencies-
 
@@ -63,10 +86,10 @@ jobs:
       - run:
           name: Create environment
           command: |
+            conda update -n base -c defaults conda
             if [ -d "/home/circleci/conda/envs/" ]; then
                 conda env update --prune --file environment.yml
             else
-                conda update -n base -c defaults conda
                 conda env create -f environment.yml
             fi
 
@@ -74,29 +97,8 @@ jobs:
           paths:
             - /home/circleci/conda/envs/
           key: >-
-            conda-dependencies-{{ checksum "environment.yml" }}
+            conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
 
-      # Run tests! We use pytest's test-runner.
-      - run:
-          name: Run tests
-          command: |
-            source activate Met4FoF_Code
-            pytest -v --junitxml=test-reports/pytest.xml \
-            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
-            --deselect \
-            agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
-            --deselect \
-            agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda \
-            > test-reports/pytest.log
-
-      #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
-      # Store test results.
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
-
-      - store_test_results:
-          path: test-reports
 
   build_and_test_venv_env:
     executor: tester
@@ -104,27 +106,20 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Checkout code
+      # Checkout code.
       - checkout
-      # Initialize submodules
+      # Initialize submodules.
       - run:
           name: Initialize submodules
           command: |
-            git submodule sync PyDynamic agentMET4FOF
-            git submodule update --init PyDynamic agentMET4FOF
+            git submodule sync
+            git submodule update --init --recursive
 
-      # Create folder for test results.
-      - run:
-          name: Create test result folder
-          command: |
-            mkdir test-reports
-
-      # Download and cache dependencies
+      # Download and cache dependencies.
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - venv-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-              {{ checksum "agentMET4FOF/requirements.txt" }}
+            - venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - venv-dependencies-
 
@@ -134,35 +129,15 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
-            pip install -r requirements.txt
-            pip install pytest
+            pip install --upgrade pip pip-tools numpy
+            pip-sync dev-requirements.txt requirements.txt
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            venv-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
-            {{ checksum "agentMET4FOF/requirements.txt" }}
+            venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
 
-      # Run tests! We use pytest's test-runner.
-      - run:
-          name: Run tests
-          command: |
-            source venv/bin/activate
-            pytest -v --junitxml=test-reports/pytest.xml \
-            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
-            --deselect \
-            agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
-            > test-reports/pytest.log
-
-      #            --ignore=agentMET4FOF/tests/test_zema_emc_ml.py \
-      # Store test results.
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports
-
-      - store_test_results:
-          path: test-reports
 
   test_PyDynamic:
     executor: tester
@@ -170,9 +145,9 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Checkout code
+      # Checkout code.
       - checkout
-      # Update and initialize submodules
+      # Update and initialize submodules.
       - run: git submodule sync PyDynamic
       - run: git submodule update --init PyDynamic
 
@@ -182,11 +157,11 @@ jobs:
           command: |
             mkdir test-reports
 
-      # Download and cache dependencies
+      # Download and cache dependencies.
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
+            - v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - v1-dependencies-
 
@@ -196,22 +171,22 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
-            pip install -r PyDynamic/requirements.txt
-            pip install pytest pytest-cov
+            pip install --upgrade pip pip-tools
+            pip-sync PyDynamic/requirements/requirements-py38.txt \
+                PyDynamic/requirements/dev-requirements-py38.txt
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            v1-dependencies-{{ checksum "PyDynamic/requirements.txt" }}
+            v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}
 
       # Run tests with coverage report! We use pytest's test-runner.
       - run:
           name: Run PyDynamic tests
           command: |
             source venv/bin/activate
-            pytest -v --junitxml=test-reports/pytest.xml \
-            --cov-config=PyDynamic/.coveragerc --cov=PyDynamic/ \
+            pytest -v --junitxml=test-reports/junit.xml \
             PyDynamic/ > test-reports/PyDynamic.log
 
       # Store test results.
@@ -228,9 +203,9 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Checkout code
+      # Checkout code.
       - checkout
-      # Update and initialize submodules
+      # Update and initialize submodules.
       - run: git submodule sync agentMET4FOF
       - run: git submodule update --init agentMET4FOF
 
@@ -240,7 +215,7 @@ jobs:
           command: |
             mkdir test-reports
 
-      # Download and cache dependencies
+      # Download and cache dependencies.
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
@@ -254,8 +229,8 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
+           pip install --upgrade pip numpy pytest
            pip install -r agentMET4FOF/requirements.txt
-           pip install pytest pytest-cov
 
       - save_cache:
           paths:
@@ -268,11 +243,7 @@ jobs:
           name: Run agentMET4FOF tests
           command: |
             source venv/bin/activate
-            pytest -v --junitxml=test-reports/pytest.xml \
-            --cov-config=.coveragerc --cov=agentMET4FOF/ \
-            --deselect agentMET4FOF/tests/test_examples.py::TestZEMA_EMC \
-            --deselect \
-            agentMET4FOF/tests/test_zema_emc_ml.py::test_zema_emc_lda_agents \
+            pytest -v --junitxml=test-reports/junit.xml \
             agentMET4FOF/ > test-reports/agentMET4FOF.log
 
       # Store test results.
@@ -282,3 +253,205 @@ jobs:
 
       - store_test_results:
          path: test-reports
+
+  test_agentMET4FOF_anomaly_detection:
+    executor: tester
+
+    working_directory: ~/repo
+
+    steps:
+      # Checkout code.
+      - checkout
+      # Update and initialize submodules.
+      - run: git submodule sync agentMET4FOF_anomaly_detection
+      - run: git submodule update --init --recursive agentMET4FOF_anomaly_detection
+
+      # Create folder for test results.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-reports
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - agentMET4FOF_anomaly_detection-dependencies-{{ checksum "agentMET4FOF_anomaly_detection/requirements.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - agentMET4FOF_anomaly_detection-dependencies-
+
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+         name: Install dependencies
+         command: |
+           python3 -m venv venv
+           source venv/bin/activate
+           pip install --upgrade pip setuptools pip-tools
+           pip-sync agentMET4FOF_anomaly_detection/dev-requirements.txt agentMET4FOF_anomaly_detection/requirements.txt
+
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            agentMET4FOF_anomaly_detection-dependencies-{{ checksum "agentMET4FOF_anomaly_detection/requirements.txt" }}
+
+      # Run tests with coverage report! We use pytest's test-runner.
+      - run:
+          name: Run agentMET4FOF_anomaly_detection tests
+          command: |
+            source venv/bin/activate
+            pytest -v --junitxml=test-reports/junit.xml \
+            agentMET4FOF_anomaly_detection > test-reports/agentMET4FOF_anomaly_detection.log
+
+      # Store test results.
+      - store_artifacts:
+         path: test-reports
+         destination: test-reports/agentMET4FOF_anomaly_detection
+
+      - store_test_results:
+         path: test-reports
+
+  test_agentMET4FOF_ml:
+    executor: tester
+
+    working_directory: ~/repo
+
+    steps:
+      # Checkout code.
+      - checkout
+      # Update and initialize submodules.
+      - run: git submodule sync agentMET4FOF_ml
+      - run: git submodule update --init --recursive agentMET4FOF_ml
+
+      # Create folder for test results.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-reports
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - agentMET4FOF_ml-{{ checksum "agentMET4FOF_ml/requirements.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - agentMET4FOF_ml-
+
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+         name: Install dependencies
+         command: |
+           python3 -m venv venv
+           source venv/bin/activate
+           pip install --upgrade pip numpy pytest
+           pip install -r agentMET4FOF_ml/requirements.txt
+
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            agentMET4FOF_ml-{{ checksum "agentMET4FOF_ml/requirements.txt" }}
+
+      # Run tests with coverage report! We use pytest's test-runner.
+      - run:
+          name: Run agentMET4FOF_ml tests
+          command: |
+            source venv/bin/activate
+            pytest -v --junitxml=test-reports/junit.xml \
+            agentMET4FOF_ml > test-reports/agentMET4FOF_ml.log
+
+      # Store test results.
+      - store_artifacts:
+         path: test-reports
+         destination: test-reports/agentMET4FOF_ml
+
+      - store_test_results:
+         path: test-reports
+
+  semantic-release:
+    executor: publisher
+
+    working_directory: ~/repo
+
+    steps:
+      # Checkout code.
+      - checkout
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+
+      # Install dependencies.
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv venv
+            source venv/bin/activate
+            pip install --upgrade pip pip-tools
+            pip-sync dev-requirements.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+
+      # Publish it!
+      - run:
+          name: Run semantic-release publish
+          command: |
+            source venv/bin/activate
+            git config --global user.name "semantic-release (via CircleCI)"
+            git config --global user.email "bjoern.ludwig@ptb.de"
+            semantic-release publish
+
+
+  preview-release:
+    executor: publisher
+
+    working_directory: ~/repo
+
+    steps:
+      # Checkout code.
+      - checkout
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+
+      # Install dependencies.
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv venv
+            source venv/bin/activate
+            pip install --upgrade pip pip-tools
+            pip-sync dev-requirements.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+
+      # Fake publish, just to make sure everything works after merging this PR or
+      # previewing the changelog and the version number.
+      - run:
+          name: Run semantic-release --noop publish
+          command: |
+            unset CIRCLE_PULL_REQUEST CIRCLE_PULL_REQUESTS CI_PULL_REQUEST \
+              CI_PULL_REQUESTS
+            export CIRCLE_BRANCH=master
+            source venv/bin/activate
+            git config --global user.name "semantic-release (via CircleCI)"
+            git config --global user.email "bjoern.ludwig@ptb.de"
+            echo "The changelog of the next release will contain:"
+            semantic-release --unreleased changelog
+            echo "The output of 'semantic-release --noop publish' is:"
+            semantic-release --noop publish

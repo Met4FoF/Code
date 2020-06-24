@@ -16,3 +16,21 @@
 [submodule "Strathcylde_AFRC_machine_learning_tutorials"]
 	path = Strathcylde_AFRC_machine_learning_tutorials
 	url = https://github.com/harislulic/Strathcylde_AFRC_machine_learning_tutorials.git
+[submodule "datareceiver"]
+	path = datareceiver
+	url = https://github.com/Met4FoF/datareceiver.git
+[submodule "agentMET4FOF_ml"]
+	path = agentMET4FOF_ml
+	url = https://github.com/Met4FoF/agentMET4FOF_ml.git
+[submodule "agentMET4FOF_bayesian_neural_network_ZeMA"]
+	path = agentMET4FOF_bayesian_neural_network_ZeMA
+	url = https://github.com/Met4FoF/agentMET4FOF_bayesian_neural_network_ZeMA
+[submodule "agentMET4FOF_ZeMA_emc"]
+	path = agentMET4FOF_ZeMA_emc
+	url = https://github.com/Met4FoF/agentMET4FOF_ZeMA_emc.git
+[submodule "agentMET4FOF_anomaly_detection"]
+	path = agentMET4FOF_anomaly_detection
+	url = https://github.com/Met4FoF/agentMET4FOF_anomaly_detection.git
+[submodule "connect-agentMET4FOF-smartupunit"]
+	path = connect-agentMET4FOF-smartupunit
+	url = https://github.com/bangxiangyong/connect-agentMET4FOF-smartupunit.git
