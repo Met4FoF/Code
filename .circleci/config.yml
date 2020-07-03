@@ -288,7 +288,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip setuptools pip-tools
+           pip install --upgrade pip setuptools pip-tools numpy
            pip-sync tutorials/agentMET4FOF_anomaly_detection/dev-requirements.txt tutorials/agentMET4FOF_anomaly_detection/requirements.txt
 
 
