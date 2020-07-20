@@ -6,9 +6,11 @@ version: 2.1
 
 executors:
   tester:
+    working_directory: ~/repo
     docker:
       - image: circleci/python:3.8
   publisher:
+    working_directory: ~/repo
     docker:
       - image: circleci/python:3.8
 
@@ -50,21 +52,63 @@ workflows:
           requires:
               - confirm_previewed_release_actions
 
+commands:
+  # Reusable command to prepare the environment for testing.
+  initialize_submodules:
+    description: "Prepare everything."
+    parameters:
+      submodule:
+        type: string
+        default: ""
+    steps:
+    # Checkout code.
+    - checkout
+    # Update and initialize submodules.
+    - run: git submodule sync << parameters.submodule >>
+    - run: git submodule update --init << parameters.submodule >>
+
+  create_result_folder:
+    description: "Create test-result folder."
+    parameters:
+      subfolder:
+        type: string
+        default: ""
+    steps:
+    # Create test-result folder.
+    - run:
+        name: Create test result folder
+        command: |
+          mkdir -p test-results/<< parameters.subfolder >>
+
+  run_and_store_tests:
+    description: "Run and store test results."
+    parameters:
+      submodule:
+        type: string
+        default: ""
+    steps:
+    # Run tests! We use pytest's test-runner.
+    - run:
+        name: Run tests
+        command: |
+          source venv/bin/activate
+          pytest -v --junitxml=test-reports/junit.xml \
+          << parameters.submodule >> > test-results/pytest.log
+
+    # Store test results.
+    - store_artifacts:
+        path: test-results
+        destination: test-results/<< parameters.submodule >>
+
+    - store_test_results:
+        path: test-results
+
 jobs:
   build_and_test_conda_env:
     executor: tester
 
-    working_directory: ~/repo
-
     steps:
-      # Checkout code.
-      - checkout
-      # Initialize submodules.
-      - run:
-          name: Initialize submodules
-          command: |
-            git submodule sync
-            git submodule update --init --recursive
+      - initialize_submodules
 
       # Install Miniconda.
       - run:
@@ -105,17 +149,8 @@ jobs:
   build_and_test_venv_env:
     executor: tester
 
-    working_directory: ~/repo
-
     steps:
-      # Checkout code.
-      - checkout
-      # Initialize submodules.
-      - run:
-          name: Initialize submodules
-          command: |
-            git submodule sync
-            git submodule update --init --recursive
+      - initialize_submodules
 
       # Download and cache dependencies.
       - restore_cache:
@@ -144,26 +179,18 @@ jobs:
   test_PyDynamic:
     executor: tester
 
-    working_directory: ~/repo
-
+    # Specify the steps to execute during this test jobs.
     steps:
-      # Checkout code.
-      - checkout
-      # Update and initialize submodules.
-      - run: git submodule sync PyDynamic
-      - run: git submodule update --init PyDynamic
-
-      # Create folder for test results.
-      - run:
-          name: Create test result folder
-          command: |
-            mkdir test-reports
+      - initialize_submodules
+          submodule: PyDynamic
+      - create_result_folder
+          subfolder: PyDynamic
 
       # Download and cache dependencies.
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}
+            - v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - v1-dependencies-
 
@@ -181,41 +208,20 @@ jobs:
           paths:
             - ./venv
           key: >-
-            v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}
+            v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
 
-      # Run tests with coverage report! We use pytest's test-runner.
-      - run:
-          name: Run PyDynamic tests
-          command: |
-            source venv/bin/activate
-            pytest -v --junitxml=test-reports/junit.xml \
-            PyDynamic/ > test-reports/PyDynamic.log
-
-      # Store test results.
-      - store_artifacts:
-          path: test-reports
-          destination: test-reports/PyDynamic
-
-      - store_test_results:
-          path: test-reports
+      # Run tests! We use pytest's test-runner.
+      - run_and_store_tests
+          submodule: PyDynamic
 
   test_agentMET4FOF:
     executor: tester
 
-    working_directory: ~/repo
-
     steps:
-      # Checkout code.
-      - checkout
-      # Update and initialize submodules.
-      - run: git submodule sync agentMET4FOF
-      - run: git submodule update --init agentMET4FOF
-
-      # Create folder for test results.
-      - run:
-          name: Create test result folder
-          command: |
-            mkdir test-reports
+      - initialize_submodules
+          submodule: agentMET4FOF
+      - create_result_folder
+          subfolder: agentMET4FOF
 
       # Download and cache dependencies.
       - restore_cache:
@@ -240,39 +246,18 @@ jobs:
           key: >-
             v1-dependencies-{{ checksum "agentMET4FOF/requirements.txt" }}
 
-      # Run tests with coverage report! We use pytest's test-runner.
-      - run:
-          name: Run agentMET4FOF tests
-          command: |
-            source venv/bin/activate
-            pytest -v --junitxml=test-reports/junit.xml \
-            agentMET4FOF/ > test-reports/agentMET4FOF.log
-
-      # Store test results.
-      - store_artifacts:
-         path: test-reports
-         destination: test-reports/agentMET4FOF
-
-      - store_test_results:
-         path: test-reports
+      # Run tests! We use pytest's test-runner.
+      - run_and_store_tests
+          submodule: agentMET4FOF
 
   test_agentMET4FOF_anomaly_detection:
     executor: tester
 
-    working_directory: ~/repo
-
     steps:
-      # Checkout code.
-      - checkout
-      # Update and initialize submodules.
-      - run: git submodule sync tutorials/agentMET4FOF_anomaly_detection
-      - run: git submodule update --init --recursive tutorials/agentMET4FOF_anomaly_detection
-
-      # Create folder for test results.
-      - run:
-          name: Create test result folder
-          command: |
-            mkdir test-reports
+      - initialize_submodules
+          submodule: tutorials/agentMET4FOF_anomaly_detection
+      - create_result_folder
+          subfolder: tutorials/agentMET4FOF_anomaly_detection
 
       # Download and cache dependencies.
       - restore_cache:
@@ -298,33 +283,18 @@ jobs:
           key: >-
             agentMET4FOF_anomaly_detection-dependencies-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
 
-      # Run tests with coverage report! We use pytest's test-runner.
-      - run:
-          name: Run agentMET4FOF_anomaly_detection tests
-          command: |
-            source venv/bin/activate
-            pytest -v --junitxml=test-reports/junit.xml \
-            tutorials/agentMET4FOF_anomaly_detection > test-reports/agentMET4FOF_anomaly_detection.log
-
-      # Store test results.
-      - store_artifacts:
-         path: test-reports
-         destination: test-reports/agentMET4FOF_anomaly_detection
-
-      - store_test_results:
-         path: test-reports
+      # Run tests! We use pytest's test-runner.
+      - run_and_store_tests
+          submodule: tutorials/agentMET4FOF_anomaly_detection
 
   test_agentMET4FOF_ml:
     executor: tester
 
-    working_directory: ~/repo
-
     steps:
-      # Checkout code.
-      - checkout
-      # Update and initialize submodules.
-      - run: git submodule sync tutorials/agentMET4FOF_ml
-      - run: git submodule update --init --recursive tutorials/agentMET4FOF_ml
+      - initialize_submodules
+          submodule: tutorials/agentMET4FOF_ml
+      - create_result_folder
+          subfolder: tutorials/agentMET4FOF_ml
 
       # Create folder for test results.
       - run:
@@ -356,26 +326,12 @@ jobs:
           key: >-
             agentMET4FOF_ml-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
 
-      # Run tests with coverage report! We use pytest's test-runner.
-      - run:
-          name: Run agentMET4FOF_ml tests
-          command: |
-            source venv/bin/activate
-            pytest -v --junitxml=test-reports/junit.xml \
-            tutorials/agentMET4FOF_ml > test-reports/agentMET4FOF_ml.log
-
-      # Store test results.
-      - store_artifacts:
-         path: test-reports
-         destination: test-reports/agentMET4FOF_ml
-
-      - store_test_results:
-         path: test-reports
+      # Run tests! We use pytest's test-runner.
+      - run_and_store_tests
+          submodule: tutorials/agentMET4FOF_ml
 
   release:
     executor: publisher
-
-    working_directory: ~/repo
 
     steps:
       # Checkout code.
@@ -414,8 +370,6 @@ jobs:
 
   preview_release:
     executor: publisher
-
-    working_directory: ~/repo
 
     steps:
       # Checkout code.
