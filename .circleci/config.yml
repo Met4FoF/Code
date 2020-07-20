@@ -181,9 +181,9 @@ jobs:
 
     # Specify the steps to execute during this test jobs.
     steps:
-      - initialize_submodules
+      - initialize_submodules:
           submodule: PyDynamic
-      - create_result_folder
+      - create_result_folder:
           subfolder: PyDynamic
 
       # Download and cache dependencies.
@@ -211,16 +211,16 @@ jobs:
             v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests
+      - run_and_store_tests:
           submodule: PyDynamic
 
   test_agentMET4FOF:
     executor: tester
 
     steps:
-      - initialize_submodules
+      - initialize_submodules:
           submodule: agentMET4FOF
-      - create_result_folder
+      - create_result_folder:
           subfolder: agentMET4FOF
 
       # Download and cache dependencies.
@@ -247,16 +247,16 @@ jobs:
             v1-dependencies-{{ checksum "agentMET4FOF/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests
+      - run_and_store_tests:
           submodule: agentMET4FOF
 
   test_agentMET4FOF_anomaly_detection:
     executor: tester
 
     steps:
-      - initialize_submodules
+      - initialize_submodules:
           submodule: tutorials/agentMET4FOF_anomaly_detection
-      - create_result_folder
+      - create_result_folder:
           subfolder: tutorials/agentMET4FOF_anomaly_detection
 
       # Download and cache dependencies.
@@ -284,16 +284,16 @@ jobs:
             agentMET4FOF_anomaly_detection-dependencies-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests
+      - run_and_store_tests:
           submodule: tutorials/agentMET4FOF_anomaly_detection
 
   test_agentMET4FOF_ml:
     executor: tester
 
     steps:
-      - initialize_submodules
+      - initialize_submodules:
           submodule: tutorials/agentMET4FOF_ml
-      - create_result_folder
+      - create_result_folder:
           subfolder: tutorials/agentMET4FOF_ml
 
       # Create folder for test results.
@@ -327,7 +327,7 @@ jobs:
             agentMET4FOF_ml-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests
+      - run_and_store_tests:
           submodule: tutorials/agentMET4FOF_ml
 
   release:
