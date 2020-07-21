@@ -65,7 +65,7 @@ commands:
     - checkout
     # Update and initialize submodules.
     - run: git submodule sync << parameters.submodule >>
-    - run: git submodule update --init << parameters.submodule >>
+    - run: git submodule update --init --recursive << parameters.submodule >>
 
   create_result_folder:
     description: "Create test-result folder."
