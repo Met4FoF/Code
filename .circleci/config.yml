@@ -17,93 +17,96 @@ executors:
 workflows:
   build_and_test_virtual_environments:
     jobs:
-      #- build_and_test_conda_env
-      #- build_and_test_venv_env
-      #- test_against_conda:
-      #    name: test_agentMET4FOF_ml_against_conda
-      #    submodule: tutorials/agentMET4FOF_ml
+      - build_and_test_conda_env
+      - build_and_test_venv_env
+      - test_against_conda:
+          name: test_agentMET4FOF_ml_against_conda
+          submodule: tutorials/agentMET4FOF_ml
       - test_against_conda:
           name: test_agentMET4FOF_anomaly_detection_against_conda
           submodule: tutorials/agentMET4FOF_anomaly_detection
           uninstalls: agentMET4FOF
-      #- test_against_conda:
-      #    name: test_time-series-buffer_against_conda
-      #    submodule: time-series-buffer
-      #- test_against_conda:
-      #    name: test_time-series-metadata_against_conda
-      #    submodule: time-series-metadata
-      #- test_against_conda:
-      #    name: test_agentMET4FOF_sensors_against_conda
-      #    submodule: tutorials/agentMET4FOF_sensors
       - test_against_conda:
-          name: test_PyDynamic_against_conda
-          submodule: PyDynamic
-          uninstalls: PyDynamic
-      #- test_against_conda:
-      #    name: test_agentMET4FOF_against_conda
-      #    submodule: agentMET4FOF
-      #- test_against_venv:
-      #    name: test_agentMET4FOF_ml_against_venv
-      #    submodule: tutorials/agentMET4FOF_ml
+          name: test_time-series-buffer_against_conda
+          submodule: time-series-buffer
+      - test_against_conda:
+          name: test_time-series-metadata_against_conda
+          submodule: time-series-metadata
+      - test_against_conda:
+          name: test_agentMET4FOF_sensors_against_conda
+          submodule: tutorials/agentMET4FOF_sensors
+      - test_against_conda:
+          name: test_agentMET4FOF_against_conda
+          submodule: agentMET4FOF
+      - test_against_venv:
+          name: test_agentMET4FOF_ml_against_venv
+          submodule: tutorials/agentMET4FOF_ml
       - test_against_venv:
           name: test_agentMET4FOF_anomaly_detection_against_venv
           submodule: tutorials/agentMET4FOF_anomaly_detection
           uninstalls: agentMET4FOF
-      #- test_against_venv:
-      #    name: test_time-series-buffer_against_venv
-      #    submodule: time-series-buffer
-      #- test_against_venv:
-      #    name: test_time-series-metadata_against_venv
-      #    submodule: time-series-metadata
-      #- test_against_venv:
-      #    name: test_agentMET4FOF_sensors_against_venv
-      #    submodule: tutorials/agentMET4FOF_sensors
       - test_against_venv:
-          name: test_PyDynamic_against_venv
-          submodule: PyDynamic
-          uninstalls: PyDynamic test examples
-      #- test_against_venv:
-      #    name: test_agentMET4FOF_against_venv
-      #    submodule: agentMET4FOF
-      #- test_PyDynamic
-      #- test_agentMET4FOF
-      #- test_agentMET4FOF_ml
-      #- test_agentMET4FOF_anomaly_detection
-      #- test_time-series-buffer
-      #- test_time-series-metadata
-      #- test_agentMET4FOF_sensors
-      #- preview_release:
-      #    # Test the 'release' job to avoid trouble when Pull Requests get merged and
-      #    # to preview publishing actions and the new changelog.
-      #    requires:
-      #        - build_and_test_conda_env
-      #        - build_and_test_venv_env
-      #        - test_agentMET4FOF_sensors_against_conda
-      #        - test_PyDynamic
-      #        - test_agentMET4FOF
-      #        - test_agentMET4FOF_ml
-      #        - test_agentMET4FOF_anomaly_detection
-      #        - test_time-series-buffer
-      #        - test_time-series-metadata
-      #        - test_agentMET4FOF_sensors
-      #- confirm_previewed_release_actions:
-      #    # This job allows for checking that the release we will create in the
-      #    # next step actually is the desired release, by observing the result of
-      #    # preview_release.
-      #    type: approval
-      #    requires:
-      #      - preview_release
-      #    filters:
-      #      branches:
-      #        # This assures the job only being triggered on branch master.
-      #        only: /master/
-      #- release:
-      #    # Job to potentially create a release based on python-semantic-release's
-      #    # decision and publish it on GitHub and Zenodo. This requires manual
-      #    # approval in the previous step, which is only triggered on branch master,
-      #    # thus this job here is triggered only on master as well.
-      #    requires:
-      #        - confirm_previewed_release_actions
+          name: test_time-series-buffer_against_venv
+          submodule: time-series-buffer
+      - test_against_venv:
+          name: test_time-series-metadata_against_venv
+          submodule: time-series-metadata
+      - test_against_venv:
+          name: test_agentMET4FOF_sensors_against_venv
+          submodule: tutorials/agentMET4FOF_sensors
+      - test_against_venv:
+          name: test_agentMET4FOF_against_venv
+          submodule: agentMET4FOF
+      - test_PyDynamic
+      - test_agentMET4FOF
+      - test_agentMET4FOF_ml
+      - test_agentMET4FOF_anomaly_detection
+      - test_time-series-buffer
+      - test_time-series-metadata
+      - test_agentMET4FOF_sensors
+      - preview_release:
+          # Test the 'release' job to avoid trouble when Pull Requests get merged and
+          # to preview publishing actions and the new changelog.
+          requires:
+              - build_and_test_conda_env
+              - build_and_test_venv_env
+              - test_agentMET4FOF_ml_against_conda
+              - test_agentMET4FOF_ml_against_venv
+              - test_agentMET4FOF_anomaly_detection_against_conda
+              - test_agentMET4FOF_anomaly_detection_against_venv
+              - test_time-series-buffer_against_conda
+              - test_time-series-buffer_against_venv
+              - test_time-series-metadata_against_conda
+              - test_time-series-metadata_against_venv
+              - test_agentMET4FOF_sensors_against_conda
+              - test_agentMET4FOF_sensors_against_venv
+              - test_agentMET4FOF_against_conda
+              - test_agentMET4FOF_against_venv
+              - test_PyDynamic
+              - test_agentMET4FOF
+              - test_agentMET4FOF_ml
+              - test_agentMET4FOF_anomaly_detection
+              - test_time-series-buffer
+              - test_time-series-metadata
+              - test_agentMET4FOF_sensors
+      - confirm_previewed_release_actions:
+          # This job allows for checking that the release we will create in the
+          # next step actually is the desired release, by observing the result of
+          # preview_release.
+          type: approval
+          requires:
+            - preview_release
+          filters:
+            branches:
+              # This assures the job only being triggered on branch master.
+              only: /master/
+      - release:
+          # Job to potentially create a release based on python-semantic-release's
+          # decision and publish it on GitHub and Zenodo. This requires manual
+          # approval in the previous step, which is only triggered on branch master,
+          # thus this job here is triggered only on master as well.
+          requires:
+              - confirm_previewed_release_actions
 
 commands:
   # Reusable command to prepare the environment for testing. These steps need to be
@@ -335,8 +338,6 @@ jobs:
                 command: |
                   source venv/bin/activate
                   pip uninstall --yes << parameters.uninstalls >>
-                  cd venv/lib/python3.8/site-packages/
-                  rm -r << parameters.uninstalls >>
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
