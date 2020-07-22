@@ -23,6 +23,9 @@ workflows:
       - test_agentMET4FOF
       - test_agentMET4FOF_ml
       - test_agentMET4FOF_anomaly_detection
+      - test_time-series-buffer
+      - test_time-series-metadata
+      - test_agentMET4FOF_sensors
       - preview_release:
           # Test the 'release' job to avoid trouble when Pull Requests get merged and
           # to preview publishing actions and the new changelog.
@@ -33,6 +36,9 @@ workflows:
               - test_agentMET4FOF
               - test_agentMET4FOF_ml
               - test_agentMET4FOF_anomaly_detection
+              - test_time-series-buffer
+              - test_time-series-metadata
+              - test_agentMET4FOF_sensors
       - confirm_previewed_release_actions:
           # This job allows for checking that the release we will create in the
           # next step actually is the desired release, by observing the result of
@@ -287,6 +293,43 @@ jobs:
       - run_and_store_tests:
           submodule: tutorials/agentMET4FOF_anomaly_detection
 
+  test_agentMET4FOF_sensors:
+    executor: tester
+
+    steps:
+      - initialize_submodules:
+          submodule: tutorials/agentMET4FOF_sensors
+      - create_result_folder:
+          subfolder: tutorials/agentMET4FOF_sensors
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - agentMET4FOF_sensors-v1-{{ checksum "tutorials/agentMET4FOF_sensors/requirements.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - agentMET4FOF_sensors-v1
+
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+         name: Install dependencies
+         command: |
+           python3 -m venv venv
+           source venv/bin/activate
+           pip install --upgrade pip pip-tools
+           pip-sync tutorials/agentMET4FOF_sensors/requirements.txt
+
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            agentMET4FOF_sensors-v1-{{ checksum "tutorials/agentMET4FOF_sensors/requirements.txt" }}
+
+      # Run tests! We use pytest's test-runner.
+      - run_and_store_tests:
+          submodule: tutorials/agentMET4FOF_sensors
+
   test_agentMET4FOF_ml:
     executor: tester
 
@@ -329,6 +372,93 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_and_store_tests:
           submodule: tutorials/agentMET4FOF_ml
+
+  test_time-series-buffer:
+    executor: tester
+
+    steps:
+      - initialize_submodules:
+          submodule: time-series-buffer
+      - create_result_folder:
+          subfolder: time-series-buffer
+
+      # Create folder for test results.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-reports
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - time-series-buffer-v1-{{ checksum "time-series-buffer/requirements.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - time-series-buffer-v1
+
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+         name: Install dependencies
+         command: |
+           python3 -m venv venv
+           source venv/bin/activate
+           pip install --upgrade pip pytest
+           pip install -r time-series-buffer/requirements.txt
+
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            time-series-buffer-v1-{{ checksum "time-series-buffer/requirements.txt" }}
+
+      # Run tests! We use pytest's test-runner.
+      - run_and_store_tests:
+          submodule: time-series-buffer
+
+  test_time-series-metadata:
+    executor: tester
+
+    steps:
+      - initialize_submodules:
+          submodule: time-series-metadata
+      - create_result_folder:
+          subfolder: time-series-metadata
+
+      # Create folder for test results.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-reports
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - time-series-metadata-v1-{{ checksum "time-series-metadata/requirements/dev-requirements-py38.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - time-series-metadata-v1
+
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+         name: Install dependencies
+         command: |
+           python3 -m venv venv
+           source venv/bin/activate
+           pip install --upgrade pip pip-tools
+           pip install time-series-metadata/.
+           pip-sync time-series-metadata/requirements/dev-requirements-py38.txt
+
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            time-series-metadata-v1-{{ checksum "time-series-metadata/requirements/dev-requirements-py38.txt" }}
+
+      # Run tests! We use pytest's test-runner.
+      - run_and_store_tests:
+          submodule: time-series-metadata
 
   release:
     executor: publisher
