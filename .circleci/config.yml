@@ -64,7 +64,7 @@ workflows:
       #- test_PyDynamic
       #- test_agentMET4FOF
       #- test_agentMET4FOF_ml
-      #- test_agentMET4FOF_anomaly_detection
+      - test_agentMET4FOF_anomaly_detection
       #- test_time-series-buffer
       #- test_time-series-metadata
       #- test_agentMET4FOF_sensors
@@ -274,9 +274,6 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_conda_tests:
           submodule: << parameters.submodule >>
-      - store_test_artifacts_and_results:
-          submodule: << parameters.submodule >>
-
 
   # Define one 'test' job with parameters to deal with all submodules and let them
   # run their test suites against the installed dependencies from the requirements
@@ -298,8 +295,6 @@ jobs:
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
-          submodule: << parameters.submodule >>
-      - store_test_artifacts_and_results:
           submodule: << parameters.submodule >>
 
 
