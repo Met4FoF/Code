@@ -316,7 +316,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip pip-tools
+           pip install --upgrade pip pip-tools pytest
            pip-sync tutorials/agentMET4FOF_sensors/requirements.txt
 
 
