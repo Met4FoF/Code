@@ -19,20 +19,76 @@ workflows:
     jobs:
       - build_and_test_conda_env
       - build_and_test_venv_env
+      - test_against_conda:
+          name: test_agentMET4FOF_ml_against_conda
+          submodule: tutorials/agentMET4FOF_ml
+      - test_against_conda:
+          name: test_agentMET4FOF_anomaly_detection_against_conda
+          submodule: tutorials/agentMET4FOF_anomaly_detection
+          uninstalls: agentMET4FOF
+      - test_against_conda:
+          name: test_time-series-buffer_against_conda
+          submodule: time-series-buffer
+      - test_against_conda:
+          name: test_time-series-metadata_against_conda
+          submodule: time-series-metadata
+      - test_against_conda:
+          name: test_agentMET4FOF_sensors_against_conda
+          submodule: tutorials/agentMET4FOF_sensors
+      - test_against_conda:
+          name: test_agentMET4FOF_against_conda
+          submodule: agentMET4FOF
+      - test_against_venv:
+          name: test_agentMET4FOF_ml_against_venv
+          submodule: tutorials/agentMET4FOF_ml
+      - test_against_venv:
+          name: test_agentMET4FOF_anomaly_detection_against_venv
+          submodule: tutorials/agentMET4FOF_anomaly_detection
+          uninstalls: agentMET4FOF
+      - test_against_venv:
+          name: test_time-series-buffer_against_venv
+          submodule: time-series-buffer
+      - test_against_venv:
+          name: test_time-series-metadata_against_venv
+          submodule: time-series-metadata
+      - test_against_venv:
+          name: test_agentMET4FOF_sensors_against_venv
+          submodule: tutorials/agentMET4FOF_sensors
+      - test_against_venv:
+          name: test_agentMET4FOF_against_venv
+          submodule: agentMET4FOF
       - test_PyDynamic
       - test_agentMET4FOF
       - test_agentMET4FOF_ml
       - test_agentMET4FOF_anomaly_detection
+      - test_time-series-buffer
+      - test_time-series-metadata
+      - test_agentMET4FOF_sensors
       - preview_release:
           # Test the 'release' job to avoid trouble when Pull Requests get merged and
           # to preview publishing actions and the new changelog.
           requires:
               - build_and_test_conda_env
               - build_and_test_venv_env
+              - test_agentMET4FOF_ml_against_conda
+              - test_agentMET4FOF_ml_against_venv
+              - test_agentMET4FOF_anomaly_detection_against_conda
+              - test_agentMET4FOF_anomaly_detection_against_venv
+              - test_time-series-buffer_against_conda
+              - test_time-series-buffer_against_venv
+              - test_time-series-metadata_against_conda
+              - test_time-series-metadata_against_venv
+              - test_agentMET4FOF_sensors_against_conda
+              - test_agentMET4FOF_sensors_against_venv
+              - test_agentMET4FOF_against_conda
+              - test_agentMET4FOF_against_venv
               - test_PyDynamic
               - test_agentMET4FOF
               - test_agentMET4FOF_ml
               - test_agentMET4FOF_anomaly_detection
+              - test_time-series-buffer
+              - test_time-series-metadata
+              - test_agentMET4FOF_sensors
       - confirm_previewed_release_actions:
           # This job allows for checking that the release we will create in the
           # next step actually is the desired release, by observing the result of
@@ -53,7 +109,9 @@ workflows:
               - confirm_previewed_release_actions
 
 commands:
-  # Reusable command to prepare the environment for testing.
+  # Reusable command to prepare the environment for testing. These steps need to be
+  # executed first in all environments, where they are used, because the checkout step
+  # needs to be conducted before anything else.
   initialize_submodules:
     description: "Prepare everything."
     parameters:
@@ -66,6 +124,76 @@ commands:
     # Update and initialize submodules.
     - run: git submodule sync << parameters.submodule >>
     - run: git submodule update --init --recursive << parameters.submodule >>
+
+  # Reusable command to prepare the environment for testing.
+  install_and_cache_venv_dependencies:
+    description: "Install pip dependencies of all packages."
+    steps:
+    # Download and cache dependencies.
+    - restore_cache:
+        keys:
+          # Specify the unique identifier for the cache.
+          - venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+          # Fallback to using the latest cache if no exact match is found.
+          - venv-dependencies-
+
+    # Install dependencies.
+    - run:
+        name: Install dependencies
+        command: |
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip pip-tools
+          pip-sync dev-requirements.txt requirements.txt
+
+    - save_cache:
+        paths:
+          - ./venv
+        key: >-
+          venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+
+
+
+  # Reusable command to prepare the environment for testing.
+  install_and_cache_conda_dependencies:
+    description: "Install Miniconda and conda dependencies of all packages."
+    steps:
+    - run:
+        name: Install Miniconda
+        command: |
+          wget "https://repo.anaconda.com/miniconda/\
+          Miniconda3-latest-Linux-x86_64.sh" -O $HOME/miniconda.sh
+          mkdir -p $HOME/.conda
+          bash $HOME/miniconda.sh -b -p /home/circleci/conda
+          source $HOME/conda/etc/profile.d/conda.sh
+          hash -r
+          conda config --set always_yes yes --set changeps1 no
+          conda update -q conda
+          echo 'export PATH=$HOME/conda/bin:$PATH' >> $BASH_ENV
+
+    # Download and cache dependencies.
+    - restore_cache:
+        keys:
+          # Specify the unique identifier for the cache.
+          - conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+          # Fallback to using the latest cache if no exact match is found.
+          - conda-dependencies-
+
+    # Create environment.
+    - run:
+        name: Create or update environment
+        command: |
+          if [ -d "$HOME/conda/envs/" ]; then
+              conda env update --prune --file environment.yml
+          else
+              conda env create -f environment.yml
+          fi
+
+    - save_cache:
+        paths:
+          - /home/circleci/conda/envs/
+        key: >-
+          conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
 
   create_result_folder:
     description: "Create test-result folder."
@@ -80,7 +208,26 @@ commands:
         command: |
           mkdir -p test-results/<< parameters.subfolder >>
 
-  run_and_store_tests:
+  run_conda_tests:
+    description: "Run and store test results."
+    parameters:
+      submodule:
+        type: string
+        default: ""
+    steps:
+    # Run tests! We use pytest's test-runner.
+    - run:
+        name: Run tests
+        command: |
+          source $HOME/conda/etc/profile.d/conda.sh
+          conda activate Met4FoF_Code
+          pytest -v --junitxml=test-results/junit.xml \
+          << parameters.submodule >> > test-results/pytest.log
+
+    - store_test_artifacts_and_results:
+        submodule: << parameters.submodule >>
+
+  run_venv_tests:
     description: "Run and store test results."
     parameters:
       submodule:
@@ -92,9 +239,19 @@ commands:
         name: Run tests
         command: |
           source venv/bin/activate
-          pytest -v --junitxml=test-reports/junit.xml \
+          pytest -v --junitxml=test-results/junit.xml \
           << parameters.submodule >> > test-results/pytest.log
 
+    - store_test_artifacts_and_results:
+        submodule: << parameters.submodule >>
+
+  store_test_artifacts_and_results:
+    description: "Store test results."
+    parameters:
+      submodule:
+        type: string
+        default: ""
+    steps:
     # Store test results.
     - store_artifacts:
         path: test-results
@@ -104,46 +261,95 @@ commands:
         path: test-results
 
 jobs:
+  # Define one 'test' job with parameters to deal with all submodules and let them
+  # run their test suites against the installed dependencies from the environment.yml.
+  test_against_conda:
+    # The parameter submodule is mandatory and requires the relative path of the
+    # submodule under test from the repository root.
+    parameters:
+      submodule:
+        type: string
+    # The parameter uninstalls is needed, whenever there is a package
+    # installed in the requirements, which is provided by the submodule under test
+    # itself.
+      uninstalls:
+        type: string
+        default: ""
+
+    executor: tester
+
+    steps:
+      - initialize_submodules:
+          submodule: << parameters.submodule >>
+      - create_result_folder:
+          subfolder: << parameters.submodule >>
+      - install_and_cache_conda_dependencies
+
+      # Uninstall packages.
+      - when:
+          condition:
+            not:
+              equal: [ "", << parameters.uninstalls >> ]
+          steps:
+            - run:
+                name: Uninstall packages
+                command: |
+                  source $HOME/conda/etc/profile.d/conda.sh
+                  conda activate Met4FoF_Code
+                  pip uninstall --yes << parameters.uninstalls >>
+
+      # Run tests! We use pytest's test-runner.
+      - run_conda_tests:
+          submodule: << parameters.submodule >>
+
+  # Define one 'test' job with parameters to deal with all submodules and let them
+  # run their test suites against the installed dependencies from the requirements
+  # files.
+  test_against_venv:
+    parameters:
+    # The parameter submodule is mandatory and requires the relative path of the
+    # submodule under test from the repository root.
+      submodule:
+        type: string
+    # The parameter uninstalls is needed, whenever there is a package
+    # installed in the requirements, which is provided by the submodule under test
+    # itself.
+      uninstalls:
+        type: string
+        default: ""
+
+    executor: tester
+
+    steps:
+      - initialize_submodules:
+          submodule: << parameters.submodule >>
+      - create_result_folder:
+          subfolder: << parameters.submodule >>
+      - install_and_cache_venv_dependencies
+
+      # Uninstall packages.
+      - when:
+          condition:
+            not:
+              equal: [ "", << parameters.uninstalls >> ]
+          steps:
+            - run:
+                name: Uninstall packages
+                command: |
+                  source venv/bin/activate
+                  pip uninstall --yes << parameters.uninstalls >>
+
+      # Run tests! We use pytest's test-runner.
+      - run_venv_tests:
+          submodule: << parameters.submodule >>
+
+
   build_and_test_conda_env:
     executor: tester
 
     steps:
       - initialize_submodules
-
-      # Install Miniconda.
-      - run:
-          name: Install Miniconda
-          command: |
-            wget "https://repo.anaconda.com/miniconda/\
-            Miniconda3-latest-Linux-x86_64.sh" -O /home/circleci/miniconda.sh
-            mkdir -p /home/circleci/.conda
-            bash /home/circleci/miniconda.sh -b -p /home/circleci/conda
-            echo 'export PATH=/home/circleci/conda/bin:$PATH' >> $BASH_ENV
-
-      # Download and cache dependencies.
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - conda-dependencies-
-
-      # Create environment.
-      - run:
-          name: Create environment
-          command: |
-            conda update -n base -c defaults conda
-            if [ -d "/home/circleci/conda/envs/" ]; then
-                conda env update --prune --file environment.yml
-            else
-                conda env create -f environment.yml
-            fi
-
-      - save_cache:
-          paths:
-            - /home/circleci/conda/envs/
-          key: >-
-            conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+      - install_and_cache_conda_dependencies
 
 
   build_and_test_venv_env:
@@ -151,29 +357,7 @@ jobs:
 
     steps:
       - initialize_submodules
-
-      # Download and cache dependencies.
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - venv-dependencies-
-
-      # Install dependencies.
-      - run:
-          name: Install dependencies
-          command: |
-            python3 -m venv venv
-            source venv/bin/activate
-            pip install --upgrade pip pip-tools numpy
-            pip-sync dev-requirements.txt requirements.txt
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: >-
-            venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+      - install_and_cache_venv_dependencies
 
 
   test_PyDynamic:
@@ -190,9 +374,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
+            - PyDynamic-v1-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - v1-dependencies-
+            - PyDynamic-v1
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -208,10 +392,10 @@ jobs:
           paths:
             - ./venv
           key: >-
-            v1-dependencies-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
+            PyDynamic-v1-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests:
+      - run_venv_tests:
           submodule: PyDynamic
 
   test_agentMET4FOF:
@@ -227,9 +411,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v1-dependencies-{{ checksum "agentMET4FOF/requirements.txt" }}
+            - agentMET4FOF-v1-{{ checksum "agentMET4FOF/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - v1-dependencies-
+            - agentMET4FOF-v1
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -244,10 +428,10 @@ jobs:
           paths:
             - ./venv
           key: >-
-            v1-dependencies-{{ checksum "agentMET4FOF/requirements.txt" }}
+            agentMET4FOF-v1-{{ checksum "agentMET4FOF/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests:
+      - run_venv_tests:
           submodule: agentMET4FOF
 
   test_agentMET4FOF_anomaly_detection:
@@ -263,9 +447,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - agentMET4FOF_anomaly_detection-dependencies-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
+            - agentMET4FOF_anomaly_detection-v1-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - agentMET4FOF_anomaly_detection-dependencies-
+            - agentMET4FOF_anomaly_detection-v1
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -281,11 +465,49 @@ jobs:
           paths:
             - ./venv
           key: >-
-            agentMET4FOF_anomaly_detection-dependencies-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
+            agentMET4FOF_anomaly_detection-v1-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests:
+      - run_venv_tests:
           submodule: tutorials/agentMET4FOF_anomaly_detection
+
+  test_agentMET4FOF_sensors:
+    executor: tester
+
+    steps:
+      - initialize_submodules:
+          submodule: tutorials/agentMET4FOF_sensors
+      - create_result_folder:
+          subfolder: tutorials/agentMET4FOF_sensors
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - agentMET4FOF_sensors-v1-{{ checksum "tutorials/agentMET4FOF_sensors/requirements.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - agentMET4FOF_sensors-v1
+
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+         name: Install dependencies
+         command: |
+           python3 -m venv venv
+           source venv/bin/activate
+           pip install --upgrade pip pip-tools
+           pip-sync tutorials/agentMET4FOF_sensors/requirements.txt
+           pip install --upgrade pytest
+
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            agentMET4FOF_sensors-v1-{{ checksum "tutorials/agentMET4FOF_sensors/requirements.txt" }}
+
+      # Run tests! We use pytest's test-runner.
+      - run_venv_tests:
+          submodule: tutorials/agentMET4FOF_sensors
 
   test_agentMET4FOF_ml:
     executor: tester
@@ -306,9 +528,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - agentMET4FOF_ml-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
+            - agentMET4FOF_ml-v1-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - agentMET4FOF_ml-
+            - agentMET4FOF_ml-v1
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -324,11 +546,98 @@ jobs:
           paths:
             - ./venv
           key: >-
-            agentMET4FOF_ml-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
+            agentMET4FOF_ml-v1-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests:
+      - run_venv_tests:
           submodule: tutorials/agentMET4FOF_ml
+
+  test_time-series-buffer:
+    executor: tester
+
+    steps:
+      - initialize_submodules:
+          submodule: time-series-buffer
+      - create_result_folder:
+          subfolder: time-series-buffer
+
+      # Create folder for test results.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-reports
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - time-series-buffer-v1-{{ checksum "time-series-buffer/requirements.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - time-series-buffer-v1
+
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+         name: Install dependencies
+         command: |
+           python3 -m venv venv
+           source venv/bin/activate
+           pip install --upgrade pip pytest
+           pip install -r time-series-buffer/requirements.txt
+
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            time-series-buffer-v1-{{ checksum "time-series-buffer/requirements.txt" }}
+
+      # Run tests! We use pytest's test-runner.
+      - run_venv_tests:
+          submodule: time-series-buffer
+
+  test_time-series-metadata:
+    executor: tester
+
+    steps:
+      - initialize_submodules:
+          submodule: time-series-metadata
+      - create_result_folder:
+          subfolder: time-series-metadata
+
+      # Create folder for test results.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-reports
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - time-series-metadata-v1-{{ checksum "time-series-metadata/requirements/dev-requirements-py38.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - time-series-metadata-v1
+
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+         name: Install dependencies
+         command: |
+           python3 -m venv venv
+           source venv/bin/activate
+           pip install --upgrade pip pip-tools
+           pip install time-series-metadata/.
+           pip-sync time-series-metadata/requirements/dev-requirements-py38.txt
+
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            time-series-metadata-v1-{{ checksum "time-series-metadata/requirements/dev-requirements-py38.txt" }}
+
+      # Run tests! We use pytest's test-runner.
+      - run_venv_tests:
+          submodule: time-series-metadata
 
   release:
     executor: publisher
