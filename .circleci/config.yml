@@ -268,7 +268,8 @@ jobs:
     steps:
       - initialize_submodules:
           submodule: << parameters.submodule >>
-      - create_result_folder
+      - create_result_folder:
+          subfolder: << parameters.submodule >>
       - install_and_cache_conda_dependencies
 
       # Run tests! We use pytest's test-runner.
@@ -290,7 +291,8 @@ jobs:
     steps:
       - initialize_submodules:
           submodule: << parameters.submodule >>
-      - create_result_folder
+      - create_result_folder:
+          subfolder: << parameters.submodule >>
       - install_and_cache_venv_dependencies
 
       # Run tests! We use pytest's test-runner.
