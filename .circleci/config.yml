@@ -98,7 +98,7 @@ commands:
         name: Run tests
         command: |
           source venv/bin/activate
-          pytest -v --junitxml=test-reports/junit.xml \
+          pytest -v --junitxml=test-results/junit.xml \
           << parameters.submodule >> > test-results/pytest.log
 
     # Store test results.
