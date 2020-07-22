@@ -43,3 +43,6 @@
 [submodule "ZeMA_testbed_Bayesian_machine_learning"]
 	path = ZeMA_testbed_Bayesian_machine_learning
 	url = https://github.com/Met4FoF/ZeMA_testbed_Bayesian_machine_learning.git
+[submodule "time-series-metadata"]
+	path = time-series-metadata
+	url = https://github.com/PTB-PSt1/time-series-metadata.git
