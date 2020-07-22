@@ -17,51 +17,51 @@ executors:
 workflows:
   build_and_test_virtual_environments:
     jobs:
-      #- build_and_test_conda_env
-      #- build_and_test_venv_env
-      - test_against_conda:
-          name: test_agentMET4FOF_ml_against_conda
-          submodule: tutorials/agentMET4FOF_ml
+      - build_and_test_conda_env
+      - build_and_test_venv_env
+      #- test_against_conda:
+      #    name: test_agentMET4FOF_ml_against_conda
+      #    submodule: tutorials/agentMET4FOF_ml
       - test_against_conda:
           name: test_agentMET4FOF_anomaly_detection_against_conda
           submodule: tutorials/agentMET4FOF_anomaly_detection
-      - test_against_conda:
-          name: test_time-series-buffer_against_conda
-          submodule: time-series-buffer
-      - test_against_conda:
-          name: test_time-series-metadata_against_conda
-          submodule: time-series-metadata
-      - test_against_conda:
-          name: test_agentMET4FOF_sensors_against_conda
-          submodule: tutorials/agentMET4FOF_sensors
+      #- test_against_conda:
+      #    name: test_time-series-buffer_against_conda
+      #    submodule: time-series-buffer
+      #- test_against_conda:
+      #    name: test_time-series-metadata_against_conda
+      #    submodule: time-series-metadata
+      #- test_against_conda:
+      #    name: test_agentMET4FOF_sensors_against_conda
+      #    submodule: tutorials/agentMET4FOF_sensors
       - test_against_conda:
           name: test_PyDynamic_against_conda
           submodule: PyDynamic
-      - test_against_conda:
-          name: test_agentMET4FOF_against_conda
-          submodule: agentMET4FOF
-      - test_against_venv:
-          name: test_agentMET4FOF_ml_against_venv
-          submodule: tutorials/agentMET4FOF_ml
+      #- test_against_conda:
+      #    name: test_agentMET4FOF_against_conda
+      #    submodule: agentMET4FOF
+      #- test_against_venv:
+      #    name: test_agentMET4FOF_ml_against_venv
+      #    submodule: tutorials/agentMET4FOF_ml
       - test_against_venv:
           name: test_agentMET4FOF_anomaly_detection_against_venv
           submodule: tutorials/agentMET4FOF_anomaly_detection
-      - test_against_venv:
-          name: test_time-series-buffer_against_venv
-          submodule: time-series-buffer
-      - test_against_venv:
-          name: test_time-series-metadata_against_venv
-          submodule: time-series-metadata
-      - test_against_venv:
-          name: test_agentMET4FOF_sensors_against_venv
-          submodule: tutorials/agentMET4FOF_sensors
+      #- test_against_venv:
+      #    name: test_time-series-buffer_against_venv
+      #    submodule: time-series-buffer
+      #- test_against_venv:
+      #    name: test_time-series-metadata_against_venv
+      #    submodule: time-series-metadata
+      #- test_against_venv:
+      #    name: test_agentMET4FOF_sensors_against_venv
+      #    submodule: tutorials/agentMET4FOF_sensors
       - test_against_venv:
           name: test_PyDynamic_against_venv
           submodule: PyDynamic
-      - test_against_venv:
-          name: test_agentMET4FOF_against_venv
-          submodule: agentMET4FOF
-      #- test_PyDynamic
+      #- test_against_venv:
+      #    name: test_agentMET4FOF_against_venv
+      #    submodule: agentMET4FOF
+      - test_PyDynamic
       #- test_agentMET4FOF
       #- test_agentMET4FOF_ml
       - test_agentMET4FOF_anomaly_detection
@@ -136,7 +136,7 @@ commands:
         command: |
           python3 -m venv venv
           source venv/bin/activate
-          pip install --upgrade pip pip-tools numpy
+          pip install --upgrade pip pip-tools
           pip-sync dev-requirements.txt requirements.txt
 
     - save_cache:
