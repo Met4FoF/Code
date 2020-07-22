@@ -20,8 +20,19 @@ workflows:
       - build_and_test_conda_env
       - build_and_test_venv_env
       - test_against_conda:
-          requires:
-            - build_and_test_conda_env
+          name: test_agentMET4FOF_ml_against_conda
+          submodule: tutorials/agentMET4FOF_ml
+      - test_against_conda:
+          name: test_agentMET4FOF_anomaly_detection_against_conda
+          submodule: tutorials/agentMET4FOF_anomaly_detection
+      - test_against_conda:
+          name: test_time-series-buffer_against_conda
+          submodule: time-series-buffer
+      - test_against_conda:
+          name: test_time-series-metadata_against_conda
+          submodule: time-series-metadata
+      - test_against_conda:
+          name: test_agentMET4FOF_sensors_against_conda
           submodule: tutorials/agentMET4FOF_sensors
       - test_PyDynamic
       - test_agentMET4FOF
@@ -36,7 +47,7 @@ workflows:
           requires:
               - build_and_test_conda_env
               - build_and_test_venv_env
-              - test_against_conda
+              - test_agentMET4FOF_sensors_against_conda
               - test_PyDynamic
               - test_agentMET4FOF
               - test_agentMET4FOF_ml
@@ -115,10 +126,15 @@ commands:
         name: Install Miniconda
         command: |
           wget "https://repo.anaconda.com/miniconda/\
-          Miniconda3-latest-Linux-x86_64.sh" -O /home/circleci/miniconda.sh
-          mkdir -p /home/circleci/.conda
-          bash /home/circleci/miniconda.sh -b -p /home/circleci/conda
-          echo 'export PATH=/home/circleci/conda/bin:$PATH' >> $BASH_ENV
+          Miniconda3-latest-Linux-x86_64.sh" -O $HOME/miniconda.sh
+          mkdir -p $HOME/.conda
+          bash $HOME/miniconda.sh -b -p /home/circleci/conda
+          source $HOME/conda/etc/profile.d/conda.sh
+          hash -r
+          conda config --set always_yes yes --set changeps1 no
+          conda update -q conda
+
+    #echo 'export PATH=$HOME/conda/bin:$PATH' >> $BASH_ENV
     # Download and cache dependencies.
     - restore_cache:
         keys:
@@ -132,7 +148,7 @@ commands:
         name: Create environment
         command: |
           conda update -n base -c defaults conda
-          if [ -d "/home/circleci/conda/envs/" ]; then
+          if [ -d "$HOME/conda/envs/" ]; then
               conda env update --prune --file environment.yml
           else
               conda env create -f environment.yml
@@ -168,7 +184,7 @@ commands:
     - run:
         name: Run tests
         command: |
-          source venv/bin/activate
+          conda activate Met4FoF_Code
           pytest -v --junitxml=test-results/junit.xml \
           << parameters.submodule >> > test-results/pytest.log
 
@@ -193,6 +209,7 @@ jobs:
     executor: tester
 
     steps:
+      - create_result_folder
       - initialize_submodules:
           submodule: << parameters.submodule >>
       - install_and_cache_conda_dependencies
