@@ -189,9 +189,6 @@ commands:
           pytest -v --junitxml=test-results/junit.xml \
           << parameters.submodule >> > test-results/pytest.log
 
-    - store_test_results:
-        submodule: << parameters.submodule >>
-
   run_venv_tests:
     description: "Run and store test results."
     parameters:
@@ -206,9 +203,6 @@ commands:
           source venv/bin/activate
           pytest -v --junitxml=test-results/junit.xml \
           << parameters.submodule >> > test-results/pytest.log
-
-    - store_test_results:
-        submodule: << parameters.submodule >>
 
   store_test_results:
     description: "Store test results."
@@ -246,6 +240,8 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_conda_tests:
           submodule: << parameters.submodule >>
+      - store_test_results:
+          submodule: << parameters.submodule >>
 
 
   # Define one 'test' job with parameters to deal with all submodules and let them
@@ -268,6 +264,8 @@ jobs:
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
+          submodule: << parameters.submodule >>
+      - store_test_results:
           submodule: << parameters.submodule >>
 
 
@@ -324,6 +322,8 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
           submodule: PyDynamic
+      - store_test_results:
+          submodule: << parameters.submodule >>
 
   test_agentMET4FOF:
     executor: tester
@@ -360,6 +360,8 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
           submodule: agentMET4FOF
+      - store_test_results:
+          submodule: << parameters.submodule >>
 
   test_agentMET4FOF_anomaly_detection:
     executor: tester
@@ -397,6 +399,8 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
           submodule: tutorials/agentMET4FOF_anomaly_detection
+      - store_test_results:
+          submodule: << parameters.submodule >>
 
   test_agentMET4FOF_sensors:
     executor: tester
@@ -435,6 +439,8 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
           submodule: tutorials/agentMET4FOF_sensors
+      - store_test_results:
+          submodule: << parameters.submodule >>
 
   test_agentMET4FOF_ml:
     executor: tester
@@ -478,6 +484,8 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
           submodule: tutorials/agentMET4FOF_ml
+      - store_test_results:
+          submodule: << parameters.submodule >>
 
   test_time-series-buffer:
     executor: tester
@@ -521,6 +529,8 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
           submodule: time-series-buffer
+      - store_test_results:
+          submodule: << parameters.submodule >>
 
   test_time-series-metadata:
     executor: tester
@@ -565,6 +575,8 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
           submodule: time-series-metadata
+      - store_test_results:
+          submodule: << parameters.submodule >>
 
   release:
     executor: publisher
