@@ -3,7 +3,7 @@ jupyter
 numpy
 scikit-learn
 scipy
-matplotlib == 3.1.0
+matplotlib
 pandas
 seaborn
 osbrain
@@ -13,7 +13,6 @@ dash-daq
 dash-cytoscape
 networkx
 multiprocess
-#h5py
 requests
 plotly
 torch
