@@ -189,7 +189,7 @@ commands:
           pytest -v --junitxml=test-results/junit.xml \
           << parameters.submodule >> > test-results/pytest.log
 
-    - store_test_results:
+    - store_test_artifacts_and_results:
         submodule: << parameters.submodule >>
 
   run_venv_tests:
@@ -210,7 +210,7 @@ commands:
     - store_test_results:
         submodule: << parameters.submodule >>
 
-  store_test_results:
+  store_test_artifacts_and_results:
     description: "Store test results."
     parameters:
       submodule:
