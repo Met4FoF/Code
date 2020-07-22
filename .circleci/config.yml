@@ -185,6 +185,7 @@ commands:
     - run:
         name: Run tests
         command: |
+          source $HOME/conda/etc/profile.d/conda.sh
           conda activate Met4FoF_Code
           pytest -v --junitxml=test-results/junit.xml \
           << parameters.submodule >> > test-results/pytest.log
