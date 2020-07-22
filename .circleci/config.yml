@@ -17,14 +17,15 @@ executors:
 workflows:
   build_and_test_virtual_environments:
     jobs:
-      - build_and_test_conda_env
-      - build_and_test_venv_env
+      #- build_and_test_conda_env
+      #- build_and_test_venv_env
       #- test_against_conda:
       #    name: test_agentMET4FOF_ml_against_conda
       #    submodule: tutorials/agentMET4FOF_ml
       - test_against_conda:
           name: test_agentMET4FOF_anomaly_detection_against_conda
           submodule: tutorials/agentMET4FOF_anomaly_detection
+          uninstalls: agentMET4FOF
       #- test_against_conda:
       #    name: test_time-series-buffer_against_conda
       #    submodule: time-series-buffer
@@ -37,6 +38,7 @@ workflows:
       - test_against_conda:
           name: test_PyDynamic_against_conda
           submodule: PyDynamic
+          uninstalls: PyDynamic
       #- test_against_conda:
       #    name: test_agentMET4FOF_against_conda
       #    submodule: agentMET4FOF
@@ -46,6 +48,7 @@ workflows:
       - test_against_venv:
           name: test_agentMET4FOF_anomaly_detection_against_venv
           submodule: tutorials/agentMET4FOF_anomaly_detection
+          uninstalls: agentMET4FOF
       #- test_against_venv:
       #    name: test_time-series-buffer_against_venv
       #    submodule: time-series-buffer
@@ -58,13 +61,14 @@ workflows:
       - test_against_venv:
           name: test_PyDynamic_against_venv
           submodule: PyDynamic
+          uninstalls: PyDynamic
       #- test_against_venv:
       #    name: test_agentMET4FOF_against_venv
       #    submodule: agentMET4FOF
-      - test_PyDynamic
+      #- test_PyDynamic
       #- test_agentMET4FOF
       #- test_agentMET4FOF_ml
-      - test_agentMET4FOF_anomaly_detection
+      #- test_agentMET4FOF_anomaly_detection
       #- test_time-series-buffer
       #- test_time-series-metadata
       #- test_agentMET4FOF_sensors
@@ -262,6 +266,12 @@ jobs:
     parameters:
       submodule:
         type: string
+    # The parameter uninstalls is needed, whenever there is a package
+    # installed in the requirements, which is provided by the submodule under test
+    # itself.
+      uninstalls:
+        type: string
+        default: ""
 
     executor: tester
 
@@ -272,6 +282,19 @@ jobs:
           subfolder: << parameters.submodule >>
       - install_and_cache_conda_dependencies
 
+      # Uninstall packages.
+      - when:
+          condition:
+            not:
+              equal: [ ""master"", << parameters.uninstalls >> ]
+          steps:
+            - run:
+                name: Uninstall packages
+                command: |
+                  source $HOME/conda/etc/profile.d/conda.sh
+                  conda activate Met4FoF_Code
+                  pip uninstall --yes << parameters.uninstalls >>
+
       # Run tests! We use pytest's test-runner.
       - run_conda_tests:
           submodule: << parameters.submodule >>
@@ -280,11 +303,17 @@ jobs:
   # run their test suites against the installed dependencies from the requirements
   # files.
   test_against_venv:
+    parameters:
     # The parameter submodule is mandatory and requires the relative path of the
     # submodule under test from the repository root.
-    parameters:
       submodule:
         type: string
+    # The parameter uninstalls is needed, whenever there is a package
+    # installed in the requirements, which is provided by the submodule under test
+    # itself.
+      uninstalls:
+        type: string
+        default: ""
 
     executor: tester
 
@@ -294,6 +323,18 @@ jobs:
       - create_result_folder:
           subfolder: << parameters.submodule >>
       - install_and_cache_venv_dependencies
+
+      # Uninstall packages.
+      - when:
+          condition:
+            not:
+              equal: [ ""master"", << parameters.uninstalls >> ]
+          steps:
+            - run:
+                name: Uninstall packages
+                command: |
+                  source venv/bin/activate
+                  pip uninstall --yes << parameters.uninstalls >>
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
