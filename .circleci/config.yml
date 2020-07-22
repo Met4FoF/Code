@@ -286,7 +286,7 @@ jobs:
       - when:
           condition:
             not:
-              equal: [ ""master"", << parameters.uninstalls >> ]
+              equal: [ "", << parameters.uninstalls >> ]
           steps:
             - run:
                 name: Uninstall packages
@@ -328,7 +328,7 @@ jobs:
       - when:
           condition:
             not:
-              equal: [ ""master"", << parameters.uninstalls >> ]
+              equal: [ "", << parameters.uninstalls >> ]
           steps:
             - run:
                 name: Uninstall packages
