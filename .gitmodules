@@ -40,3 +40,6 @@
 [submodule "tutorials/agentMET4FOF_sensors"]
 	path = tutorials/agentMET4FOF_sensors
 	url = https://github.com/Met4FoF/agentMET4FOF_sensors.git
+[submodule "ZeMA_testbed_Bayesian_machine_learning"]
+	path = ZeMA_testbed_Bayesian_machine_learning
+	url = https://github.com/Met4FoF/ZeMA_testbed_Bayesian_machine_learning.git
