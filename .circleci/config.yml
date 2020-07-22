@@ -135,8 +135,8 @@ commands:
           hash -r
           conda config --set always_yes yes --set changeps1 no
           conda update -q conda
+          echo 'export PATH=$HOME/conda/bin:$PATH' >> $BASH_ENV
 
-    #echo 'export PATH=$HOME/conda/bin:$PATH' >> $BASH_ENV
     # Download and cache dependencies.
     - restore_cache:
         keys:
@@ -149,7 +149,6 @@ commands:
     - run:
         name: Create environment
         command: |
-          conda update -n base -c defaults conda
           if [ -d "$HOME/conda/envs/" ]; then
               conda env update --prune --file environment.yml
           else
@@ -175,7 +174,7 @@ commands:
         command: |
           mkdir -p test-results/<< parameters.subfolder >>
 
-  run_and_store_tests:
+  run_conda_tests:
     description: "Run and store test results."
     parameters:
       submodule:
@@ -190,6 +189,34 @@ commands:
           pytest -v --junitxml=test-results/junit.xml \
           << parameters.submodule >> > test-results/pytest.log
 
+    - store_test_results:
+        submodule: << parameters.submodule >>
+
+  run_venv_tests:
+    description: "Run and store test results."
+    parameters:
+      submodule:
+        type: string
+        default: ""
+    steps:
+    # Run tests! We use pytest's test-runner.
+    - run:
+        name: Run tests
+        command: |
+          source venv/bin/activate
+          pytest -v --junitxml=test-results/junit.xml \
+          << parameters.submodule >> > test-results/pytest.log
+
+    - store_test_results:
+        submodule: << parameters.submodule >>
+
+  store_test_results:
+    description: "Store test results."
+    parameters:
+      submodule:
+        type: string
+        default: ""
+    steps:
     # Store test results.
     - store_artifacts:
         path: test-results
@@ -217,7 +244,30 @@ jobs:
       - install_and_cache_conda_dependencies
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests:
+      - run_conda_tests:
+          submodule: << parameters.submodule >>
+
+
+  # Define one 'test' job with parameters to deal with all submodules and let them
+  # run their test suites against the installed dependencies from the requirements
+  # files.
+  test_against_venv:
+    # The parameter submodule is mandatory and requires the relative path of the
+    # submodule under test from the repository root.
+    parameters:
+      submodule:
+        type: string
+
+    executor: tester
+
+    steps:
+      - initialize_submodules:
+          submodule: << parameters.submodule >>
+      - create_result_folder
+      - install_and_cache_venv_dependencies
+
+      # Run tests! We use pytest's test-runner.
+      - run_venv_tests:
           submodule: << parameters.submodule >>
 
 
@@ -272,7 +322,7 @@ jobs:
             PyDynamic-v1-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests:
+      - run_venv_tests:
           submodule: PyDynamic
 
   test_agentMET4FOF:
@@ -308,7 +358,7 @@ jobs:
             agentMET4FOF-v1-{{ checksum "agentMET4FOF/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests:
+      - run_venv_tests:
           submodule: agentMET4FOF
 
   test_agentMET4FOF_anomaly_detection:
@@ -345,7 +395,7 @@ jobs:
             agentMET4FOF_anomaly_detection-v1-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests:
+      - run_venv_tests:
           submodule: tutorials/agentMET4FOF_anomaly_detection
 
   test_agentMET4FOF_sensors:
@@ -383,7 +433,7 @@ jobs:
             agentMET4FOF_sensors-v1-{{ checksum "tutorials/agentMET4FOF_sensors/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests:
+      - run_venv_tests:
           submodule: tutorials/agentMET4FOF_sensors
 
   test_agentMET4FOF_ml:
@@ -426,7 +476,7 @@ jobs:
             agentMET4FOF_ml-v1-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests:
+      - run_venv_tests:
           submodule: tutorials/agentMET4FOF_ml
 
   test_time-series-buffer:
@@ -469,7 +519,7 @@ jobs:
             time-series-buffer-v1-{{ checksum "time-series-buffer/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests:
+      - run_venv_tests:
           submodule: time-series-buffer
 
   test_time-series-metadata:
@@ -513,7 +563,7 @@ jobs:
             time-series-metadata-v1-{{ checksum "time-series-metadata/requirements/dev-requirements-py38.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_and_store_tests:
+      - run_venv_tests:
           submodule: time-series-metadata
 
   release:
