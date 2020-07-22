@@ -75,7 +75,9 @@ workflows:
       #        - confirm_previewed_release_actions
 
 commands:
-  # Reusable command to prepare the environment for testing.
+  # Reusable command to prepare the environment for testing. These steps need to be
+  # executed first in all environments, where they are used, because the checkout step
+  # needs to be conducted before anything else.
   initialize_submodules:
     description: "Prepare everything."
     parameters:
@@ -209,9 +211,9 @@ jobs:
     executor: tester
 
     steps:
-      - create_result_folder
       - initialize_submodules:
           submodule: << parameters.submodule >>
+      - create_result_folder
       - install_and_cache_conda_dependencies
 
       # Run tests! We use pytest's test-runner.
