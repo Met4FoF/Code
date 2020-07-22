@@ -37,3 +37,6 @@
 [submodule "PyDynamic_tutorials"]
 	path = tutorials/PyDynamic_tutorials
 	url = https://github.com/PTB-PSt1/PyDynamic_tutorials.git
+[submodule "tutorials/agentMET4FOF_sensors"]
+	path = tutorials/agentMET4FOF_sensors
+	url = https://github.com/Met4FoF/agentMET4FOF_sensors.git
