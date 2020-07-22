@@ -46,3 +46,6 @@
 [submodule "time-series-metadata"]
 	path = time-series-metadata
 	url = https://github.com/PTB-PSt1/time-series-metadata.git
+[submodule "time-series-buffer"]
+	path = time-series-buffer
+	url = https://github.com/PTB-PSt1/time-series-buffer.git
