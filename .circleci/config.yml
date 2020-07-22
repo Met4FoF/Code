@@ -61,7 +61,7 @@ workflows:
       - test_against_venv:
           name: test_PyDynamic_against_venv
           submodule: PyDynamic
-          uninstalls: PyDynamic
+          uninstalls: PyDynamic test examples
       #- test_against_venv:
       #    name: test_agentMET4FOF_against_venv
       #    submodule: agentMET4FOF
@@ -335,6 +335,8 @@ jobs:
                 command: |
                   source venv/bin/activate
                   pip uninstall --yes << parameters.uninstalls >>
+                  cd venv/lib/python3.8/site-packages/
+                  rm -r << parameters.uninstalls >>
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
