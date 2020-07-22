@@ -1,6 +1,5 @@
 -c requirements.txt
 
--r tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in
 python-semantic-release
 pytest
 hypothesis
