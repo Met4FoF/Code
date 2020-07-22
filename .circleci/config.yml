@@ -22,18 +22,45 @@ workflows:
       - test_against_conda:
           name: test_agentMET4FOF_ml_against_conda
           submodule: tutorials/agentMET4FOF_ml
-      #- test_against_conda:
-      #    name: test_agentMET4FOF_anomaly_detection_against_conda
-      #    submodule: tutorials/agentMET4FOF_anomaly_detection
-      #- test_against_conda:
-      #    name: test_time-series-buffer_against_conda
-      #    submodule: time-series-buffer
-      #- test_against_conda:
-      #    name: test_time-series-metadata_against_conda
-      #    submodule: time-series-metadata
-      #- test_against_conda:
-      #    name: test_agentMET4FOF_sensors_against_conda
-      #    submodule: tutorials/agentMET4FOF_sensors
+      - test_against_conda:
+          name: test_agentMET4FOF_anomaly_detection_against_conda
+          submodule: tutorials/agentMET4FOF_anomaly_detection
+      - test_against_conda:
+          name: test_time-series-buffer_against_conda
+          submodule: time-series-buffer
+      - test_against_conda:
+          name: test_time-series-metadata_against_conda
+          submodule: time-series-metadata
+      - test_against_conda:
+          name: test_agentMET4FOF_sensors_against_conda
+          submodule: tutorials/agentMET4FOF_sensors
+      - test_against_conda:
+          name: test_PyDynamic_against_conda
+          submodule: PyDynamic
+      - test_against_conda:
+          name: test_agentMET4FOF_against_conda
+          submodule: agentMET4FOF
+      - test_against_venv:
+          name: test_agentMET4FOF_ml_against_venv
+          submodule: tutorials/agentMET4FOF_ml
+      - test_against_venv:
+          name: test_agentMET4FOF_anomaly_detection_against_venv
+          submodule: tutorials/agentMET4FOF_anomaly_detection
+      - test_against_venv:
+          name: test_time-series-buffer_against_venv
+          submodule: time-series-buffer
+      - test_against_venv:
+          name: test_time-series-metadata_against_venv
+          submodule: time-series-metadata
+      - test_against_venv:
+          name: test_agentMET4FOF_sensors_against_venv
+          submodule: tutorials/agentMET4FOF_sensors
+      - test_against_venv:
+          name: test_PyDynamic_against_venv
+          submodule: PyDynamic
+      - test_against_venv:
+          name: test_agentMET4FOF_against_venv
+          submodule: agentMET4FOF
       #- test_PyDynamic
       #- test_agentMET4FOF
       #- test_agentMET4FOF_ml
@@ -147,7 +174,7 @@ commands:
 
     # Create environment.
     - run:
-        name: Create environment
+        name: Create or update environment
         command: |
           if [ -d "$HOME/conda/envs/" ]; then
               conda env update --prune --file environment.yml
@@ -247,6 +274,8 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_conda_tests:
           submodule: << parameters.submodule >>
+      - store_test_artifacts_and_results:
+          submodule: << parameters.submodule >>
 
 
   # Define one 'test' job with parameters to deal with all submodules and let them
@@ -269,6 +298,8 @@ jobs:
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
+          submodule: << parameters.submodule >>
+      - store_test_artifacts_and_results:
           submodule: << parameters.submodule >>
 
 
