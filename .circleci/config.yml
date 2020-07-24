@@ -421,7 +421,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip-r agentMET4FOF/requirements.txt -r agentMET4FOF/dev-requirements.txt
+           pip install --upgrade pip -r agentMET4FOF/requirements.txt -r agentMET4FOF/dev-requirements.txt
 
       - save_cache:
           paths:
