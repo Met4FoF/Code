@@ -25,7 +25,6 @@ workflows:
       - test_against_conda:
           name: test_agentMET4FOF_anomaly_detection_against_conda
           subtree: tutorials/agentMET4FOF_anomaly_detection
-          uninstalls: agentMET4FOF
       - test_against_conda:
           name: test_time-series-buffer_against_conda
           subtree: time-series-buffer
@@ -44,7 +43,6 @@ workflows:
       - test_against_venv:
           name: test_agentMET4FOF_anomaly_detection_against_venv
           subtree: tutorials/agentMET4FOF_anomaly_detection
-          uninstalls: agentMET4FOF
       - test_against_venv:
           name: test_time-series-buffer_against_venv
           subtree: time-series-buffer
