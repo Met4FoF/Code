@@ -4,7 +4,7 @@
 #
 #    pip-compile
 #
-agentmet4fof==0.1.8       # via -r requirements.in
+agentmet4fof==0.2.0       # via -r requirements.in
 brotli==1.0.7             # via flask-compress
 click==7.1.2              # via flask
 cloudpickle==1.4.1        # via osbrain
@@ -19,15 +19,14 @@ decorator==4.4.2          # via networkx
 dill==0.3.1.1             # via osbrain
 flask-compress==1.5.0     # via dash
 flask==1.1.2              # via dash, flask-compress
-future==0.18.2            # via dash, torch
+future==0.18.2            # via dash, torch, uncertainties
 itsdangerous==1.1.0       # via flask
 jinja2==2.11.2            # via flask
-joblib==0.15.1            # via scikit-learn
 kiwisolver==1.2.0         # via matplotlib
 markupsafe==1.1.1         # via jinja2
 matplotlib==3.1.0         # via agentmet4fof
 networkx==2.4             # via agentmet4fof
-numpy==1.18.5             # via -r requirements.in, agentmet4fof, matplotlib, pandas, scikit-learn, scipy, torch
+numpy==1.18.5             # via -r requirements.in, agentmet4fof, matplotlib, pandas, scipy, time-series-buffer, torch
 osbrain==0.6.5            # via agentmet4fof
 pandas==1.0.4             # via -r requirements.in, agentmet4fof
 plotly==4.8.1             # via -r requirements.in, agentmet4fof, dash
@@ -37,10 +36,11 @@ python-dateutil==2.8.1    # via matplotlib, pandas
 pytz==2020.1              # via pandas
 pyzmq==19.0.1             # via osbrain
 retrying==1.3.3           # via plotly
-scikit-learn==0.23.1      # via agentmet4fof
-scipy==1.4.1              # via -r requirements.in, scikit-learn
+scipy==1.4.1              # via -r requirements.in, agentmet4fof
 serpent==1.30.2           # via pyro4
 six==1.15.0               # via cycler, plotly, python-dateutil, retrying
-threadpoolctl==2.1.0      # via scikit-learn
+time-series-buffer==0.1.4b0  # via agentmet4fof
+time-series-metadata==0.1.0  # via agentmet4fof
 torch==1.5.0              # via -r requirements.in
+uncertainties==3.1.4      # via time-series-buffer
 werkzeug==1.0.1           # via flask
