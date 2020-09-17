@@ -21,42 +21,42 @@ workflows:
       - build_and_test_venv_env
       - test_against_conda:
           name: test_agentMET4FOF_ml_against_conda
-          submodule: tutorials/agentMET4FOF_ml
+          subtree: tutorials/agentMET4FOF_ml
       - test_against_conda:
           name: test_agentMET4FOF_anomaly_detection_against_conda
-          submodule: tutorials/agentMET4FOF_anomaly_detection
+          subtree: tutorials/agentMET4FOF_anomaly_detection
           uninstalls: agentMET4FOF
       - test_against_conda:
           name: test_time-series-buffer_against_conda
-          submodule: time-series-buffer
+          subtree: time-series-buffer
       - test_against_conda:
           name: test_time-series-metadata_against_conda
-          submodule: time-series-metadata
+          subtree: time-series-metadata
       - test_against_conda:
           name: test_agentMET4FOF_sensors_against_conda
-          submodule: tutorials/agentMET4FOF_sensors
+          subtree: tutorials/agentMET4FOF_sensors
       - test_against_conda:
           name: test_agentMET4FOF_against_conda
-          submodule: agentMET4FOF
+          subtree: agentMET4FOF
       - test_against_venv:
           name: test_agentMET4FOF_ml_against_venv
-          submodule: tutorials/agentMET4FOF_ml
+          subtree: tutorials/agentMET4FOF_ml
       - test_against_venv:
           name: test_agentMET4FOF_anomaly_detection_against_venv
-          submodule: tutorials/agentMET4FOF_anomaly_detection
+          subtree: tutorials/agentMET4FOF_anomaly_detection
           uninstalls: agentMET4FOF
       - test_against_venv:
           name: test_time-series-buffer_against_venv
-          submodule: time-series-buffer
+          subtree: time-series-buffer
       - test_against_venv:
           name: test_time-series-metadata_against_venv
-          submodule: time-series-metadata
+          subtree: time-series-metadata
       - test_against_venv:
           name: test_agentMET4FOF_sensors_against_venv
-          submodule: tutorials/agentMET4FOF_sensors
+          subtree: tutorials/agentMET4FOF_sensors
       - test_against_venv:
           name: test_agentMET4FOF_against_venv
-          submodule: agentMET4FOF
+          subtree: agentMET4FOF
       - test_PyDynamic
       - test_agentMET4FOF
       - test_agentMET4FOF_ml
@@ -109,22 +109,6 @@ workflows:
               - confirm_previewed_release_actions
 
 commands:
-  # Reusable command to prepare the environment for testing. These steps need to be
-  # executed first in all environments, where they are used, because the checkout step
-  # needs to be conducted before anything else.
-  initialize_submodules:
-    description: "Prepare everything."
-    parameters:
-      submodule:
-        type: string
-        default: ""
-    steps:
-    # Checkout code.
-    - checkout
-    # Update and initialize submodules.
-    - run: git submodule sync << parameters.submodule >>
-    - run: git submodule update --init --recursive << parameters.submodule >>
-
   # Reusable command to prepare the environment for testing.
   install_and_cache_venv_dependencies:
     description: "Install pip dependencies of all packages."
@@ -211,7 +195,7 @@ commands:
   run_conda_tests:
     description: "Run and store test results."
     parameters:
-      submodule:
+      subtree:
         type: string
         default: ""
     steps:
@@ -222,15 +206,15 @@ commands:
           source $HOME/conda/etc/profile.d/conda.sh
           conda activate Met4FoF_Code
           pytest -v --junitxml=test-results/junit.xml \
-          << parameters.submodule >> > test-results/pytest.log
+          << parameters.subtree >> > test-results/pytest.log
 
     - store_test_artifacts_and_results:
-        submodule: << parameters.submodule >>
+        subtree: << parameters.subtree >>
 
   run_venv_tests:
     description: "Run and store test results."
     parameters:
-      submodule:
+      subtree:
         type: string
         default: ""
     steps:
@@ -240,37 +224,37 @@ commands:
         command: |
           source venv/bin/activate
           pytest -v --junitxml=test-results/junit.xml \
-          << parameters.submodule >> > test-results/pytest.log
+          << parameters.subtree >> > test-results/pytest.log
 
     - store_test_artifacts_and_results:
-        submodule: << parameters.submodule >>
+        subtree: << parameters.subtree >>
 
   store_test_artifacts_and_results:
     description: "Store test results."
     parameters:
-      submodule:
+      subtree:
         type: string
         default: ""
     steps:
     # Store test results.
     - store_artifacts:
         path: test-results
-        destination: test-results/<< parameters.submodule >>
+        destination: test-results/<< parameters.subtree >>
 
     - store_test_results:
         path: test-results
 
 jobs:
-  # Define one 'test' job with parameters to deal with all submodules and let them
+  # Define one 'test' job with parameters to deal with all subtrees and let them
   # run their test suites against the installed dependencies from the environment.yml.
   test_against_conda:
-    # The parameter submodule is mandatory and requires the relative path of the
-    # submodule under test from the repository root.
+    # The parameter subtree is mandatory and requires the relative path of the
+    # subtree under test from the repository root.
     parameters:
-      submodule:
+      subtree:
         type: string
     # The parameter uninstalls is needed, whenever there is a package
-    # installed in the requirements, which is provided by the submodule under test
+    # installed in the requirements, which is provided by the subtree under test
     # itself.
       uninstalls:
         type: string
@@ -279,10 +263,9 @@ jobs:
     executor: tester
 
     steps:
-      - initialize_submodules:
-          submodule: << parameters.submodule >>
+      - checkout
       - create_result_folder:
-          subfolder: << parameters.submodule >>
+          subfolder: << parameters.subtree >>
       - install_and_cache_conda_dependencies
 
       # Uninstall packages.
@@ -300,19 +283,19 @@ jobs:
 
       # Run tests! We use pytest's test-runner.
       - run_conda_tests:
-          submodule: << parameters.submodule >>
+          subtree: << parameters.subtree >>
 
-  # Define one 'test' job with parameters to deal with all submodules and let them
+  # Define one 'test' job with parameters to deal with all subtrees and let them
   # run their test suites against the installed dependencies from the requirements
   # files.
   test_against_venv:
     parameters:
-    # The parameter submodule is mandatory and requires the relative path of the
-    # submodule under test from the repository root.
-      submodule:
+    # The parameter subtree is mandatory and requires the relative path of the
+    # subtree under test from the repository root.
+      subtree:
         type: string
     # The parameter uninstalls is needed, whenever there is a package
-    # installed in the requirements, which is provided by the submodule under test
+    # installed in the requirements, which is provided by the subtree under test
     # itself.
       uninstalls:
         type: string
@@ -321,10 +304,9 @@ jobs:
     executor: tester
 
     steps:
-      - initialize_submodules:
-          submodule: << parameters.submodule >>
+      - checkout
       - create_result_folder:
-          subfolder: << parameters.submodule >>
+          subfolder: << parameters.subtree >>
       - install_and_cache_venv_dependencies
 
       # Uninstall packages.
@@ -341,14 +323,14 @@ jobs:
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
-          submodule: << parameters.submodule >>
+          subtree: << parameters.subtree >>
 
 
   build_and_test_conda_env:
     executor: tester
 
     steps:
-      - initialize_submodules
+      - checkout
       - install_and_cache_conda_dependencies
 
 
@@ -356,7 +338,7 @@ jobs:
     executor: tester
 
     steps:
-      - initialize_submodules
+      - checkout
       - install_and_cache_venv_dependencies
 
 
@@ -365,8 +347,7 @@ jobs:
 
     # Specify the steps to execute during this test jobs.
     steps:
-      - initialize_submodules:
-          submodule: PyDynamic
+      - checkout
       - create_result_folder:
           subfolder: PyDynamic
 
@@ -396,14 +377,13 @@ jobs:
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
-          submodule: PyDynamic
+          subtree: PyDynamic
 
   test_agentMET4FOF:
     executor: tester
 
     steps:
-      - initialize_submodules:
-          submodule: agentMET4FOF
+      - checkout
       - create_result_folder:
           subfolder: agentMET4FOF
 
@@ -431,14 +411,13 @@ jobs:
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
-          submodule: agentMET4FOF
+          subtree: agentMET4FOF
 
   test_agentMET4FOF_anomaly_detection:
     executor: tester
 
     steps:
-      - initialize_submodules:
-          submodule: tutorials/agentMET4FOF_anomaly_detection
+      - checkout
       - create_result_folder:
           subfolder: tutorials/agentMET4FOF_anomaly_detection
 
@@ -468,14 +447,13 @@ jobs:
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
-          submodule: tutorials/agentMET4FOF_anomaly_detection
+          subtree: tutorials/agentMET4FOF_anomaly_detection
 
   test_agentMET4FOF_sensors:
     executor: tester
 
     steps:
-      - initialize_submodules:
-          submodule: tutorials/agentMET4FOF_sensors
+      - checkout
       - create_result_folder:
           subfolder: tutorials/agentMET4FOF_sensors
 
@@ -506,14 +484,13 @@ jobs:
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
-          submodule: tutorials/agentMET4FOF_sensors
+          subtree: tutorials/agentMET4FOF_sensors
 
   test_agentMET4FOF_ml:
     executor: tester
 
     steps:
-      - initialize_submodules:
-          submodule: tutorials/agentMET4FOF_ml
+      - checkout
       - create_result_folder:
           subfolder: tutorials/agentMET4FOF_ml
 
@@ -549,14 +526,13 @@ jobs:
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
-          submodule: tutorials/agentMET4FOF_ml
+          subtree: tutorials/agentMET4FOF_ml
 
   test_time-series-buffer:
     executor: tester
 
     steps:
-      - initialize_submodules:
-          submodule: time-series-buffer
+      - checkout
       - create_result_folder:
           subfolder: time-series-buffer
 
@@ -592,14 +568,13 @@ jobs:
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
-          submodule: time-series-buffer
+          subtree: time-series-buffer
 
   test_time-series-metadata:
     executor: tester
 
     steps:
-      - initialize_submodules:
-          submodule: time-series-metadata
+      - checkout
       - create_result_folder:
           subfolder: time-series-metadata
 
@@ -636,7 +611,7 @@ jobs:
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
-          submodule: time-series-metadata
+          subtree: time-series-metadata
 
   release:
     executor: publisher
