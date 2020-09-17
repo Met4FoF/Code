@@ -1,0 +1,4 @@
+# Runtime clutter #
+###################
+*.csv
+*.pth

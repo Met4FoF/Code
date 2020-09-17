@@ -1,0 +1,8 @@
+name: PyDynamic_tutorials
+channels:
+    - defaults
+dependencies:
+    - python = 3.8.2
+    # pip dependencies have to be provided in `requirements.txt` syntax
+    - pip:
+        - -r requirements.txt

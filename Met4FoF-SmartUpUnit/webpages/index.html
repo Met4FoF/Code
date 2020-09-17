@@ -1,0 +1,129 @@
+<html>
+<head>
+
+<!-- JQuery Import -->
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js" type="text/javascript"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+  	$(".led").click(function(e) {
+  	    $.get($(this).attr("id"));
+  	});
+	function refreshValues() {
+       $.get("btn1", function(res) {
+           if(res == "OFF")
+           	 $("#usr-btn").removeClass("alert-success").addClass("alert-info");
+           else
+             $("#usr-btn").removeClass("alert-info").addClass("alert-success");
+             
+           $("#usr-btn").find("b").html(res);           
+        }); 
+        $.get("adc", function(res) {
+           $("#mcu-temp").find("b").html(res);           
+        }); 
+	   setTimeout(refreshValues, 250); 
+	}
+	setTimeout(refreshValues, 250);
+  
+  //################################################################################
+  
+ 
+    $('.IP').mask('999.999.999.999');
+	
+//$('#button1').on('click', function() {
+        //alert(tbox1);
+		//$("#result").html($('#first input').serialize());	
+//    });
+   function getUrlVars() {
+    var vars = {};
+    var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+        vars[key] = value;
+    });
+    return vars;
+}
+       var tbox1 = getUrlVars()["tbox1"];
+	   var tbox2 = getUrlVars()["tbox1"];
+	 
+ 
+  });
+</script>
+  <script>
+
+        strLine1 = "";
+        strLine2 = "";
+        
+        function SendText()
+        {
+            //nocache = "&nocache=" + Math.random() * 1000000;
+            var request = new XMLHttpRequest();
+            
+            strLine1 = "&L1=" + document.getElementById("txt_form").tbox1.value;
+            strLine2 = "&L2=" + document.getElementById("txt_form").tbox2.value;
+            
+            request.open("GET", "ajax_inputs" + strLine1 + strLine2 , true);
+            request.send(null);
+        }
+        </script>
+<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+</head>
+<body>
+<div class="container">
+	<div class="panel panel-default">
+	 <div class="panel-heading">Nucleo LEDs</div>
+	  <div class="panel-body">
+	    <div class="row">
+		  <div class="col-md-6 cell">
+		     <button type="button" class="btn btn-default btn-block led" id="led1">LED1</button>
+		  </div>
+		  <div class="col-md-6 cell">
+		  	 <button type="button" class="btn btn-default btn-block led" id="led2">LED2</button>
+		  </div>	  	 
+		  <div class="col-md-6 cell">
+		  	 <button type="button" class="btn btn-default btn-block led" id="led3">LED3</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	
+	<div class="panel panel-default">
+	<form method="get">
+    <div id="first" style=" ">
+	<div class="panel-heading" style="background-color: #ddd;">Setting IP</div>
+	<div style="padding: 10px;" >
+	                         <form id="txt_form" name="frmText">
+    &nbsp;&nbsp;&nbsp;&nbsp; UDP Target IP: <input name="tbox1"  placeholder="---,---,---,---" type="text" class='IP led' id="ipv4" style="width: 110px;">
+                             Subnet Max:    <input name="tbox2"  placeholder="---,---,---,---" type="text" class='IP led' id="sub1" style="width: 110px;"> &nbsp;&nbsp;&nbsp;&nbsp;
+							 </form>
+                                            <input id="button1" type="submit" value="save" onclick="SendText()">
+      </div> 
+     
+    </div>
+	
+     </form>
+	</div>
+	
+	
+	<div class="panel panel-default">
+	
+	  <div class="panel-heading">Nucleo USER BUTTON</div>
+	  <div class="panel-body">
+	     <div id="usr-btn" class="alert alert-info" role="alert"><b>OFF</b></div>
+	  </div>
+	</div>	
+	<div class="panel panel-default">
+	  <div class="panel-heading">MCU Temperature</div>
+	  <div class="panel-body">
+	     <div id="mcu-temp" class="alert alert-warning" role="alert"><b>TEMP</b></div>
+	  </div>
+	</div>	
+</div>
+</body>
+</html>
