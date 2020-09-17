@@ -1,0 +1,6 @@
+agentMET4FOF
+automationhat
+dash
+numpy
+OctoPrint>=1.4.1rc3
+pyserial
