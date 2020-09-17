@@ -1,0 +1,9 @@
+.idea
+.ipynb_checkpoints
+dataset
+pickles
+venv
+__pycache__
+*.csv
+results/
+*.pkl
