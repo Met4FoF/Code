@@ -1,17 +1,20 @@
 # Guide for software development in the EMPIR project 17IND12 ***Met4FoF***
+
 This guide strives to help project partners, members of the stakeholder
-advisory board and all others interested in the project outcomes and processes
+advisory board and all others interested in the project's outcomes and processes
 to understand the way we are collaborating on code writing and software
 development. We will constantly work on it and extend it as the project evolves,
 questions arise and solutions are provided.
 
 ## Coding conventions
+
 To ensure equally high code quality across the project we provide coding
-conventions. Those conventions are collected in [coding_conventions.md
-](coding_conventions.md). They are comprised of proven best practices to produce
-easily readable and usable production code.
+conventions. Those conventions are collected in
+[coding_conventions.md](coding_conventions.md). They are comprised of proven best
+practices to produce easily readable and usable research or production code.
 
 ## Support on coding
+
 As all project partners agreed on making the code written for the project
 publicly available, we have implemented state of the art tools on a publicly
 available repository [*Met4FoF/Code*](../README.md). These tools are supporting
@@ -21,9 +24,10 @@ advances and enhance, extend or exchange them if needed to ensure publication of
 high quality code only.  
 
 ## Contribution
+
 There are several ways of contributing to the software development processes in
 the project for all partners. The following picture sketches the architecture
-for inlcuding [internal](#internal) and [external](#external) **Git**
+for including [internal](#internal) and [external](#external) **Git**
 repositories.
 
 ![repository architecture](./images/Met4FoF_Code_architecture.png)
@@ -33,24 +37,23 @@ Basically there are two ways of contributing code.
 1.  Add an external **GitHub** repository to the [super-project](#super-project)
 
     This option lets you manage all your code in a **GitHub** repository owned
-    by yourself completely seperated from the project. Whenever a revision of
+    by yourself completely separated from the project. Whenever a revision of
     your code is ready to be published, you inform the [project's software
     development coordinator](https://github.com/BjoernLudwigPTB). After checking
-    the code's compliance with the [project's coding conventions
-    ](coding_conventions.md) your code will then be published as part of the
-    super-project [*Met4FoF/Code*](../README.md).
+    the code's compliance with the
+    [project's coding conventions](coding_conventions.md) your code will then be
+    published as part of the super-project [*Met4FoF/Code*](../README.md).
 
 1.  Use an internal **GitHub** repository in the [super-project](#super-project)
 
     This option lets you use a repository set up and maintained by the
-    [project's software development coordinator
-    ](https://github.com/BjoernLudwigPTB). As collaborator you will be able to
-    push your code directly into this repository. Whenever a revision of your
-    code is ready to be published, you inform the [project's software
-    development coordinator](https://github.com/BjoernLudwigPTB). After checking
-    the code's compliance with the [project's coding conventions
-    ](coding_conventions.md) your code will then be published as part of the
-    super-project [*Met4FoF/Code*](../README.md).
+    [project's software development coordinator](https://github.com/BjoernLudwigPTB).
+    As collaborator you will be able to push your code directly into this repository.
+    Whenever a revision of your code is ready to be published, you inform the
+    [project's software development coordinator](https://github.com/BjoernLudwigPTB).
+    After checking the code's compliance with the
+    [project's coding conventions](coding_conventions.md) your code will then be
+    published as part of the super-project [*Met4FoF/Code*](../README.md).
 
 ## Glossary
 
