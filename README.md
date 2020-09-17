@@ -8,6 +8,20 @@ This repository combines all the code written for or used in the EMPIR project 1
 
 You find the project partners' code in the corresponding subfolders of the repository.
 
+## **MIGRATING FROM PREVIOUS VERSIONS**
+
+If you have a clone of this repository where the subprojects were still included as
+_Git submodules_, run the following command sequence once in the repository's root
+directory:
+ 
+```bash
+$ git submodule deinit --all
+$ git pull
+```
+
+You will end up with the current version. From then on simply use the command as
+stated in [Updating the code](#Updating-the-code) to stay up-to-date.
+
 ## Project's coding conventions and best practices
 
 Additional information around code writing and software development in the project
@@ -29,7 +43,9 @@ open _Git Bash_ in Windows or the command line and run the given commands.
 
 To clone the repository locally, you go to any folder on your machine (i.e. `~/your/local/folder/`) and execute
 
-`$ git clone --recurse-submodules https://github.com/Met4FoF/Code Met4FoF_Code`
+```bash
+$ git clone --recurse-submodules https://github.com/Met4FoF/Code Met4FoF_Code
+```
 
 where `Met4FoF_Code` in the command stands for the folder you want the repository to
 go into. This folder does not need to exist before you execute the command. It will
