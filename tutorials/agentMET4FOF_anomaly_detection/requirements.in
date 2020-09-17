@@ -1,0 +1,6 @@
+plotly
+numpy 
+scipy
+pandas
+torch
+agentMET4FOF>=0.2.0
