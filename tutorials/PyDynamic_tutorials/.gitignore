@@ -1,0 +1,12 @@
+# Jupyter Notebook artifacts #
+##############################
+.ipynb_checkpoints/
+
+# Data artifacts #
+##################
+*.dump
+run_example.py
+PyDynamic_tutorials/deconvolution/AmplitudeData
+PyDynamic_tutorials/deconvolution/HydrophonCalibrationData
+PyDynamic_tutorials/deconvolution/MeasuredSignals/M-Mode 3 MHz
+PyDynamic_tutorials/deconvolution/MeasuredSignals
