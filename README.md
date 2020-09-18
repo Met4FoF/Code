@@ -15,11 +15,12 @@ _Git submodules_, run the following command sequence once in the repository's ro
 directory:
  
 ```bash
-$ git submodule deinit --all
+$ git submodule deinit --all --force
 $ git pull
 ```
 
-You will end up with the current version. From then on simply use the command as
+This temporarily deletes your copies of the former submodules and replaces them by
+the current versions in this repository. From then on simply use the command as
 stated in [Updating the code](#Updating-the-code) to stay up-to-date.
 
 ## Project's coding conventions and best practices
