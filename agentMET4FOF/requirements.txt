@@ -1,3 +1,4 @@
+mesa
 ipykernel
 numpy
 scipy
@@ -15,3 +16,4 @@ networkx
 plotly
 time-series-buffer
 time-series-metadata
+mpld3

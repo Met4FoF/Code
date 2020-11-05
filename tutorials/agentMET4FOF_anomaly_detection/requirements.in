@@ -3,4 +3,4 @@ numpy
 scipy
 pandas
 torch
-agentMET4FOF>=0.2.0
+agentMET4FOF==0.2.0
