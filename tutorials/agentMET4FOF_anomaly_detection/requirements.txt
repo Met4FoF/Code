@@ -5,42 +5,44 @@
 #    pip-compile
 #
 agentmet4fof==0.2.0       # via -r requirements.in
-brotli==1.0.7             # via flask-compress
+brotli==1.0.9             # via flask-compress
 click==7.1.2              # via flask
-cloudpickle==1.4.1        # via osbrain
+cloudpickle==1.6.0        # via osbrain
 cycler==0.10.0            # via matplotlib
-dash-core-components==1.10.0  # via dash
-dash-cytoscape==0.1.1     # via agentmet4fof
-dash-html-components==1.0.3  # via dash, dash-cytoscape
-dash-table==4.7.0         # via dash
-dash==1.12.0              # via agentmet4fof, dash-cytoscape
-dash_renderer==1.4.1      # via dash, dash-cytoscape
+dash-core-components==1.13.0  # via dash
+dash-cytoscape==0.2.0     # via agentmet4fof
+dash-html-components==1.1.1  # via dash
+dash-table==4.11.0        # via dash
+dash==1.17.0              # via agentmet4fof, dash-cytoscape
+dash_renderer==1.8.3      # via dash
+dataclasses==0.6          # via torch
 decorator==4.4.2          # via networkx
-dill==0.3.1.1             # via osbrain
-flask-compress==1.5.0     # via dash
+dill==0.3.3               # via osbrain
+flask-compress==1.8.0     # via dash
 flask==1.1.2              # via dash, flask-compress
 future==0.18.2            # via dash, torch, uncertainties
 itsdangerous==1.1.0       # via flask
 jinja2==2.11.2            # via flask
-kiwisolver==1.2.0         # via matplotlib
+kiwisolver==1.3.1         # via matplotlib
 markupsafe==1.1.1         # via jinja2
-matplotlib==3.1.0         # via agentmet4fof
-networkx==2.4             # via agentmet4fof
-numpy==1.18.5             # via -r requirements.in, agentmet4fof, matplotlib, pandas, scipy, time-series-buffer, torch
+matplotlib==3.2.2         # via agentmet4fof
+networkx==2.5             # via agentmet4fof
+numpy==1.19.4             # via -r requirements.in, agentmet4fof, matplotlib, pandas, scipy, time-series-buffer, torch
 osbrain==0.6.5            # via agentmet4fof
-pandas==1.0.4             # via -r requirements.in, agentmet4fof
-plotly==4.8.1             # via -r requirements.in, agentmet4fof, dash
+pandas==1.1.4             # via -r requirements.in, agentmet4fof
+plotly==4.12.0            # via -r requirements.in, agentmet4fof, dash
 pyparsing==2.4.7          # via matplotlib
 pyro4==4.80               # via osbrain
 python-dateutil==2.8.1    # via matplotlib, pandas
-pytz==2020.1              # via pandas
-pyzmq==19.0.1             # via osbrain
+pytz==2020.4              # via pandas
+pyzmq==19.0.2             # via osbrain
 retrying==1.3.3           # via plotly
-scipy==1.4.1              # via -r requirements.in, agentmet4fof
+scipy==1.5.4              # via -r requirements.in, agentmet4fof
 serpent==1.30.2           # via pyro4
 six==1.15.0               # via cycler, plotly, python-dateutil, retrying
 time-series-buffer==0.1.4b0  # via agentmet4fof
 time-series-metadata==0.1.0  # via agentmet4fof
-torch==1.5.0              # via -r requirements.in
+torch==1.7.0              # via -r requirements.in
+typing-extensions==3.7.4.3  # via torch
 uncertainties==3.1.4      # via time-series-buffer
 werkzeug==1.0.1           # via flask

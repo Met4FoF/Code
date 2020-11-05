@@ -4,22 +4,19 @@
 #
 #    pip-compile dev-requirements.in
 #
-attrs==20.2.0             # via pytest
+attrs==20.3.0             # via pytest
 certifi==2020.6.20        # via requests
 chardet==3.0.4            # via requests
 idna==2.10                # via requests
-importlib-metadata==1.7.0  # via pluggy, pytest
-iniconfig==1.0.1          # via pytest
-more-itertools==8.5.0     # via pytest
+iniconfig==1.1.1          # via pytest
 packaging==20.4           # via pytest
 pluggy==0.13.1            # via pytest
-psutil==5.7.2             # via -r dev-requirements.in
+psutil==5.7.3             # via -r dev-requirements.in
 py==1.9.0                 # via pytest
 pyparsing==2.4.7          # via packaging
 pytest-timeout==1.4.2     # via -r dev-requirements.in
-pytest==6.0.2             # via -r dev-requirements.in, pytest-timeout
+pytest==6.1.2             # via -r dev-requirements.in, pytest-timeout
 requests==2.24.0          # via -r dev-requirements.in
 six==1.15.0               # via packaging
-toml==0.10.1              # via pytest
-urllib3==1.25.10          # via requests
-zipp==3.1.0               # via importlib-metadata
+toml==0.10.2              # via pytest
+urllib3==1.25.11          # via requests
