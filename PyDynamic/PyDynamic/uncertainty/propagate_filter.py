@@ -26,6 +26,8 @@ __all__ = ["FIRuncFilter", "IIRuncFilter"]
 def FIRuncFilter(y, sigma_noise, theta, Utheta=None, shift=0, blow=None, kind="corr"):
     """Uncertainty propagation for signal y and uncertain FIR filter theta
 
+    A preceding FIR low-pass filter with coefficients `blow` can be provided optionally.
+
     Parameters
     ----------
         y: np.ndarray
@@ -35,23 +37,26 @@ def FIRuncFilter(y, sigma_noise, theta, Utheta=None, shift=0, blow=None, kind="c
             1D-array: interpretation depends on kind
         theta: np.ndarray
             FIR filter coefficients
-        Utheta: np.ndarray
+        Utheta: np.ndarray, optional
             covariance matrix associated with theta
-        shift: int
-            time delay of filter output signal (in samples)
-        blow: np.ndarray
+            if the filter is fully certain, use `Utheta = None` (default) to make use of more efficient calculations. 
+            see also the comparison given in <examples\Digital filtering\FIRuncFilter_runtime_comparison.py>
+        shift: int, optional
+            time delay of filter output signal (in samples) (defaults to 0)
+        blow: np.ndarray, optional
             optional FIR low-pass filter
         kind: string
-            only meaningfull in combination with isinstance(sigma_noise, numpy.ndarray)
+            only meaningful in combination with sigma_noise a 1D numpy array
             "diag": point-wise standard uncertainties of non-stationary white noise
-            "corr": single sided autocovariance of stationary (colored/corrlated) noise (default)
+            "corr": single sided autocovariance of stationary (colored/correlated)
+            noise (default)
 
     Returns
     -------
         x: np.ndarray
             FIR filter output signal
         ux: np.ndarray
-            point-wise uncertainties associated with x
+            point-wise standard uncertainties associated with x
 
 
     References
@@ -63,16 +68,12 @@ def FIRuncFilter(y, sigma_noise, theta, Utheta=None, shift=0, blow=None, kind="c
     """
 
     Ntheta = len(theta)  # FIR filter size
-    # filterOrder = Ntheta - 1   # FIR filter order
-
-    if not isinstance(Utheta, np.ndarray):  # handle case of zero uncertainty filter
-        Utheta = np.zeros((Ntheta, Ntheta))
 
     # check which case of sigma_noise is necessary
     if isinstance(sigma_noise, float):
         sigma2 = sigma_noise ** 2
 
-    elif isinstance(sigma_noise, np.ndarray):
+    elif isinstance(sigma_noise, np.ndarray) and len(sigma_noise.shape) == 1:
         if kind == "diag":
             sigma2 = sigma_noise ** 2
         elif kind == "corr":
@@ -81,7 +82,12 @@ def FIRuncFilter(y, sigma_noise, theta, Utheta=None, shift=0, blow=None, kind="c
             raise ValueError("unknown kind of sigma_noise")
 
     else:
-        raise ValueError("sigma_noise is neither of type float nor numpy.ndarray.")
+        raise ValueError(
+            f"FIRuncFilter: Uncertainty sigma_noise associated "
+            f"with input signal is expected to be either a float or a 1D array but "
+            f"is of shape {sigma_noise.shape}. Please check documentation for input "
+            f"parameters sigma_noise and kind for more information."
+        )
 
 
     if isinstance(blow,np.ndarray):             # calculate low-pass filtered signal and propagate noise
@@ -164,23 +170,47 @@ def FIRuncFilter(y, sigma_noise, theta, Utheta=None, shift=0, blow=None, kind="c
     if len(theta.shape) == 1:
         theta = theta[:, np.newaxis]
 
+    # NOTE: In the code below whereever `theta` or `Utheta` get used, they need to be flipped. 
+    #       This is necessary to take the time-order of both variables into account. (Which is descending
+    #       for `theta` and `Utheta` but ascending for `Ulow`.)
+    #       
+    #       Further details and illustrations showing the effect of not-flipping
+    #       can be found at https://github.com/PTB-PSt1/PyDynamic/issues/183
+
     # handle diag-case, where Ulow needs to be sliced from V
     if kind == "diag":
         # UncCov needs to be calculated inside in its own for-loop
         # V has dimension (len(sigma2) + Ntheta) * (len(sigma2) + Ntheta) --> slice a fitting Ulow of dimension (Ntheta x Ntheta)
         UncCov = np.zeros((len(sigma2)))
 
-        for k in range(len(sigma2)):
-            Ulow = V[k:k+Ntheta,k:k+Ntheta]
-            UncCov[k] = np.squeeze(theta.T.dot(Ulow.dot(theta)) + np.abs(np.trace(Ulow.dot(Utheta))))  # static part of uncertainty
+        if isinstance(Utheta, np.ndarray):
+            for k in range(len(sigma2)):
+                Ulow = V[k:k+Ntheta,k:k+Ntheta]
+                UncCov[k] = np.squeeze(np.flip(theta).T.dot(Ulow.dot(np.flip(theta))) + np.abs(np.trace(Ulow.dot(np.flip(Utheta)))))  # static part of uncertainty
+        else:
+            for k in range(len(sigma2)):
+                Ulow = V[k:k+Ntheta,k:k+Ntheta]
+                UncCov[k] = np.squeeze(np.flip(theta).T.dot(Ulow.dot(np.flip(theta))))  # static part of uncertainty
 
     else:
-        UncCov = theta.T.dot(Ulow.dot(theta)) + np.abs(np.trace(Ulow.dot(Utheta)))      # static part of uncertainty
+        if isinstance(Utheta, np.ndarray):
+            UncCov = np.flip(theta).T.dot(Ulow.dot(np.flip(theta))) + np.abs(np.trace(Ulow.dot(np.flip(Utheta))))      # static part of uncertainty
+        else:
+            UncCov = np.flip(theta).T.dot(Ulow.dot(np.flip(theta)))     # static part of uncertainty
 
-    unc = np.zeros_like(y)
-    for m in range(Ntheta,len(xlow)):
-        XL = xlow[m:m-Ntheta:-1, np.newaxis]  # extract necessary part from input signal
-        unc[m] = XL.T.dot(Utheta.dot(XL))     # apply formula from paper
+    if isinstance(Utheta, np.ndarray):
+        unc = np.empty_like(y)
+
+        # use extended signal to match assumption of stationary signal prior to first entry
+        xlow_extended = np.append(np.full(Ntheta - 1, xlow[0]), xlow)
+        
+        for m in range(len(xlow)):
+            # extract necessary part from input signal
+            XL = xlow_extended[m : m + Ntheta, np.newaxis]
+            unc[m] = XL.T.dot(np.flip(Utheta).dot(XL))  # apply formula from paper
+    else:
+        unc = np.zeros_like(y)
+    
     ux = np.sqrt(np.abs(UncCov + unc))
     ux = np.roll(ux, -int(shift))  # correct for delay
 

@@ -44,15 +44,15 @@ The documentation for PyDynamic can be found on
 
 The fundamental structure of PyDynamic is shown in the following figure.
 
-![PyDynamic package diagram](https://raw.githubusercontent.com/PTB-PSt1/PyDynamic/master/doc/PyDynamic_package_diagram.png)
+![PyDynamic package diagram](https://raw.githubusercontent.com/PTB-PSt1/PyDynamic/master/docs/PyDynamic_package_diagram.png)
 
 However, imports should generally be possible without explicitly naming all packages
 and modules in the path, so that for example the following import statements are all
 equivalent.
 
 ```python
-from PyDynamic.misc.tools import make_equidistant
-from PyDynamic.misc import make_equidistant
+from PyDynamic.uncertainty.interpolate import make_equidistant
+from PyDynamic.uncertainty import make_equidistant
 from PyDynamic import make_equidistant
 ```
 
@@ -60,7 +60,7 @@ from PyDynamic import make_equidistant
 
 There is a [quick way](#quick-setup-not-recommended) to get started but we advise to
 setup a virtual environment and guide through the process in the section
-[Proper Python setup with virtual environment](#proper-python-setup-with-virtual-environment)
+[Proper Python setup with virtual environment](#proper-python-setup-with-virtual-environment-recommended)
 
 ### Quick setup (**not recommended**)
 
@@ -73,7 +73,7 @@ pip install --user PyDynamic
 
 This will download the latest version from the Python package repository
 and copy it into your local folder of third-party libraries. Note that
-PyDynamic runs with **Python versions 3.5 to 3.8**. Usage in any Python
+PyDynamic runs with **Python versions 3.6 to 3.8**. Usage in any Python
 environment on your computer is then possible by
 
 ```python
