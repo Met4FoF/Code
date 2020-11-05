@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
-agentmet4fof==0.3.0       # via -r tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -r tutorials/agentMET4FOF_anomaly_detection/requirements.in, -r tutorials/agentMET4FOF_ml/requirements.txt, -r tutorials/agentMET4FOF_sensors/requirements.in
+agentmet4fof==0.2.0       # via -r tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -r tutorials/agentMET4FOF_anomaly_detection/requirements.in, -r tutorials/agentMET4FOF_ml/requirements.txt, -r tutorials/agentMET4FOF_sensors/requirements.in
 alabaster==0.7.12         # via sphinx
 appdirs==1.4.4            # via black, virtualenv
 argon2-cffi==20.1.0       # via notebook
