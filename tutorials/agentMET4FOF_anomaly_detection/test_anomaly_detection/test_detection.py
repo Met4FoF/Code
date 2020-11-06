@@ -20,7 +20,7 @@ def dashboard():
     dashboard.join()
 
 
-@pytest.mark.timeout(5)
+@pytest.mark.timeout(10)
 @pytest.mark.usefixtures("dashboard")
 def test_dashboard():
     # This test calls demonstrate_generator_agent_use and waits for five seconds for the
