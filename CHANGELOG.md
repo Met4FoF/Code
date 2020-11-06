@@ -2,6 +2,15 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.1 (2020-11-06)
+### :ambulance:
+* :ambulance: _Update agentMET4FOF_anomaly_detection_ to latest version for avoiding test timeouts ([`8bc68f7`](https://github.com/Met4FoF/Code/commit/8bc68f7ccd09e7b570a3afd74a4ef59d583e953f))
+
+### :robot:
+* :robot: Improve release automation and changelog generation  ([`63fe7c5`](https://github.com/Met4FoF/Code/commit/63fe7c567ff7405584874222388f37a81706d0ef))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.10.0...v0.10.1)**
+
 ## v0.10.0 (2020-11-06)
 
 ### Updated repositories
