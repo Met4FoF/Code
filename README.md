@@ -4,7 +4,14 @@
 [![CircleCI](https://circleci.com/gh/Met4FoF/Code.svg?style=shield&circle-token=3566560a243f21fa06fafbe49e92ac2a6d3fc250)](https://circleci.com/gh/Met4FoF/Code)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0761272aabbc4010bba5921015ab084f)](https://www.codacy.com/app/PTB-PSt1/Code?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Met4FoF/Code&amp;utm_campaign=Badge_Grade)
 
-This repository combines all the code written for or used in the EMPIR project 17IND12 *Metrology for the Factory of the Future* to enable pulling/cloning all the code and all coding related documents at once.
+![met4fof.eu](https://www.ptb.de/empir2018/fileadmin/documents/empir/Met4FoF/images/Metrology-Factory-Future_Logo_200px.png)
+
+This repository combines all the code written for or used in the
+[EMPIR project 17IND12 *Metrology for the Factory of the Future*](https://met4fof.eu/) 
+to enable pulling/cloning all the code and all coding related documents at once.
+
+For more details in the project visit us on
+[met4fof.eu](https://met4fof.eu/). 
 
 You find the project partners' code in the corresponding subfolders of the repository.
 
@@ -30,7 +37,7 @@ you can find in the repository's
 [wiki](https://github.com/Met4FoF/Code/wiki), in the
 [coding conventions](conventions/README.md) and in our related
 [Blog post](https://www.ptb.de/empir2018/met4fof/information-communication/blog/detail-view/?tx_news_pi1%5Bnews%5D=38&tx_news_pi1%5Bcontroller%5D=News&tx_news_pi1%5Baction%5D=detail&cHash=ce963c7573572d40ef0f496449ef8aff)
-on the [project homepage](https://www.ptb.de/empir2018/met4fof/home/). 
+on the [project homepage](https://met4fof.eu/). 
 
 ## Installing Git
 
