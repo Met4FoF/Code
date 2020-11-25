@@ -2,6 +2,15 @@
 
 <!--next-version-placeholder-->
 
+## v0.10.2 (2020-11-25)
+### :lock:
+* :lock: Update requirements  ([`d37191b`](https://github.com/Met4FoF/Code/commit/d37191bdbcaa5cd3e58435b0bc776300068c78c6))
+
+### :speech_balloon:
+* :speech_balloon: Introduce project homepage's link into _README.md_  ([`49bf174`](https://github.com/Met4FoF/Code/commit/49bf174990476e34f6a1e4446a5bb361fa54d614))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.10.1...v0.10.2)**
+
 ## v0.10.1 (2020-11-06)
 ### :ambulance:
 * :ambulance: _Update agentMET4FOF_anomaly_detection_ to latest version for avoiding test timeouts ([`8bc68f7`](https://github.com/Met4FoF/Code/commit/8bc68f7ccd09e7b570a3afd74a4ef59d583e953f))
