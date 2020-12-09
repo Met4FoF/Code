@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.11.0 (2020-12-09)
+### :sparkles:
+* :sparkles: Update agentMET4FOF and thus introduce uncertainty generators  ([`d427444`](https://github.com/Met4FoF/Code/commit/d42744425d83c8bb20933968f9bf6bb764725574))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.10.2...v0.11.0)**
+
 ## v0.10.2 (2020-11-25)
 ### :lock:
 * :lock: Update requirements  ([`d37191b`](https://github.com/Met4FoF/Code/commit/d37191bdbcaa5cd3e58435b0bc776300068c78c6))
