@@ -1,6 +1,7 @@
 -e agentMET4FOF
 -c agentMET4FOF/dev-requirements.in
 -e Met4FoF-redundancy
+-c Met4FoF-redundancy/requirements/dev-requirements.txt
 -e PyDynamic
 -c PyDynamic/requirements/dev-requirements.in
 -e time-series-buffer

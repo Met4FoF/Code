@@ -633,7 +633,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - Met4FoF-redundancy-v1-{{ checksum "Met4FoF-redundancy/requirements/requirements.txt" }}
+            - Met4FoF-redundancy-v1-{{ checksum "Met4FoF-redundancy/requirements/requirements.txt" }}-{{ checksum "Met4FoF-redundancy/requirements/dev-requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
             - Met4FoF-redundancy-v1
 
@@ -649,7 +649,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            Met4FoF-redundancy-v1-{{ checksum "Met4FoF-redundancy/requirements/requirements.txt" }}
+            Met4FoF-redundancy-v1-{{ checksum "Met4FoF-redundancy/requirements/requirements.txt" }}-{{ checksum "Met4FoF-redundancy/requirements/dev-requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
