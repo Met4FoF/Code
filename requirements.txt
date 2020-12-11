@@ -4,11 +4,11 @@
 #
 #    pip-compile
 #
--e file:///home/ludwig10/code/Met4FoF_Code/agentMET4FOF  # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_anomaly_detection/requirements.in, -c tutorials/agentMET4FOF_ml/requirements.txt, -c tutorials/agentMET4FOF_sensors/requirements.in, -r requirements.in, met4fof-redundancy
--e file:///home/ludwig10/code/Met4FoF_Code/Met4FoF-redundancy  # via -r requirements.in
--e file:///home/ludwig10/code/Met4FoF_Code/PyDynamic  # via -c tutorials/PyDynamic_tutorials/requirements/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -r requirements.in
--e file:///home/ludwig10/code/Met4FoF_Code/time-series-buffer  # via -r requirements.in, agentmet4fof
--e file:///home/ludwig10/code/Met4FoF_Code/time-series-metadata  # via -r requirements.in, agentmet4fof
+-e ./agentMET4FOF  # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_anomaly_detection/requirements.in, -c tutorials/agentMET4FOF_ml/requirements.txt, -c tutorials/agentMET4FOF_sensors/requirements.in, -r requirements.in, met4fof-redundancy
+-e ./Met4FoF-redundancy  # via -r requirements.in
+-e ./PyDynamic  # via -c tutorials/PyDynamic_tutorials/requirements/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -r requirements.in
+-e ./time-series-buffer  # via -r requirements.in, agentmet4fof
+-e ./time-series-metadata  # via -r requirements.in, agentmet4fof
 arrow==0.17.0             # via jinja2-time
 binaryornot==0.4.4        # via cookiecutter
 brotli==1.0.7             # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, flask-compress
