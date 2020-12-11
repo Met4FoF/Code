@@ -4,8 +4,6 @@
 #
 #    pip-compile dev-requirements.in
 #
-astroid==2.4.2            # via pylint
-attrs==20.3.0             # via hypothesis, pytest
 bleach==3.2.1             # via readme-renderer
 certifi==2020.4.5.1       # via -c requirements.txt, requests
 cffi==1.14.4              # via cryptography
@@ -17,24 +15,15 @@ cryptography==3.3.1       # via secretstorage
 docutils==0.16            # via readme-renderer
 gitdb==4.0.5              # via gitpython
 gitpython==3.1.11         # via python-semantic-release
-hypothesis==5.43.3        # via -r dev-requirements.in
 idna==2.9                 # via -c requirements.txt, requests
-iniconfig==1.1.1          # via pytest
 invoke==1.4.1             # via python-semantic-release
-isort==5.6.4              # via pylint
 jeepney==0.6.0            # via keyring, secretstorage
 keyring==21.5.0           # via twine
-lazy-object-proxy==1.4.3  # via astroid
-mccabe==0.6.1             # via pylint
-packaging==20.7           # via bleach, pytest
+packaging==20.4           # via -c requirements.txt, bleach
 pkginfo==1.6.1            # via twine
-pluggy==0.13.1            # via pytest
-py==1.9.0                 # via pytest
 pycparser==2.20           # via cffi
 pygments==2.7.3           # via readme-renderer
-pylint==2.6.0             # via -r dev-requirements.in
 pyparsing==2.4.7          # via -c requirements.txt, packaging
-pytest==6.1.2             # via -r dev-requirements.in
 python-gitlab==1.15.0     # via python-semantic-release
 python-semantic-release==7.6.0  # via -r dev-requirements.in
 readme-renderer==28.0     # via twine
@@ -43,16 +32,14 @@ requests==2.23.0          # via -c requirements.txt, python-gitlab, python-seman
 rfc3986==1.4.0            # via twine
 secretstorage==3.3.0      # via keyring
 semver==2.13.0            # via python-semantic-release
-six==1.15.0               # via -c requirements.txt, astroid, bleach, cryptography, python-gitlab, readme-renderer
+six==1.15.0               # via -c requirements.txt, bleach, cryptography, packaging, python-gitlab, readme-renderer
 smmap==3.0.4              # via gitdb
-sortedcontainers==2.3.0   # via hypothesis
-toml==0.10.2              # via pylint, pytest, python-semantic-release
+toml==0.10.2              # via -c requirements.txt, python-semantic-release
 tqdm==4.46.1              # via -c requirements.txt, twine
 twine==3.2.0              # via python-semantic-release
 urllib3==1.25.9           # via -c requirements.txt, requests
 webencodings==0.5.1       # via bleach
 wheel==0.36.1             # via python-semantic-release
-wrapt==1.12.1             # via astroid
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

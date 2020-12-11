@@ -125,7 +125,7 @@ commands:
     - restore_cache:
         keys:
           # Specify the unique identifier for the cache.
-          - venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+          - venv-dependencies-{{ checksum "requirements.txt" }}
           # Fallback to using the latest cache if no exact match is found.
           - venv-dependencies-
 
@@ -137,13 +137,13 @@ commands:
           source venv/bin/activate
           pip install --upgrade pip pip-tools
           pip install --upgrade numpy scipy uncertainties
-          pip-sync dev-requirements.txt requirements.txt
+          pip-sync requirements.txt
 
     - save_cache:
         paths:
           - ./venv
         key: >-
-          venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+          venv-dependencies-{{ checksum "requirements.txt" }}
 
 
 
@@ -168,7 +168,7 @@ commands:
     - restore_cache:
         keys:
           # Specify the unique identifier for the cache.
-          - conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+          - conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}
           # Fallback to using the latest cache if no exact match is found.
           - conda-dependencies-
 
@@ -186,7 +186,7 @@ commands:
         paths:
           - /home/circleci/conda/envs/
         key: >-
-          conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+          conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}
 
   create_result_folder:
     description: "Create test-result folder."
@@ -644,7 +644,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip -r Met4FoF-redundancy/requirements/requirements.txt
+           pip install --upgrade pip -r Met4FoF-redundancy/requirements/requirements.txt -r Met4FoF-redundancy/requirements/dev-requirements.txt
 
       - save_cache:
           paths:

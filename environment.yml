@@ -9,6 +9,5 @@ dependencies:
     - uncertainties
     # pip dependencies have to be provided in `requirements.txt` syntax
     - pip:
-        - -r dev-requirements.txt
         - -r requirements.txt
 
