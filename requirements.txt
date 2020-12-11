@@ -4,6 +4,11 @@
 #
 #    pip-compile
 #
+-e ./agentMET4FOF  # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_anomaly_detection/requirements.in, -c tutorials/agentMET4FOF_ml/requirements.txt, -c tutorials/agentMET4FOF_sensors/requirements.in, -r requirements.in, met4fof-redundancy
+-e ./Met4FoF-redundancy  # via -r requirements.in
+-e ./PyDynamic  # via -c tutorials/PyDynamic_tutorials/requirements/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -r requirements.in
+-e ./time-series-buffer  # via -r requirements.in, agentmet4fof
+-e ./time-series-metadata  # via -r requirement
 arrow==0.17.0             # via jinja2-time
 binaryornot==0.4.4        # via cookiecutter
 brotli==1.0.7             # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, flask-compress
@@ -55,9 +60,4 @@ tornado==6.0.4            # via -c tutorials/PyDynamic_tutorials/requirements/re
 tqdm==4.46.1              # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, mesa
 uncertainties==3.1.5      # via time-series-buffer
 urllib3==1.25.9           # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, requests
-werkzeug==1.0.1           # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, flask
--e ./agentMET4FOF  # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_anomaly_detection/requirements.in, -c tutorials/agentMET4FOF_ml/requirements.txt, -c tutorials/agentMET4FOF_sensors/requirements.in, -r requirements.in, met4fof-redundancy
--e ./Met4FoF-redundancy  # via -r requirements.in
--e ./PyDynamic  # via -c tutorials/PyDynamic_tutorials/requirements/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -r requirements.in
--e ./time-series-buffer  # via -r requirements.in, agentmet4fof
--e ./time-series-metadata  # via -r requirements.in, agentmet4fof
+werkzeug==1.0.1           # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, flasks.in, agentmet4fof
