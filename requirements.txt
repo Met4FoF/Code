@@ -4,12 +4,13 @@
 #
 #    pip-compile
 #
--e ./agentMET4FOF  # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_anomaly_detection/requirements.in, -c tutorials/agentMET4FOF_ml/requirements.txt, -c tutorials/agentMET4FOF_sensors/requirements.in, -r requirements.in, met4fof-redundancy
+-e ./agentMET4FOF  # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_sensors/requirements.in, -r requirements.in, -r tutorials/agentMET4FOF_anomaly_detection/requirements.in, -r tutorials/agentMET4FOF_ml/requirements.txt, met4fof-redundancy
 -e ./Met4FoF-redundancy  # via -r requirements.in
 -e ./PyDynamic  # via -c tutorials/PyDynamic_tutorials/requirements/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -r requirements.in
 -e ./time-series-buffer  # via -r requirements.in, agentmet4fof
--e ./time-series-metadata  # via -r requirement
+-e ./time-series-metadata  # via -r requirements.in, agentmet4fof
 arrow==0.17.0             # via jinja2-time
+attrs==19.3.0             # via -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, pytest
 binaryornot==0.4.4        # via cookiecutter
 brotli==1.0.7             # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, flask-compress
 certifi==2020.4.5.1       # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, requests
@@ -17,6 +18,7 @@ chardet==3.0.4            # via -c ZeMA_testbed_Bayesian_machine_learning/requir
 click==7.1.2              # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, cookiecutter, flask, mesa
 cloudpickle==1.4.1        # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, osbrain
 cookiecutter==1.7.2       # via mesa
+coverage==5.3             # via pytest-cov
 cycler==0.10.0            # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, matplotlib
 dash-core-components==1.10.0  # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, dash
 dash-cytoscape==0.1.1     # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, agentmet4fof
@@ -30,34 +32,50 @@ flask-compress==1.5.0     # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.
 flask==1.1.2              # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, dash, flask-compress
 future==0.18.2            # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, dash, uncertainties
 idna==2.9                 # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, requests
+iniconfig==1.1.1          # via pytest
 itsdangerous==1.1.0       # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, flask
 jinja2-time==0.2.0        # via cookiecutter
 jinja2==2.11.2            # via -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, cookiecutter, flask, jinja2-time, mpld3
+joblib==0.15.1            # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, scikit-learn
 kiwisolver==1.2.0         # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, matplotlib
 markupsafe==1.1.1         # via -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, cookiecutter, jinja2
-matplotlib==3.2.1         # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, agentmet4fof, mpld3, pydynamic
+matplotlib==3.2.1         # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, agentmet4fof, mpld3, pydynamic, scikit-multiflow
 mesa==0.8.8.1             # via agentmet4fof
 mpld3==0.5.2              # via agentmet4fof
 networkx==2.4             # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, agentmet4fof, mesa
-numpy==1.18.5             # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_anomaly_detection/requirements.in, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, -c tutorials/agentMET4FOF_ml/requirements.txt, -c tutorials/agentMET4FOF_sensors/requirements.in, agentmet4fof, matplotlib, mesa, met4fof-redundancy, pandas, pydynamic, scipy, time-series-buffer
+numpy==1.18.5             # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, -c tutorials/agentMET4FOF_sensors/requirements.in, -r tutorials/agentMET4FOF_anomaly_detection/requirements.in, -r tutorials/agentMET4FOF_ml/requirements.txt, agentmet4fof, matplotlib, mesa, met4fof-redundancy, pandas, pydynamic, scikit-learn, scikit-multiflow, scipy, time-series-buffer, torch
 osbrain==0.6.5            # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, agentmet4fof
-pandas==1.0.4             # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_anomaly_detection/requirements.in, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, agentmet4fof, mesa, pydynamic
-plotly==4.8.1             # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_anomaly_detection/requirements.in, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, agentmet4fof, dash
+packaging==20.4           # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, pytest
+pandas==1.0.4             # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, -r tutorials/agentMET4FOF_anomaly_detection/requirements.in, agentmet4fof, mesa, pydynamic, scikit-multiflow
+plotly==4.8.1             # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, -r tutorials/agentMET4FOF_anomaly_detection/requirements.in, agentmet4fof, dash
+pluggy==0.13.1            # via pytest
 poyo==0.5.0               # via cookiecutter
-pyparsing==2.4.7          # via -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, matplotlib
+psutil==5.7.3             # via -c tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in, -r agentMET4FOF/dev-requirements.in
+py==1.9.0                 # via pytest
+pyparsing==2.4.7          # via -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, matplotlib, packaging
 pyro4==4.80               # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, osbrain
+pytest-cov==2.10.1        # via -c PyDynamic/requirements/dev-requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/dev-requirements.in, -r agentMET4FOF/dev-requirements.in
+pytest-timeout==1.4.2     # via -c tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in, -r agentMET4FOF/dev-requirements.in
+pytest==6.1.2             # via -c Met4FoF-redundancy/requirements/dev-requirements.txt, -c PyDynamic/requirements/dev-requirements.in, -c time-series-metadata/requirements/dev-requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/dev-requirements.in, -c tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in, -r agentMET4FOF/dev-requirements.in, pytest-cov, pytest-timeout
 python-dateutil==2.8.1    # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, arrow, matplotlib, pandas
 python-slugify==4.0.1     # via cookiecutter
 pytz==2020.1              # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, pandas
 pyzmq==19.0.1             # via -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, osbrain
-requests==2.23.0          # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c agentMET4FOF/dev-requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -c tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, cookiecutter
+requests==2.23.0          # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -c tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, -r agentMET4FOF/dev-requirements.in, cookiecutter
 retrying==1.3.3           # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, plotly
-scipy==1.4.1              # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_anomaly_detection/requirements.in, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, agentmet4fof, met4fof-redundancy, pydynamic
+scikit-learn==0.23.1      # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, scikit-multiflow
+scikit-multiflow==0.5.3   # via -r tutorials/agentMET4FOF_ml/requirements.txt
+scipy==1.4.1              # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, -r tutorials/agentMET4FOF_anomaly_detection/requirements.in, agentmet4fof, met4fof-redundancy, pydynamic, scikit-learn, scikit-multiflow
 serpent==1.30.2           # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, pyro4
-six==1.15.0               # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, cookiecutter, cycler, plotly, python-dateutil, retrying
+six==1.15.0               # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, cookiecutter, cycler, packaging, plotly, python-dateutil, retrying
+sortedcontainers==2.3.0   # via scikit-multiflow
 text-unidecode==1.3       # via python-slugify
+threadpoolctl==2.1.0      # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, scikit-learn
+toml==0.10.2              # via pytest
+torch==1.7.1              # via -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt, -r tutorials/agentMET4FOF_anomaly_detection/requirements.in
 tornado==6.0.4            # via -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, mesa
 tqdm==4.46.1              # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, mesa
+typing-extensions==3.7.4.2  # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, torch
 uncertainties==3.1.5      # via time-series-buffer
 urllib3==1.25.9           # via -c ZeMA_testbed_Bayesian_machine_learning/requirements.in, -c tutorials/PyDynamic_tutorials/requirements/requirements.txt, requests
-werkzeug==1.0.1           # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, flasks.in, agentmet4fof
+werkzeug==1.0.1           # via -c tutorials/agentMET4FOF_ZeMA_emc/requirements.txt, flask

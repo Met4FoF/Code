@@ -1,5 +1,5 @@
 -e agentMET4FOF
--c agentMET4FOF/dev-requirements.in
+-r agentMET4FOF/dev-requirements.in
 -e Met4FoF-redundancy
 -c Met4FoF-redundancy/requirements/dev-requirements.txt
 -e PyDynamic
@@ -7,10 +7,10 @@
 -e time-series-buffer
 -e time-series-metadata
 -c time-series-metadata/requirements/dev-requirements.in
--c tutorials/agentMET4FOF_anomaly_detection/requirements.in
+-r tutorials/agentMET4FOF_anomaly_detection/requirements.in
 -c tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in
 -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt
--c tutorials/agentMET4FOF_ml/requirements.txt
+-r tutorials/agentMET4FOF_ml/requirements.txt
 -c tutorials/agentMET4FOF_sensors/requirements.in
 -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in
 -c tutorials/agentMET4FOF_ZeMA_emc/dev-requirements.in
