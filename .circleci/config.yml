@@ -135,8 +135,8 @@ commands:
         command: |
           python3 -m venv venv
           source venv/bin/activate
-          pip install --upgrade pip pip-tools
-          pip install --upgrade numpy scipy uncertainties
+          pip install pip pip-tools
+          pip install numpy scipy uncertainties
           pip-sync requirements.txt
 
     - save_cache:
@@ -374,7 +374,7 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
-            pip install --upgrade pip pip-tools
+            pip install pip pip-tools
             pip-sync PyDynamic/requirements/requirements-py38.txt \
                 PyDynamic/requirements/dev-requirements-py38.txt
 
@@ -410,7 +410,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip -r agentMET4FOF/requirements.txt -r agentMET4FOF/dev-requirements.txt
+           pip install pip -r agentMET4FOF/requirements.txt -r agentMET4FOF/dev-requirements.txt
 
       - save_cache:
           paths:
@@ -444,7 +444,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip setuptools pip-tools numpy
+           pip install pip setuptools pip-tools numpy
            pip-sync tutorials/agentMET4FOF_anomaly_detection/dev-requirements.txt tutorials/agentMET4FOF_anomaly_detection/requirements.txt
 
 
@@ -480,9 +480,9 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip pip-tools
+           pip install pip pip-tools
            pip-sync tutorials/agentMET4FOF_sensors/requirements.txt
-           pip install --upgrade pytest
+           pip install pytest
 
 
       - save_cache:
@@ -523,7 +523,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip numpy pytest
+           pip install pip numpy pytest
            pip install -r tutorials/agentMET4FOF_ml/requirements.txt
 
 
@@ -565,7 +565,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip pytest
+           pip install pip pytest
            pip install -r time-series-buffer/requirements.txt
 
 
@@ -607,7 +607,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip pip-tools
+           pip install pip pip-tools
            pip install time-series-metadata/.
            pip-sync time-series-metadata/requirements/dev-requirements-py38.txt
 
@@ -644,7 +644,7 @@ jobs:
          command: |
            python3 -m venv venv
            source venv/bin/activate
-           pip install --upgrade pip -r Met4FoF-redundancy/requirements/requirements.txt -r Met4FoF-redundancy/requirements/dev-requirements.txt
+           pip install pip -r Met4FoF-redundancy/requirements/requirements.txt -r Met4FoF-redundancy/requirements/dev-requirements.txt
 
       - save_cache:
           paths:
@@ -675,7 +675,7 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
-            pip install --upgrade pip pip-tools
+            pip install pip pip-tools
             pip-sync dev-requirements.txt
 
       - save_cache:
@@ -713,7 +713,7 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
-            pip install --upgrade pip pip-tools
+            pip install pip pip-tools
             pip-sync dev-requirements.txt
 
       - save_cache:
