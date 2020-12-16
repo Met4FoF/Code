@@ -4,7 +4,14 @@
 
 ## v0.12.0 (2020-12-16)
 ### :egg:
+
 * :egg: Introduce Met4FoF-redundancy and update some of the other projects ([`214533d`](https://github.com/Met4FoF/Code/commit/214533dca90afd4c0c5e4e7dec76294a83704ed6))
+
+### :sparkles: 
+
+* :sparkles: Update agentMET4FOF to version 0.4.1 and thus fix an issue with shutdowns ([`c29467f`](https://github.com/Met4FoF/Code/commit/c29467ff93e1ba967cc6173abee27ed4d3bf4896))
+* :sparkles: Update agentMET4FOF_anomaly_detection and thus drop agentMET4FOF pinning to version 0.2.0 ([`7ef0713`](https://github.com/Met4FoF/Code/commit/7ef0713ab6555c1552eb62f6dcf2a8e62f83530a))
+
 
 **[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.11.0...v0.12.0)**
 
