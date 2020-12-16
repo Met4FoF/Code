@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.12.0 (2020-12-16)
+### :egg:
+* :egg: Introduce Met4FoF-redundancy and update some of the other projects ([`214533d`](https://github.com/Met4FoF/Code/commit/214533dca90afd4c0c5e4e7dec76294a83704ed6))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.11.0...v0.12.0)**
+
 ## v0.11.0 (2020-12-09)
 ### :sparkles:
 * :sparkles: Update agentMET4FOF and thus introduce uncertainty generators  ([`d427444`](https://github.com/Met4FoF/Code/commit/d42744425d83c8bb20933968f9bf6bb764725574))
