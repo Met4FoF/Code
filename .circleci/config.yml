@@ -37,6 +37,9 @@ workflows:
       - test_against_conda:
           name: test_agentMET4FOF_against_conda
           subtree: agentMET4FOF
+      - test_against_conda:
+          name: test_Met4FoF-redundancy_against_conda
+          subtree: Met4FoF-redundancy
       - test_against_venv:
           name: test_agentMET4FOF_ml_against_venv
           subtree: tutorials/agentMET4FOF_ml
@@ -55,6 +58,9 @@ workflows:
       - test_against_venv:
           name: test_agentMET4FOF_against_venv
           subtree: agentMET4FOF
+      - test_against_venv:
+          name: test_Met4FoF-redundancy_against_venv
+          subtree: Met4FoF-redundancy
       - test_PyDynamic
       - test_agentMET4FOF
       - test_agentMET4FOF_ml
@@ -62,6 +68,7 @@ workflows:
       - test_time-series-buffer
       - test_time-series-metadata
       - test_agentMET4FOF_sensors
+      - test_Met4FoF-redundancy
       - preview_release:
           # Test the 'release' job to avoid trouble when Pull Requests get merged and
           # to preview publishing actions and the new changelog.
@@ -80,6 +87,8 @@ workflows:
               - test_agentMET4FOF_sensors_against_venv
               - test_agentMET4FOF_against_conda
               - test_agentMET4FOF_against_venv
+              - test_Met4FoF-redundancy_against_conda
+              - test_Met4FoF-redundancy_against_venv
               - test_PyDynamic
               - test_agentMET4FOF
               - test_agentMET4FOF_ml
@@ -87,6 +96,7 @@ workflows:
               - test_time-series-buffer
               - test_time-series-metadata
               - test_agentMET4FOF_sensors
+              - test_Met4FoF-redundancy
       - confirm_previewed_release_actions:
           # This job allows for checking that the release we will create in the
           # next step actually is the desired release, by observing the result of
@@ -115,7 +125,7 @@ commands:
     - restore_cache:
         keys:
           # Specify the unique identifier for the cache.
-          - venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+          - venv-dependencies-{{ checksum "requirements.txt" }}
           # Fallback to using the latest cache if no exact match is found.
           - venv-dependencies-
 
@@ -126,13 +136,14 @@ commands:
           python3 -m venv venv
           source venv/bin/activate
           pip install --upgrade pip pip-tools
-          pip-sync dev-requirements.txt requirements.txt
+          pip install --upgrade numpy scipy uncertainties
+          pip-sync requirements.txt
 
     - save_cache:
         paths:
           - ./venv
         key: >-
-          venv-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+          venv-dependencies-{{ checksum "requirements.txt" }}
 
 
 
@@ -157,7 +168,7 @@ commands:
     - restore_cache:
         keys:
           # Specify the unique identifier for the cache.
-          - conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+          - conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}
           # Fallback to using the latest cache if no exact match is found.
           - conda-dependencies-
 
@@ -175,7 +186,7 @@ commands:
         paths:
           - /home/circleci/conda/envs/
         key: >-
-          conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "dev-requirements.txt" }}
+          conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}
 
   create_result_folder:
     description: "Create test-result folder."
@@ -610,6 +621,40 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
           subtree: time-series-metadata
+
+  test_Met4FoF-redundancy:
+    executor: tester
+
+    steps:
+      - checkout
+      - create_result_folder:
+          subfolder: Met4FoF-redundancy
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - Met4FoF-redundancy-v1-{{ checksum "Met4FoF-redundancy/requirements/requirements.txt" }}-{{ checksum "Met4FoF-redundancy/requirements/dev-requirements.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - Met4FoF-redundancy-v1
+
+      # Install dependencies and Codecov reporter if necessary.
+      - run:
+         name: Install dependencies
+         command: |
+           python3 -m venv venv
+           source venv/bin/activate
+           pip install --upgrade pip -r Met4FoF-redundancy/requirements/requirements.txt -r Met4FoF-redundancy/requirements/dev-requirements.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: >-
+            Met4FoF-redundancy-v1-{{ checksum "Met4FoF-redundancy/requirements/requirements.txt" }}-{{ checksum "Met4FoF-redundancy/requirements/dev-requirements.txt" }}
+
+      # Run tests! We use pytest's test-runner.
+      - run_venv_tests:
+          subtree: Met4FoF-redundancy
 
   release:
     executor: publisher
