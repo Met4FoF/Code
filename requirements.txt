@@ -4,7 +4,7 @@
 #
 #    pip-compile
 #
--e file:///home/ludwig10/code/Met4FoF_Code/agentMET4FOF
+-e ./agentMET4FOF
     # via
     #   -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in
     #   -c tutorials/agentMET4FOF_sensors/requirements.in
@@ -12,18 +12,18 @@
     #   -r tutorials/agentMET4FOF_anomaly_detection/requirements.in
     #   -r tutorials/agentMET4FOF_ml/requirements.txt
     #   met4fof-redundancy
--e file:///home/ludwig10/code/Met4FoF_Code/Met4FoF-redundancy
+-e ./Met4FoF-redundancy
     # via -r requirements.in
--e file:///home/ludwig10/code/Met4FoF_Code/PyDynamic
+-e ./PyDynamic
     # via
     #   -c tutorials/PyDynamic_tutorials/requirements/requirements.in
     #   -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt
     #   -r requirements.in
--e file:///home/ludwig10/code/Met4FoF_Code/time-series-buffer
+-e ./time-series-buffer
     # via
     #   -r requirements.in
     #   agentmet4fof
--e file:///home/ludwig10/code/Met4FoF_Code/time-series-metadata
+-e ./time-series-metadata
     # via
     #   -r requirements.in
     #   agentmet4fof
