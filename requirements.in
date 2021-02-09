@@ -13,8 +13,6 @@
 -r tutorials/agentMET4FOF_ml/requirements.txt
 -c tutorials/agentMET4FOF_sensors/requirements.in
 -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in
--c tutorials/agentMET4FOF_ZeMA_emc/dev-requirements.in
 -c tutorials/PyDynamic_tutorials/requirements/requirements.in
--c tutorials/PyDynamic_tutorials/requirements/requirements-dev.in
 -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt
 -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
