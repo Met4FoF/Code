@@ -126,28 +126,28 @@ def get_file_info(infos):
     if i == 1:
         measurementfile = "MeasuredSignals/M-Mode 3 MHz/M3_MH44.DAT"
         noisefile = "MeasuredSignals/M-Mode 3 MHz/M3_MH44r.DAT"
-        hydfilename = "HydrophonCalibrationData/MW_MH44ReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MW_MH44ReIm.csv"
         infos["hydrophonname"] = "GAMPT MH44"
         infos["measurementtype"] = "M-Mode 3 MHz"
 
     if i == 2:
         measurementfile = "MeasuredSignals/M-Mode 3 MHz/M3_MH46.DAT"
         noisefile = "MeasuredSignals/M-Mode 3 MHz/M3_MH46r.DAT"
-        hydfilename = "HydrophonCalibrationData/MH46_MWReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MH46_MWReIm.csv"
         infos["hydrophonname"] = "GAMPT MH46"
         infos["measurementtype"] = "M-Mode 3 MHz"
 
     if i == 3:
         measurementfile = "MeasuredSignals/M-Mode 3 MHz/M3_ON1704.DAT"
         noisefile = "MeasuredSignals/M-Mode 3 MHz/M3_ON1704r.DAT"
-        hydfilename = "HydrophonCalibrationData/MW_ONDA1704_SECReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MW_ONDA1704_SECReIm.csv"
         infos["hydrophonname"] = "ONDA1704"
         infos["measurementtype"] = "M-Mode 3 MHz"
 
     if i == 4:
         measurementfile = "MeasuredSignals/M-Mode 3 MHz/M3_PA1434.DAT"
         noisefile = "MeasuredSignals/M-Mode 3 MHz/M3_PA1434r.DAT"
-        hydfilename = "HydrophonCalibrationData/MW PA1434 ReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MW PA1434 ReIm.csv"
         infos["hydrophonname"] = "Precision Acoustics 1434"
         infos["measurementtype"] = "M-Mode 3 MHz"
 
@@ -156,28 +156,28 @@ def get_file_info(infos):
     if i == 5:
         measurementfile = "MeasuredSignals/pD-Mode 3 MHz/pD3_MH44.DAT"
         noisefile = "MeasuredSignals/pD-Mode 3 MHz/pD3_MH44r.DAT"
-        hydfilename = "HydrophonCalibrationData/MW_MH44ReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MW_MH44ReIm.csv"
         infos["hydrophonname"] = "GAMPT MH44"
         infos["measurementtype"] = "Pulse-Doppler-Mode 3 MHz"
 
     if i == 6:
         measurementfile = "MeasuredSignals/pD-Mode 3 MHz/pD3_MH46.DAT"
         noisefile = "MeasuredSignals/pD-Mode 3 MHz/pD3_MH46r.DAT"
-        hydfilename = "HydrophonCalibrationData/MH46_MWReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MH46_MWReIm.csv"
         infos["hydrophonname"] = "GAMPT MH46"
         infos["measurementtype"] = "Pulse-Doppler-Mode 3 MHz"
 
     if i == 7:
         measurementfile = "MeasuredSignals/pD-Mode 3 MHz/pD3_ON1704.DAT"
         noisefile = "MeasuredSignals/pD-Mode 3 MHz/pD3_ON1704r.DAT"
-        hydfilename = "HydrophonCalibrationData/MW_ONDA1704_SECReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MW_ONDA1704_SECReIm.csv"
         infos["hydrophonname"] = "ONDA1704"
         infos["measurementtype"] = "Pulse-Doppler-Mode 3 MHz"
 
     if i == 8:
         measurementfile = "MeasuredSignals/pD-Mode 3 MHz/pD3_PA1434.DAT"
         noisefile = "MeasuredSignals/pD-Mode 3 MHz/pD3_PA1434r.DAT"
-        hydfilename = "HydrophonCalibrationData/MW PA1434 ReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MW PA1434 ReIm.csv"
         infos["hydrophonname"] = "Precision Acoustics 1434"
         infos["measurementtype"] = "Pulse-Doppler-Mode 3 MHz"
 
@@ -185,28 +185,28 @@ def get_file_info(infos):
     if i == 9:
         measurementfile = "MeasuredSignals/M-Mode 6 MHz/M6_MH44.DAT"
         noisefile = "MeasuredSignals/M-Mode 6 MHz/M6_MH44r.DAT"
-        hydfilename = "HydrophonCalibrationData/MW_MH44ReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MW_MH44ReIm.csv"
         infos["hydrophonname"] = "GAMPT MH44"
         infos["measurementtype"] = "M-Mode 6 MHz"
 
     if i == 10:
         measurementfile = "MeasuredSignals/M-Mode 6 MHz/M6_MH46.DAT"
         noisefile = "MeasuredSignals/M-Mode 6 MHz/M6_MH46r.DAT"
-        hydfilename = "HydrophonCalibrationData/MH46_MWReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MH46_MWReIm.csv"
         infos["hydrophonname"] = "GAMPT MH46"
         infos["measurementtype"] = "M-Mode 6 MHz"
 
     if i == 11:
         measurementfile = "MeasuredSignals/M-Mode 6 MHz/M6_ON1704.DAT"
         noisefile = "MeasuredSignals/M-Mode 6 MHz/M6_ON1704r.DAT"
-        hydfilename = "HydrophonCalibrationData/MW_ONDA1704_SECReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MW_ONDA1704_SECReIm.csv"
         infos["hydrophonname"] = "ONDA1704"
         infos["measurementtype"] = "M-Mode 6 MHz"
 
     if i == 12:
         measurementfile = "MeasuredSignals/M-Mode 6 MHz/M6_PA1434.DAT"
         noisefile = "MeasuredSignals/M-Mode 6 MHz/M6_PA1434r.DAT"
-        hydfilename = "HydrophonCalibrationData/MW PA1434 ReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MW PA1434 ReIm.csv"
         infos["hydrophonname"] = "Precision Acoustics 1434"
         infos["measurementtype"] = "M-Mode 6 MHz"
 
@@ -214,28 +214,28 @@ def get_file_info(infos):
     if i == 13:
         measurementfile = "MeasuredSignals/pD-Mode 7 MHz/pD7_MH44.DAT"
         noisefile = "MeasuredSignals/pD-Mode 7 MHz/pD7_MH44r.DAT"
-        hydfilename = "HydrophonCalibrationData/MW_MH44ReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MW_MH44ReIm.csv"
         infos["hydrophonname"] = "GAMPT MH44"
         infos["measurementtype"] = "Pulse-Doppler-Mode 7 MHz"
 
     if i == 14:
         measurementfile = "MeasuredSignals/pD-Mode 7 MHz/pD7_MH46.DAT"
         noisefile = "MeasuredSignals/pD-Mode 7 MHz/pD7_MH46r.DAT"
-        hydfilename = "HydrophonCalibrationData/MH46_MWReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MH46_MWReIm.csv"
         infos["hydrophonname"] = "GAMPT MH46"
         infos["measurementtype"] = "Pulse-Doppler-Mode 7 MHz"
 
     if i == 15:
         measurementfile = "MeasuredSignals/pD-Mode 7 MHz/pD7_ON1704.DAT"
         noisefile = "MeasuredSignals/pD-Mode 7 MHz/pD7_ON1704r.DAT"
-        hydfilename = "HydrophonCalibrationData/MW_ONDA1704_SECReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MW_ONDA1704_SECReIm.csv"
         infos["hydrophonname"] = "ONDA1704"
         infos["measurementtype"] = "Pulse-Doppler-Mode 7 MHz"
 
     if i == 16:
         measurementfile = "MeasuredSignals/pD-Mode 7 MHz/pD7_PA1434.DAT"
         noisefile = "MeasuredSignals/pD-Mode 7 MHz/pD7_PA1434r.DAT"
-        hydfilename = "HydrophonCalibrationData/MW PA1434 ReIm.csv"
+        hydfilename = "HydrophoneCalibrationData/MW PA1434 ReIm.csv"
         infos["hydrophonname"] = "Precision Acoustics 1434"
         infos["measurementtype"] = "Pulse-Doppler-Mode 7 MHz"
 
@@ -327,7 +327,7 @@ def calc_awf(f, U, verbose=True, return_all=False):
 
     f_awf = 0.5 * (f1 + f2)
     if verbose:
-        print("resulting f_awf = %g MHz" % f_awf*1e-6)
+        print(f"resulting f_awf = {f_awf*1e-6} MHz")
 
     if return_all:
         return float(f_awf), f1, f2, f3x

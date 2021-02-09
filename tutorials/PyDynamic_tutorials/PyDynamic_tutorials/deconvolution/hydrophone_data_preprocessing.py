@@ -1,8 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from matplotlib.pyplot import *
+import os
+import sys
+
+datasets_dir = os.path.dirname(os.path.abspath('')) + '/datasets'
+if datasets_dir not in sys.path: sys.path.append(datasets_dir)
+
+from download_data import download_tutorial_data
 from helper_methods import *
+from matplotlib.pyplot import *
+from meas_data_preprocessing import DATA_SOURCE_REPO
 from PyDynamic.uncertainty.interpolation import interp1d_unc
+
 
 def read_calib_data(infos = None, meas_scenario = None, verbose = True, do_plot = True):
     """ Pre-processing of the hydrophone calibration data
@@ -18,6 +27,16 @@ def read_calib_data(infos = None, meas_scenario = None, verbose = True, do_plot 
         else:
             infos = {"i": 1}
     infos, measurementfile, noisefile, hydfilename = get_file_info(infos)  # file names and such
+    # Before reading the data check if data is present and if not download it.
+    measurementfile = download_tutorial_data(
+        url=DATA_SOURCE_REPO + measurementfile.replace(" ", "%20")
+    )
+    noisefile = download_tutorial_data(
+        url=DATA_SOURCE_REPO + noisefile.replace(" ", "%20")
+    )
+    hydfilename = download_tutorial_data(
+        url=DATA_SOURCE_REPO + hydfilename.replace(" ", "%20")
+    )
     infos["measurementfile"] = measurementfile
     infos["noisefile"] = noisefile
     infos["hydfilename"] = hydfilename
