@@ -1,8 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from matplotlib.pyplot import *
+import os
+import sys
+
+datasets_dir = os.path.dirname(os.path.abspath('')) + '/datasets'
+if datasets_dir not in sys.path: sys.path.append(datasets_dir)
+
+from download_data import download_tutorial_data
 from helper_methods import *
+from matplotlib.pyplot import *
 from PyDynamic.uncertainty.propagate_DFT import GUM_DFT
+
+DATA_SOURCE_REPO = (
+    "https://raw.githubusercontent.com/Ma-Weber/Tutorial-Deconvolution/master/"
+)
 
 def read_data(meas_scenario = 13, verbose = True):
     """
@@ -11,7 +22,18 @@ def read_data(meas_scenario = 13, verbose = True):
     :return: infos, measurement_data as dict
     """
     infos = {"i": meas_scenario}
-    infos, measurementfile, noisefile, hydfilename = get_file_info(infos) # file names and such
+    infos, measurementfile, noisefile, hydfilename = get_file_info(infos)  # file
+    # Before reading the data check if data is present and if not download it.
+    measurementfile = download_tutorial_data(
+        url=DATA_SOURCE_REPO + measurementfile.replace(" ", "%20")
+    )
+    noisefile = download_tutorial_data(
+        url=DATA_SOURCE_REPO + noisefile.replace(" ", "%20")
+    )
+    hydfilename = download_tutorial_data(
+        url=DATA_SOURCE_REPO + hydfilename.replace(" ", "%20")
+    )
+    # names and such
     infos["measurementfile"] = measurementfile
     infos["noisefile"] = noisefile
     infos["hydfilename"] = hydfilename

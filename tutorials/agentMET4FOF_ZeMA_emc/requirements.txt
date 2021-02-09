@@ -4,43 +4,122 @@
 #
 #    pip-compile
 #
-agentmet4fof==0.1.8       # via -r requirements.in
-brotli==1.0.7             # via flask-compress
-click==7.1.2              # via flask
-cloudpickle==1.4.1        # via osbrain
-cycler==0.10.0            # via matplotlib
-dash-core-components==1.10.0  # via dash
-dash-cytoscape==0.1.1     # via agentmet4fof
-dash-html-components==1.0.3  # via dash, dash-cytoscape
-dash-table==4.7.0         # via dash
-dash==1.12.0              # via agentmet4fof, dash-cytoscape
-dash_renderer==1.4.1      # via dash, dash-cytoscape
-decorator==4.4.2          # via networkx
-dill==0.3.2               # via osbrain
-flask-compress==1.5.0     # via dash
-flask==1.1.2              # via dash, flask-compress
-future==0.18.2            # via dash
-h5py==2.10.0              # via -r requirements.in
-itsdangerous==1.1.0       # via flask
-jinja2==2.11.2            # via flask
-joblib==0.15.1            # via scikit-learn
-kiwisolver==1.2.0         # via matplotlib
-markupsafe==1.1.1         # via jinja2
-matplotlib==3.2.1         # via -r requirements.in, agentmet4fof
-networkx==2.4             # via agentmet4fof
-numpy==1.18.5             # via -r requirements.in, agentmet4fof, h5py, matplotlib, pandas, scikit-learn, scipy
-osbrain==0.6.5            # via agentmet4fof
-pandas==1.0.4             # via -r requirements.in, agentmet4fof
-plotly==4.8.1             # via agentmet4fof, dash
-pyparsing==2.4.7          # via matplotlib
-pyro4==4.80               # via osbrain
-python-dateutil==2.8.1    # via matplotlib, pandas
-pytz==2020.1              # via pandas
-pyzmq==19.0.1             # via osbrain
-retrying==1.3.3           # via plotly
-scikit-learn==0.23.1      # via -r requirements.in, agentmet4fof
-scipy==1.4.1              # via -r requirements.in, scikit-learn
-serpent==1.30.2           # via pyro4
-six==1.15.0               # via cycler, h5py, plotly, python-dateutil, retrying
-threadpoolctl==2.1.0      # via scikit-learn
-werkzeug==1.0.1           # via flask
+agentmet4fof==0.1.8
+    # via -r requirements.in
+brotli==1.0.9
+    # via flask-compress
+certifi==2020.12.5
+    # via requests
+chardet==4.0.0
+    # via requests
+click==7.1.2
+    # via flask
+cloudpickle==1.6.0
+    # via osbrain
+cycler==0.10.0
+    # via matplotlib
+dash-core-components==1.15.0
+    # via dash
+dash-cytoscape==0.2.0
+    # via agentmet4fof
+dash-html-components==1.1.2
+    # via dash
+dash-table==4.11.2
+    # via dash
+dash==1.19.0
+    # via
+    #   agentmet4fof
+    #   dash-cytoscape
+dash_renderer==1.9.0
+    # via dash
+decorator==4.4.2
+    # via networkx
+dill==0.3.3
+    # via osbrain
+flask-compress==1.8.0
+    # via dash
+flask==1.1.2
+    # via
+    #   dash
+    #   flask-compress
+future==0.18.2
+    # via dash
+h5py==3.1.0
+    # via -r requirements.in
+idna==2.10
+    # via requests
+itsdangerous==1.1.0
+    # via flask
+jinja2==2.11.3
+    # via flask
+joblib==1.0.0
+    # via scikit-learn
+kiwisolver==1.3.1
+    # via matplotlib
+markupsafe==1.1.1
+    # via jinja2
+matplotlib==3.3.4
+    # via
+    #   -r requirements.in
+    #   agentmet4fof
+networkx==2.5
+    # via agentmet4fof
+numpy==1.20.1
+    # via
+    #   -r requirements.in
+    #   agentmet4fof
+    #   h5py
+    #   matplotlib
+    #   pandas
+    #   scikit-learn
+    #   scipy
+osbrain==0.6.5
+    # via agentmet4fof
+pandas==1.2.1
+    # via
+    #   -r requirements.in
+    #   agentmet4fof
+pillow==8.1.0
+    # via matplotlib
+plotly==4.14.3
+    # via
+    #   agentmet4fof
+    #   dash
+pyparsing==2.4.7
+    # via matplotlib
+pyro4==4.80
+    # via osbrain
+python-dateutil==2.8.1
+    # via
+    #   matplotlib
+    #   pandas
+pytz==2021.1
+    # via pandas
+pyzmq==22.0.2
+    # via osbrain
+requests==2.25.1
+    # via -r requirements.in
+retrying==1.3.3
+    # via plotly
+scikit-learn==0.24.1
+    # via
+    #   -r requirements.in
+    #   agentmet4fof
+scipy==1.6.0
+    # via
+    #   -r requirements.in
+    #   scikit-learn
+serpent==1.30.2
+    # via pyro4
+six==1.15.0
+    # via
+    #   cycler
+    #   plotly
+    #   python-dateutil
+    #   retrying
+threadpoolctl==2.1.0
+    # via scikit-learn
+urllib3==1.26.3
+    # via requests
+werkzeug==1.0.1
+    # via flask
