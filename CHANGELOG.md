@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.13.0 (2021-02-09)
+### :sparkles:
+* :sparkles: Update PyDynamic and ZeMA_emc and their dependencies  ([`b2531b6`](https://github.com/Met4FoF/Code/commit/b2531b66768be21f778bf99fe672e0a977861185))
+* :sparkles: Update agentMET4FOF and thus introduce SineGeneratorAgent and improved docs  ([`ede0878`](https://github.com/Met4FoF/Code/commit/ede08789193e705b48f542eaae89c4d7e54b0bda))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.12.0...v0.13.0)**
+
 ## v0.12.0 (2020-12-16)
 ### :egg:
 
