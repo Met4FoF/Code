@@ -1,0 +1,87 @@
+# Python CircleCI 2.1 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2.1
+
+executors:
+  # Define a parameterized executor which accepts two parameters to choose the python
+  # version which will be used for the docker image and the tox actions.
+  tester:
+    working_directory: ~/repo
+    parameters:
+      tag:
+        type: string
+        default: "3.8"
+    docker:
+      - image: circleci/python:<< parameters.tag >>
+
+workflows:
+  # Create workflow for testing and deploying.
+  test:
+    jobs:
+      - test:
+          name: "test_python3.8"
+          tag: "3.8"
+          pyenv: "py38"
+
+jobs:
+  # Define one 'test' job with parameters to deal with all desired cases.
+  test:
+    # Define all parameters, where 'tag' is used for the docker image and 'pyenv' is
+    # the string which is used in tox to identify the current Python version. We reuse
+    # this variable basically everywhere we deal with the virtual environment.
+    parameters:
+      tag:
+        type: string
+        default: "3.8"
+      pyenv:
+        type: string
+        default: "py38"
+
+    # Specify the executor and hand over the docker image tag parameter.
+    executor:
+      name: tester
+      tag: << parameters.tag >>
+
+    # Specify the steps to execute during this test jobs.
+    steps:
+      # Checkout code.
+      - checkout
+      # Create test-result folder.
+      - run:
+          name: Create test result folder
+          command: |
+            mkdir test-results
+
+      # Create virtual environment.
+      - run:
+          name: Create virtual environment
+          command: |
+            python3 -m venv << parameters.pyenv >>
+            source << parameters.pyenv >>/bin/activate
+            pip install --upgrade pip
+
+      # Install dependencies.
+      - run:
+          name: Install development dependencies
+          command: |
+            source << parameters.pyenv >>/bin/activate
+            pip install -r requirements.txt -r dev-requirements.txt
+
+      # Run tests with coverage report! We use pytest's test-runner.
+      - run:
+          name: Run agentMET4FOF tests
+          no_output_timeout: 20m
+          command: |
+            source << parameters.pyenv >>/bin/activate
+            pytest -v --junitxml=test-results/pytest.xml --cov=. . | tee \
+            test-results/agentMET4FOF_ZeMA_emc.log
+
+      # Store test results.
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+
+      - store_test_results:
+          path: test-results
