@@ -215,7 +215,7 @@ commands:
           source $HOME/conda/etc/profile.d/conda.sh
           conda activate Met4FoF_Code
           pytest -v --junitxml=test-results/junit.xml \
-          << parameters.subtree >> > test-results/pytest.log
+          << parameters.subtree >> | tee test-results/pytest.log
 
     - store_test_artifacts_and_results:
         subtree: << parameters.subtree >>
@@ -233,7 +233,7 @@ commands:
         command: |
           source venv/bin/activate
           pytest -v --junitxml=test-results/junit.xml \
-          << parameters.subtree >> > test-results/pytest.log
+          << parameters.subtree >> | tee test-results/pytest.log
 
     - store_test_artifacts_and_results:
         subtree: << parameters.subtree >>
