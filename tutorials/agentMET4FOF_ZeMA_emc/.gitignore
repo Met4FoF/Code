@@ -1,2 +1,6 @@
 *.csv
 dataset
+.idea/*
+ZeMA_emc/__pycache__/*
+pytest.xml
+.coverage*

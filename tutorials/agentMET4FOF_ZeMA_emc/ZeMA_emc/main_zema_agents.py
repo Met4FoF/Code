@@ -1,20 +1,22 @@
 import numpy as np
 from agentMET4FOF.agents import AgentNetwork, DataStreamAgent, MonitorAgent
 
-from . import zema_agents, zema_datastream
-from .zema_agents import (EvaluatorAgent, FFT_BFCAgent, LDA_Agent,
+from ZeMA_emc import zema_agents, zema_datastream
+from ZeMA_emc.zema_agents import (EvaluatorAgent, FFT_BFCAgent, LDA_Agent,
                           Pearson_FeatureSelectionAgent, Regression_Agent,
                           TrainTestSplitAgent)
-from .zema_datastream import ZEMA_DataStream
+from ZeMA_emc.zema_datastream import ZEMA_DataStream
 
 np.random.seed(100)
 
+import matplotlib
+matplotlib.use('Agg') # https://stackoverflow.com/questions/27147300/matplotlib-tcl-asyncdelete-async-handler-deleted-by-the-wrong-thread
 
 def main():
     # start agent network server
     agentNetwork = AgentNetwork(
         dashboard_modules=[zema_datastream,
-                           zema_agents], log_filename=False)
+                           zema_agents], log_filename=False, backend="mesa")
     # init agents by adding into the agent network
     datastream_agent = agentNetwork.add_agent(agentType=DataStreamAgent)
     train_test_split_agent = agentNetwork.add_agent(

@@ -6,7 +6,7 @@
 #
 attrs==20.3.0
     # via pytest
-coverage==5.4
+coverage==5.5
     # via pytest-cov
 iniconfig==1.1.1
     # via pytest
@@ -22,7 +22,7 @@ pyparsing==2.4.7
     #   packaging
 pytest-cov==2.11.1
     # via -r dev-requirements.in
-pytest==6.2.2
+pytest==6.2.3
     # via
     #   -r dev-requirements.in
     #   pytest-cov

@@ -1,4 +1,4 @@
-agentMET4FOF==0.1.8
+agentMET4FOF==0.6.3
 numpy
 scikit-learn
 scipy
