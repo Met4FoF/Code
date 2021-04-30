@@ -3,4 +3,9 @@ numpy
 scipy
 pandas
 torch
-agentMET4FOF
+agentMET4FOF==0.4.0
+# These pinnings are necessary due to a vunerability of older versions. It can be
+# removed as soon as we are able to recompile all dependencies cleanly and end up with
+# a appropriate versions of urllib3 and jinja2.
+urllib3>=1.26.4
+jinja2>=2.11.3
