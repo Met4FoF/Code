@@ -17,20 +17,19 @@ host_ip='192.168.43.95'
 local_ip='192.168.43.102'
 
 class OpenSenecaAgent(AgentMET4FOF):
-    def init_parameters(self, port_name='/dev/ttyUSB0', sensor_buffer_size=5):
+    def init_parameters(self, port_name='/dev/ttyUSB0'):
         self.stream = self.connect_seneca_serial(port_name)
-        self.buffer_size = sensor_buffer_size
 
     def agent_loop(self):
         if self.current_state == "Running":
             sensor_data = self.read_seneca_sensor(self.stream)
 
             #save data into memory
-            self.update_data_memory({'from':self.name,'data':sensor_data})
+            self.buffer_store(agent_from=self.name,data=sensor_data)
             # send out buffered data if the stored data has exceeded the buffer size
-            if len(self.memory[self.name][next(iter(self.memory[self.name]))]) >= self.buffer_size:
-                self.send_output(self.memory[self.name])
-                self.memory = {}
+            if self.buffer_filled(self.name):
+                self.send_output(self.buffer[self.name])
+                self.buffer_clear(self.name)
 
     def connect_seneca_serial(self, port_name = '/dev/ttyUSB0'):
         ser = serial.Serial(port_name)
@@ -53,11 +52,11 @@ class OpenSenecaAgent(AgentMET4FOF):
 def main():
     #connect to agent network server
     log_file = False
-    agentNetwork = AgentNetwork(dashboard_modules=False,log_filename=log_file, ip_addr=host_ip)
+    agentNetwork = AgentNetwork(dashboard_modules=False,log_filename=log_file,ip_addr=host_ip)
 
     #init agents by adding into the agent network
-    gen_agent = agentNetwork.add_agent(agentType = OpenSenecaAgent,ip_addr=local_ip)
-    gen_agent.init_parameters(port_name='/dev/ttyUSB0',sensor_buffer_size=1)
+    gen_agent = agentNetwork.add_agent(agentType = OpenSenecaAgent,ip_addr=local_ip,buffer_size=1)
+    gen_agent.init_parameters(port_name='/dev/ttyUSB0')
     gen_agent.init_agent_loop(loop_wait=1)
 
     # set all agents states to "Running"

@@ -1,5 +1,3 @@
-[![CircleCI](https://circleci.com/gh/Met4FoF/agentMET4FOF_ZeMA_emc.svg?style=shield)](https://circleci.com/gh/Met4FoF/agentMET4FOF_ZeMA_emc)
-
 # Met4FoF use case of agent based condition monitoring
 
 This is supported by European Metrology Programme for Innovation and Research (EMPIR)
@@ -27,7 +25,7 @@ If you have any questions please get in touch with
 
 ### Dependencies
 
-To install all dependencies in virtual environment based on Python version 3.8 first
+To install all dependencies in virtual environment based on Python version 3.9 first
 install `pip-tools` and afterwards use our prepared `requirements.txt` to get
 everything ready.
 
@@ -73,34 +71,11 @@ The interesting parts you find in the file
 
 - `main_zema_agents.py`
 
-### Orphaned processes
-
-In the event of agents not terminating cleanly, you can end all Python processes
-running on your system (caution: the following commands affect **all** running Python
- processes, not just those that emerged from the agents).
-
-#### Killing all Python processes in Windows
-
-In your Windows command prompt execute the following to terminate all python processes.
-
-```shell
-> taskkill /f /im python.exe /t
->
-```
-
-#### Killing all Python processes on Mac and Linux
-
-In your terminal execute the following to terminate all python processes.
-
-```shell
-$ pkill python
-$
-```
-
 ## References
 
 For details about the agents refer to the
 [upstream repository _agentMET4FOF_](https://github.com/bangxiangyong/agentMET4FOF)
 
 ## Screenshot of web visualization
-![Web Screenshot](https://github.com/bangxiangyong/agentMet4FoF/blob/master/screenshot_met4fof.png)
+
+![Web Screenshot](https://github.com/Met4FoF/agentMET4FOF/blob/0c96171509dd7aec01de44b7ba573279efecbdef/docs/screenshot_met4fof.png)

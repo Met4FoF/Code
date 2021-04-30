@@ -33,8 +33,8 @@ def test_zema_emc_lda():
     zema_data = zema_datastream.all_samples()
 
     #split
-    x_data = zema_data['x']
-    y_data = zema_data['y']
+    x_data = zema_data['quantities']
+    y_data = zema_data['target']
 
     x_train, x_test =train_test_split(x_data, train_size=0.8,random_state=15)
     y_train, y_test =train_test_split(y_data, train_size=0.8,random_state=15)

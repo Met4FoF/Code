@@ -17,7 +17,7 @@ class FFTAgent(AgentMET4FOF):
         self.sampling_period = sampling_period                                                                   # sampling period 1 s                                      # sampling points
 
     def on_received_message(self, message):
-        x_data = message['data']['x']
+        x_data = message['data']['quantities']
         n_of_sampling_pts = x_data.shape[1]
         freq = np.fft.rfftfreq(n_of_sampling_pts, float(self.sampling_period)/n_of_sampling_pts)   # frequency axis
         amp = np.fft.rfft(x_data[0,:,0])                                                      # amplitude axis
@@ -30,13 +30,13 @@ class FFT_BFCAgent(AgentMET4FOF):
 
     def on_received_message(self, message):
         if message['channel'] == 'train':
-            res = self.fft_bfc.fit_transform(message['data']['x'])
-            self.send_output({'x': res, 'y': message['data']['y']}, channel='train')
+            res = self.fft_bfc.fit_transform(message['data']['quantities'])
+            self.send_output({'quantities': res, 'target': message['data']['target']}, channel='train')
             self.send_plot(self.fft_bfc.plot_bestFreq())
 
         elif message['channel'] == 'test':
-            res = self.fft_bfc.transform(message['data']['x'])
-            self.send_output({'x': res, 'y': message['data']['y']}, channel='test')
+            res = self.fft_bfc.transform(message['data']['quantities'])
+            self.send_output({'quantities': res, 'target': message['data']['target']}, channel='test')
 
 class TrainTestSplitAgent(AgentMET4FOF):
     """
@@ -61,8 +61,8 @@ class TrainTestSplitAgent(AgentMET4FOF):
             self.pretrain_done = False
 
     def on_received_message(self, message):
-        x_data = message['data']['x']
-        y_data = message['data']['y']
+        x_data = message['data']['quantities']
+        y_data = message['data']['target']
 
         #leave one out
         if self.train_ratio > 0:
@@ -70,20 +70,20 @@ class TrainTestSplitAgent(AgentMET4FOF):
             y_train, y_test =train_test_split(y_data, train_size=self.train_ratio,random_state=15)
 
             #so that train and test will be handled sequentially
-            self.send_output({'x': x_train, 'y': y_train}, channel='train')
+            self.send_output({'quantities': x_train, 'target': y_train}, channel='train')
             time.sleep(2)
-            self.send_output({'x': x_test, 'y': y_test}, channel='test')
+            self.send_output({'quantities': x_test, 'target': y_test}, channel='test')
 
         #prequential
         else:
             if self.pretrain_done == False:
                 self.pretrain_done= True
-                self.send_output({'x': x_data, 'y': y_data}, channel='train')
+                self.send_output({'quantities': x_data, 'target': y_data}, channel='train')
                 time.sleep(2)
             else:
-                self.send_output({'x': x_data,'y': y_data}, channel='test')
+                self.send_output({'quantities': x_data,'target': y_data}, channel='test')
                 time.sleep(2)
-                self.send_output({'x': x_data,'y': y_data}, channel='train')
+                self.send_output({'quantities': x_data,'target': y_data}, channel='train')
 
 class Pearson_FeatureSelectionAgent(AgentMET4FOF):
     def init_parameters(self):
@@ -92,8 +92,8 @@ class Pearson_FeatureSelectionAgent(AgentMET4FOF):
     def on_received_message(self, message):
         if message['channel'] == 'train':
             #handle train data
-            selected_features, sensor_percentages = self.pearson_fs.fit_transform(message['data']['x'], message['data']['y'])
-            self.send_output({'x':np.array(selected_features),'y':message['data']['y']}, channel='train')
+            selected_features, sensor_percentages = self.pearson_fs.fit_transform(message['data']['quantities'], message['data']['target'])
+            self.send_output({'quantities':np.array(selected_features),'target':message['data']['target']}, channel='train')
             self.send_plot(self.pearson_fs.plot_feature_percentages(sensor_percentages,
                                                                     labels=('Microphone',
                                                                             'Vibration plain bearing','Vibration piston rod','Vibration ball bearing',
@@ -101,8 +101,8 @@ class Pearson_FeatureSelectionAgent(AgentMET4FOF):
                                                                             'Motor current phase 2','Motor current phase 3')))
             #handle test data
         elif message['channel'] == 'test':
-            selected_features, sensor_percentages = self.pearson_fs.transform(message['data']['x'])
-            self.send_output({'x':np.array(selected_features), 'y':message['data']['y']}, channel='test')
+            selected_features, sensor_percentages = self.pearson_fs.transform(message['data']['quantities'])
+            self.send_output({'quantities':np.array(selected_features), 'target':message['data']['target']}, channel='test')
             self.log_info("HANDLING TEST DATA NOW")
 
 class LDA_Agent(AgentMET4FOF):
@@ -121,23 +121,23 @@ class LDA_Agent(AgentMET4FOF):
         self.log_info("MODE : "+ message['channel'])
         if message['channel'] == 'train':
             if self.incremental:
-                #message['data']['y'] = message['data']['y'][0]
-                message['data']['y'] = self.reformat_target(message['data']['y'])
-                self.update_data_memory(message)
-                y_true = self.memory[list(self.memory.keys())[0]]['y']
-                x = np.array(self.memory[list(self.memory.keys())[0]]['x'])
+                #message['data']['target'] = message['data']['target'][0]
+                message['data']['target'] = self.reformat_target(message['data']['target'])
+                self.buffer_store(agent_from=message['from'], data=message['data'])
+                y_true = self.buffer[list(self.buffer.keys())[0]]['target']
+                x = np.array(self.buffer[list(self.buffer.keys())[0]]['quantities'])
             else:
-                y_true = self.reformat_target(message['data']['y'])
-                x = message['data']['x']
+                y_true = self.reformat_target(message['data']['target'])
+                x = message['data']['quantities']
             self.ml_model = self.ml_model.fit(x, y_true)
             self.log_info("Overall Train Score: " + str(self.ml_model.score(x, y_true)))
 
         elif message['channel'] == 'test':
-            y_true = self.reformat_target(message['data']['y'])
-            y_pred = self.ml_model.predict(message['data']['x'])
+            y_true = self.reformat_target(message['data']['target'])
+            y_pred = self.ml_model.predict(message['data']['quantities'])
             self.send_output({'y_pred':y_pred, 'y_true': y_true})
-            self.log_info("Overall Test Score: " + str(self.ml_model.score(message['data']['x'], y_true)))
-            self.lda_test_score = self.ml_model.score(message['data']['x'], y_true)
+            self.log_info("Overall Test Score: " + str(self.ml_model.score(message['data']['quantities'], y_true)))
+            self.lda_test_score = self.ml_model.score(message['data']['quantities'], y_true)
 
 
 class Regression_Agent(AgentMET4FOF):
@@ -156,31 +156,29 @@ class Regression_Agent(AgentMET4FOF):
 
         if message['channel'] == 'train':
             if self.incremental:
-                message['data']['y'] = message['data']['y'].values.ravel()
-                self.update_data_memory(message)
-                y_true = self.memory[list(self.memory.keys())[0]]['y']
-                x = np.array(self.memory[list(self.memory.keys())[0]]['x'])
+                message['data']['target'] = message['data']['target'].ravel()
+                self.buffer_store(agent_from=message['from'], data=message['data'])
+                y_true = self.buffer[list(self.buffer.keys())[0]]['target']
+                x = np.array(self.buffer[list(self.buffer.keys())[0]]['quantities'])
             else:
-                y_true = message['data']['y'][0]
-                x = message['data']['x']
+                y_true = message['data']['target'][0]
+                x = message['data']['quantities']
             self.lin_model = self.lin_model.fit(x, y_true)
             self.log_info("Overall Train Score: " + str(self.lin_model.score(x, y_true)))
         elif message['channel'] == 'test':
-            y_true = message['data']['y'][0]
-            y_pred = self.lin_model.predict(message['data']['x']).clip(0, 100)
+            y_true = message['data']['target'][0]
+            y_pred = self.lin_model.predict(message['data']['quantities']).clip(0, 100)
             self.send_output({'y_pred': y_pred, 'y_true': np.array(y_true)})
-            self.log_info("Overall Test Score: " + str(self.lin_model.score(message['data']['x'], y_true)))
-            self.reg_test_score = self.lin_model.score(message['data']['x'], y_true)
+            self.log_info("Overall Test Score: " + str(self.lin_model.score(message['data']['quantities'], y_true)))
+            self.reg_test_score = self.lin_model.score(message['data']['quantities'], y_true)
 
 
 class EvaluatorAgent(AgentMET4FOF):
      def on_received_message(self, message):
-        self.update_data_memory(message)
-        # y_pred = message['data']['y_pred']
-        # y_true = message['data']['y_true']
+        self.buffer_store(agent_from=message['from'], data=message['data'])
         from_agent = message['from']
-        y_pred = self.memory[from_agent]['y_pred']
-        y_true = self.memory[from_agent]['y_true']
+        y_pred = self.buffer[from_agent]['y_pred']
+        y_true = self.buffer[from_agent]['y_true']
         error = np.abs(y_pred- y_true)
         rmse = np.sqrt(mean_squared_error(y_pred, y_true))
 

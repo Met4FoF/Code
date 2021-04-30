@@ -14,13 +14,15 @@ backcall==0.2.0
     # via ipython
 bleach==3.3.0
     # via nbconvert
-bokeh==2.2.3
+bokeh==2.3.1
     # via
     #   holoviews
     #   panel
+cached-property==1.5.2
+    # via h5py
 certifi==2020.12.5
     # via requests
-cffi==1.14.4
+cffi==1.14.5
     # via argon2-cffi
 chardet==4.0.0
     # via requests
@@ -28,9 +30,11 @@ colorcet==2.0.6
     # via holoviews
 cycler==0.10.0
     # via matplotlib
-decorator==4.4.2
-    # via ipython
-defusedxml==0.6.0
+decorator==5.0.7
+    # via
+    #   ipython
+    #   traitlets
+defusedxml==0.7.1
     # via nbconvert
 download==0.3.5
     # via -r requirements/requirements.in
@@ -38,11 +42,15 @@ entrypoints==0.3
     # via nbconvert
 h5py==3.1.0
     # via -r requirements/requirements.in
-holoviews[recommended]==1.14.1
+holoviews[recommended]==1.14.3
     # via -r requirements/requirements.in
 idna==2.10
     # via requests
-ipykernel==5.4.3
+importlib-metadata==4.0.1
+    # via
+    #   jsonschema
+    #   markdown
+ipykernel==5.5.3
     # via
     #   ipywidgets
     #   notebook
@@ -51,8 +59,9 @@ ipython-genutils==0.2.0
     #   nbformat
     #   notebook
     #   traitlets
-ipython==7.20.0
+ipython==7.16.1
     # via
+    #   -r requirements/requirements.in
     #   holoviews
     #   ipykernel
     #   ipywidgets
@@ -67,7 +76,7 @@ jinja2==2.11.3
     #   notebook
 jsonschema==3.2.0
     # via nbformat
-jupyter-client==6.1.11
+jupyter-client==6.1.12
     # via
     #   ipykernel
     #   nbclient
@@ -84,21 +93,22 @@ jupyterlab-widgets==1.0.0
     # via ipywidgets
 kiwisolver==1.3.1
     # via matplotlib
-markdown==3.3.3
+markdown==3.3.4
     # via panel
 markupsafe==1.1.1
     # via jinja2
 matplotlib==3.3.4
     # via
+    #   -r requirements/requirements.in
     #   holoviews
     #   pydynamic
 mistune==0.8.4
     # via nbconvert
-nbclient==0.5.1
+nbclient==0.5.3
     # via nbconvert
 nbconvert==6.0.7
     # via notebook
-nbformat==5.1.2
+nbformat==5.1.3
     # via
     #   ipywidgets
     #   nbclient
@@ -106,12 +116,12 @@ nbformat==5.1.2
     #   notebook
 nest-asyncio==1.5.1
     # via nbclient
-notebook==6.2.0
+notebook==6.3.0
     # via
     #   -r requirements/requirements.in
     #   holoviews
     #   widgetsnbextension
-numpy==1.20.1
+numpy==1.19.5
     # via
     #   -r requirements/requirements.in
     #   bokeh
@@ -125,14 +135,14 @@ packaging==20.9
     # via
     #   bleach
     #   bokeh
-pandas==1.2.1
+pandas==1.1.5
     # via
     #   -r requirements/requirements.in
     #   holoviews
     #   pydynamic
 pandocfilters==1.4.3
     # via nbconvert
-panel==0.10.3
+panel==0.11.3
     # via holoviews
 param==1.10.1
     # via
@@ -141,21 +151,21 @@ param==1.10.1
     #   panel
     #   pyct
     #   pyviz-comms
-parso==0.8.1
+parso==0.8.2
     # via jedi
 pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
-pillow==8.1.0
+pillow==8.2.0
     # via
     #   bokeh
     #   matplotlib
 plotly==4.14.3
     # via -r requirements/requirements.in
-prometheus-client==0.9.0
+prometheus-client==0.10.1
     # via notebook
-prompt-toolkit==3.0.14
+prompt-toolkit==3.0.18
     # via ipython
 ptyprocess==0.7.0
     # via
@@ -167,9 +177,9 @@ pyct==0.4.8
     # via
     #   colorcet
     #   panel
-pydynamic==1.6.1
+pydynamic==1.8.0
     # via -r requirements/requirements.in
-pygments==2.7.4
+pygments==2.8.1
     # via
     #   ipython
     #   jupyterlab-pygments
@@ -194,7 +204,7 @@ pyviz-comms==2.0.1
     #   panel
 pyyaml==5.4.1
     # via bokeh
-pyzmq==22.0.2
+pyzmq==22.0.3
     # via
     #   jupyter-client
     #   notebook
@@ -204,7 +214,7 @@ requests==2.25.1
     #   panel
 retrying==1.3.3
     # via plotly
-scipy==1.6.0
+scipy==1.5.4
     # via pydynamic
 send2trash==1.5.0
     # via notebook
@@ -218,10 +228,9 @@ six==1.15.0
     #   plotly
     #   python-dateutil
     #   retrying
-terminado==0.8.3
-    # via
-    #   -r requirements/requirements.in
-    #   notebook
+    #   traitlets
+terminado==0.9.4
+    # via notebook
 testpath==0.4.4
     # via nbconvert
 tornado==6.1
@@ -231,11 +240,11 @@ tornado==6.1
     #   jupyter-client
     #   notebook
     #   terminado
-tqdm==4.56.0
+tqdm==4.60.0
     # via
     #   download
     #   panel
-traitlets==5.0.5
+traitlets==4.3.3
     # via
     #   ipykernel
     #   ipython
@@ -247,8 +256,10 @@ traitlets==5.0.5
     #   nbformat
     #   notebook
 typing-extensions==3.7.4.3
-    # via bokeh
-urllib3==1.26.3
+    # via
+    #   bokeh
+    #   importlib-metadata
+urllib3==1.26.4
     # via requests
 wcwidth==0.2.5
     # via prompt-toolkit
@@ -256,6 +267,8 @@ webencodings==0.5.1
     # via bleach
 widgetsnbextension==3.5.1
     # via ipywidgets
+zipp==3.4.1
+    # via importlib-metadata
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

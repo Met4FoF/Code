@@ -1,0 +1,140 @@
+# Python CircleCI 2.1 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+#
+version: 2.1
+
+executors:
+  # Define a parameterized executor which accepts two parameters to choose the python
+  # version which will be used for the docker image and the tox actions.
+  tester:
+    working_directory: ~/repo
+    parameters:
+      tag:
+        type: string
+        default: "3.8"
+    docker:
+      - image: circleci/python:<< parameters.tag >>
+
+commands:
+  # Reusable command to prepare the environment for testing.
+  create_folders_and_venv:
+    description: "Prepare everything."
+    parameters:
+      pyenv:
+        type: string
+        default: "py38"
+    steps:
+    # Checkout code.
+    - checkout
+    # Create test-result folder.
+    - run:
+        name: Create test result folder
+        command: |
+          mkdir test-results
+
+    # Create PyDynamic_tutorials virtual environment.
+    - run:
+        name: Create virtual environment
+        command: |
+          python3 -m venv << parameters.pyenv >>
+          source << parameters.pyenv >>/bin/activate
+          pip install --upgrade pip setuptools pip-tools
+
+  # Reusable command to install production dependencies.
+  install_deps:
+    description: "Install dependencies."
+    parameters:
+      pyenv:
+        type: string
+        default: "py38"
+    steps:
+
+    # Install dependencies.
+    - run:
+        name: Install dependencies
+        command: |
+          source << parameters.pyenv >>/bin/activate
+          python -m piptools sync requirements/requirements.txt requirements/requirements-dev.txt
+
+  # Reusable command to conduct actual testing.
+  execute_nbval:
+    description: "Execute pytest with nbval plugin."
+    parameters:
+      pyenv:
+        type: string
+    steps:
+
+    # Call pytest with nbval.
+    - run:
+        name: Perform pytest --nbval testing
+        command: |
+          source << parameters.pyenv >>/bin/activate
+          pytest --nbval --current-env --sanitize-with nbval_sanitization | tee --append test-results/pytest.log
+
+  # Reusable command to store the previously generated test results.
+  store_results:
+    description: "Store test results and artifacts."
+    parameters:
+      pyenv:
+        type: string
+    steps:
+    # Store test results.
+    - store_artifacts:
+        path: test-results
+        destination: test-results
+
+    - store_test_results:
+        path: test-results
+
+workflows:
+  # Create workflow for testing PyDynamic_tutorials.
+  test:
+    jobs:
+      # Create 'test' job to test and install PyDynamic_tutorials for every commit.
+      - test:
+          name: "test_python3.6"
+          tag: "3.6"
+          pyenv: "py36"
+      - test:
+          name: "test_python3.7"
+          tag: "3.7"
+          pyenv: "py37"
+      - test:
+          name: "test_python3.8"
+          tag: "3.8"
+          pyenv: "py38"
+
+jobs:
+
+  # Define one 'test' job with parameters to deal with all desired cases. The
+  # reason for this is the desire to ensure the following for all supported Python
+  # versions referring to the docs: all notebooks are guaranteed to produce the same
+  # output as they contain.
+  test:
+    # Define all parameters, where 'tag' is used for the docker image and 'pyenv' is
+    # the string which is used to identify the current Python version. We reuse
+    # this variable basically everywhere we deal with the virtual environment.
+    parameters:
+      tag:
+        type: string
+        default: "3.8"
+      pyenv:
+        type: string
+        default: "py38"
+
+    # Specify the executor and hand over the docker image tag parameter.
+    executor:
+      name: tester
+      tag: << parameters.tag >>
+
+    # Specify the steps to execute during this test jobs.
+    steps:
+      - create_folders_and_venv:
+          pyenv: << parameters.pyenv >>
+      - install_deps:
+          pyenv: << parameters.pyenv >>
+      - execute_nbval:
+          pyenv: << parameters.pyenv >>
+      - store_results:
+          pyenv: << parameters.pyenv >>

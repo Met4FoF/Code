@@ -6,20 +6,19 @@ import serial
 #sudo chmod 666 /dev/ttyS0
 
 class OpenSenecaAgent(AgentMET4FOF):
-    def init_parameters(self, port_name='/dev/ttyUSB0', sensor_buffer_size=5):
+    def init_parameters(self, port_name='/dev/ttyUSB0'):
         self.stream = self.connect_seneca_serial(port_name)
-        self.buffer_size = sensor_buffer_size
 
     def agent_loop(self):
         if self.current_state == "Running":
             sensor_data = self.read_seneca_sensor(self.stream)
 
             #save data into memory
-            self.update_data_memory({'from':self.name,'data':sensor_data})
+            self.buffer_store(agent_from=self.name,data=sensor_data)
             # send out buffered data if the stored data has exceeded the buffer size
-            if len(self.memory[self.name][next(iter(self.memory[self.name]))]) >= self.buffer_size:
+            if self.buffer_filled(self.name):
                 self.send_output(self.memory[self.name])
-                self.memory = {}
+                self.buffer_clear()
 
     def connect_seneca_serial(self, port_name = '/dev/ttyUSB0'):
         ser = serial.Serial(port_name)
@@ -45,10 +44,10 @@ def main():
     agentNetwork = AgentNetwork(log_filename=log_file, dashboard_update_interval=1)
 
     #init agents by adding into the agent network
-    sensor_agent = agentNetwork.add_agent(agentType = OpenSenecaAgent)
-    monitor_agent = agentNetwork.add_agent(agentType = MonitorAgent, memory_buffer_size=100)
+    sensor_agent = agentNetwork.add_agent(agentType = OpenSenecaAgent, buffer_size=1)
+    monitor_agent = agentNetwork.add_agent(agentType = MonitorAgent, buffer_size=100)
 
-    sensor_agent.init_parameters(port_name='/dev/ttyUSB0',sensor_buffer_size=1)
+    sensor_agent.init_parameters(port_name='/dev/ttyUSB0')
     sensor_agent.init_agent_loop(loop_wait=1)
 
     #connect the sensor agent to the monitor agent
