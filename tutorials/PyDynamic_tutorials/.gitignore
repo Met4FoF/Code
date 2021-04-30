@@ -16,3 +16,7 @@ docs/**/*.ipynb
 *.p
 *.DAT
 *.csv
+
+# pytest artifacts #
+####################
+.pytest_cache/

@@ -1,5 +1,6 @@
 # _PyDynamic tutorials_
 
+[![CircleCI](https://circleci.com/gh/PTB-PSt1/PyDynamic_tutorials.svg?style=shield)](https://circleci.com/gh/PTB-PSt1/PyDynamic_tutorials)
 [![Documentation Status](https://readthedocs.org/projects/pydynamic-tutorials/badge/?version=latest)](https://pydynamic-tutorials.readthedocs.io/en/latest/?badge=latest)
 
 We prepared a collection of tutorials and examples to document, explain and illustrate
@@ -14,11 +15,11 @@ included in _PyDynamic_'s codebase subfolders
 To get going with the tutorials you can either start directly in your browser or get
 a local copy and experiment offline on your machine.
  
- ### Quick start in current browser session
+### Quick start in current browser session
  
 To start working in the notebooks directly in the browser, click [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PTB-PSt1/PyDynamic_tutorials/master).
  
- ### Get a local copy to work offline
+### Get a local copy to work offline
 
 To get started on your local machine, follow these simple steps:
 
@@ -65,7 +66,7 @@ $ source PyDynamic_tutorial_venv/bin/activate
 Collecting pip
 [...]
 Successfully installed click-7.1.2 pip-20.1.1 pip-tools-5.2.0 setuptools-47.1.1 six-1.15.0
-$ pip-sync requirements/requirement.txt
+$ pip-sync requirements/requirements.txt
 Collecting attrs==19.3.0
 [...]
 Installing collected packages: attrs, [...]
@@ -86,7 +87,7 @@ $ jupyter notebook
 
 #### 5. Go to localhost:8888
 
-Usually a browser window will have opened automatically at this point. Otherwise just
+Usually a browser window will have opened automatically at this point. Otherwise, just
 open one yourself and navigate to the printed URL in the console, in our case
 `http://localhost:8888/?token=f368c552e042d48d46ff4c8a094448d0e7681790b0719215`.
 

@@ -1,0 +1,3 @@
+[regex1]
+regex: \|█+\|\ (\d+\.)?\d+(G|MB|k)\/(\d+\.)?\d+(G|MB|k)\ \[(\d+)?\d+:\d+<(\d+)?\d+:\d+,\ ('\\n ')?(\d+\.)?\d+(G|MB|kB)\/s
+replace: DOWNLOAD_TIME

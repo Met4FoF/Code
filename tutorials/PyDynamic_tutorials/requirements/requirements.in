@@ -1,17 +1,11 @@
 download
+ipython
 ipywidgets
 h5py
 holoviews[recommended]
 notebook
 numpy
+matplotlib
 pandas
 plotly
 PyDynamic
-# This was needed from 3e072fd on, because of the following error in the cached
-# mybinder.org image while installing dependencies:
-# Attempting uninstall: terminado
-#     Found existing installation: terminado 0.8.3
-# ERROR: Cannot uninstall 'terminado'. It is a distutils installed project and thus we
-# cannot accurately determine which files belong to it which would lead to only a
-# partial uninstall.
-terminado == 0.8.3
