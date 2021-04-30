@@ -33,11 +33,11 @@ class AccelerationSensorAgent(AgentMET4FOF):
             self.send_output(sensor_data)
 
             #save data into memory
-            self.update_data_memory({'from':self.name,'data':sensor_data})
+            self.buffer_store(agent_from=self.name,data=sensor_data)
             # send out buffered data if the stored data has exceeded the buffer size
-            if len(self.memory[self.name][next(iter(self.memory[self.name]))]) >= self.buffer_size:
-                self.send_output(self.memory[self.name])
-                self.memory = {}
+            if self.buffer_filled(self.name):
+                self.send_output(self.buffer[self.name])
+                self.buffer_clear(self.name)
 
     def next_sample(self):
         data ={}
@@ -73,11 +73,11 @@ class TemperatureSensorAgent(AgentMET4FOF):
             # self.send_output(sensor_data)
 
             #save data into memory
-            self.update_data_memory({'from':self.name,'data':sensor_data})
+            self.buffer_store(agent_from=self.name,data=sensor_data)
             # send out buffered data if the stored data has exceeded the buffer size
-            if len(self.memory[self.name][next(iter(self.memory[self.name]))]) >= self.buffer_size:
-                self.send_output(self.memory[self.name])
-                self.memory = {}
+            if self.buffer_filled(self.name):
+                self.send_output(self.buffer[self.name])
+                self.buffer_clear(self.name)
 
     def next_sample(self):
         pState = self.printer.get_status()
@@ -123,16 +123,16 @@ def main():
     #y_sensor_agent = agentNetwork.add_agent(name="Y_acceleration",agentType= AccelerationSensorAgent).init_parameters(axis='y')
     #z_sensor_agent = agentNetwork.add_agent(name="Z_acceleration",agentType= AccelerationSensorAgent).init_parameters(axis='z')
     sensor_buffer_size = 1
-    acceleration_agent = agentNetwork.add_agent(name="XYZ_acceleration",agentType= AccelerationSensorAgent).init_parameters(axis='xyz',sensor_buffer_size=sensor_buffer_size)
-    nozzle_sensor_agent = agentNetwork.add_agent(name="Nozzle_temperature",agentType= TemperatureSensorAgent).init_parameters(position='tool0',sensor_buffer_size=sensor_buffer_size)
-    platform_sensor_agent = agentNetwork.add_agent(name="Platform_temperature",agentType= TemperatureSensorAgent).init_parameters(position='bed',sensor_buffer_size=sensor_buffer_size)
+    acceleration_agent = agentNetwork.add_agent(name="XYZ_acceleration",buffer_size=1, agentType=AccelerationSensorAgent).init_parameters(axis='xyz')
+    nozzle_sensor_agent = agentNetwork.add_agent(name="Nozzle_temperature",buffer_size=1, agentType= TemperatureSensorAgent).init_parameters(position='tool0')
+    platform_sensor_agent = agentNetwork.add_agent(name="Platform_temperature",buffer_size=1, agentType= TemperatureSensorAgent).init_parameters(position='bed')
 
     sensor_agents = [acceleration_agent,nozzle_sensor_agent,platform_sensor_agent]
 
     #do something for all agents
     for sensor_agent in sensor_agents:
         #bind sensor agent to monitor
-        monitor_agent = agentNetwork.add_agent(agentType= MonitorAgent, memory_buffer_size=100)
+        monitor_agent = agentNetwork.add_agent(agentType= MonitorAgent,buffer_size=100)
         sensor_agent.bind_output(monitor_agent)
 
         #set loop interval for each sensor agent

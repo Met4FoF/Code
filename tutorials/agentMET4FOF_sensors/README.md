@@ -17,8 +17,8 @@ Note that you need to have access to the actual hardware sensor setup, to execut
 most of the code. To get more information on that, contact the
 [author of the code](https://github.com/bangxiangyong).
 
-First you need to create a virtual environment, install all dependencies and finally
-execute the examples. To install the dependencies we utilize
+First you need to create a virtual environment based on Python 3.8, install all
+dependencies and finally execute the examples. To install the dependencies we utilize
 [_pip-tools_](https://pypi.org/project/pip-tools/) to get the specified requirements
 from the `requirements.txt`.
   
@@ -40,21 +40,7 @@ If you have any questions please get in touch with
 
 The interesting parts you find in the subfolder [_agentMET4FOF_sensors_](agentMET4FOF_sensors).
 
-### Note
-
-In the event of agents not terminating cleanly, run
-
-```shell
-taskkill /f /im python.exe /t
-```
-
-in Windows Command Prompt to terminate all background python processes.
-
 ## References
 
 For details about the agents refer to the
 [upstream repository _agentMET4FOF_](https://github.com/bangxiangyong/agentMET4FOF)
-
-## Screenshot of web visualization
-
-![Web Screenshot](https://raw.githubusercontent.com/bangxiangyong/agentMET4FOF/develop/docs/screenshot_met4fof.png)
