@@ -2,6 +2,20 @@
 
 <!--next-version-placeholder-->
 
+## v0.14.0 (2021-05-04)
+### :sparkles:
+* :sparkles: Update agentMET4FOF_anomaly_detection  ([`210db5f`](https://github.com/Met4FoF/Code/commit/210db5fc5d3cfb127b1423e45e87b3864959076d))
+* :sparkles: Update connect_agentMET4FOF_smatupunit  ([`38a954c`](https://github.com/Met4FoF/Code/commit/38a954c2b69897c5ec42f130cbfa187ad8940534))
+* :sparkles: Update datareceiver  ([`765df27`](https://github.com/Met4FoF/Code/commit/765df27b137d7742a4abfa9e97396356ffc539af))
+* :sparkles: Update agentMET4FOF_sensors to most recent version of agentMET4FOF  ([`df09f55`](https://github.com/Met4FoF/Code/commit/df09f55624bb26d3178d6234480effecb8d7f274))
+* :sparkles: Update PyDynamic_tutorials  ([`5a161d2`](https://github.com/Met4FoF/Code/commit/5a161d2b37c524c6b9f0b6c32ea6ea87f5d81a5f))
+* :sparkles: Update agentMET4FOF_ZeMA_emc to most recent agentMET4FOF version  ([`baaff68`](https://github.com/Met4FoF/Code/commit/baaff684de965b57efecab550a92db8012ce1773))
+* :sparkles: Update Met4FoF-redundancy  ([`62cdea1`](https://github.com/Met4FoF/Code/commit/62cdea1d69c153c00e48f09c2d47b588b19beec4))
+* :sparkles: Update agentMET4FOF  ([`a36da14`](https://github.com/Met4FoF/Code/commit/a36da145df640ced3fb0c94fb2b3f0229e1fbbe2))
+* :sparkles: Update PyDynamic and thus introduce new feature for convoluting two signals  ([`d9bd31f`](https://github.com/Met4FoF/Code/commit/d9bd31f00472775eb9a0d19bbe9239e7cee17c8f))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.13.0...v0.14.0)**
+
 ## v0.13.0 (2021-02-09)
 ### :sparkles:
 * :sparkles: Update PyDynamic and ZeMA_emc and their dependencies  ([`b2531b6`](https://github.com/Met4FoF/Code/commit/b2531b66768be21f778bf99fe672e0a977861185))
