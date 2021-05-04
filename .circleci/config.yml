@@ -113,8 +113,11 @@ workflows:
           # decision and publish it on GitHub and Zenodo. This requires manual
           # approval in the previous step, which is only triggered on branch master,
           # thus this job here is triggered only on master as well.
+          context:
+            - GitHub pushes to BjoernLudwigPTB's public_repos
           requires:
-              - confirm_previewed_release_actions
+            - confirm_previewed_release_actions
+
 
 commands:
   # Reusable command to prepare the environment for testing.
