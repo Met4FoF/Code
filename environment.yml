@@ -3,6 +3,7 @@ channels:
     - defaults
 dependencies:
     - python >=3.6
+    - pip
     # pip dependencies have to be provided in `requirements.txt` syntax
     - pip:
         - -r requirements.txt
