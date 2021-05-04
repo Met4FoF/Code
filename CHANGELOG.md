@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.14.1 (2021-05-04)
+### :lock:
+* :lock: Update all dependencies to most current versions to fix security issues with older ones  ([`006577e`](https://github.com/Met4FoF/Code/commit/006577e6320a37e4402528379e0e739b8b126741))
+* :lock: Update time-series-metadata to update its depdencies to most current versions  ([`34f98ae`](https://github.com/Met4FoF/Code/commit/34f98aee0e66e3e90682977ce88b633e32a8fcd0))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.14.0...v0.14.1)**
+
 ## v0.14.0 (2021-05-04)
 ### :sparkles:
 * :sparkles: Update agentMET4FOF_anomaly_detection  ([`210db5f`](https://github.com/Met4FoF/Code/commit/210db5fc5d3cfb127b1423e45e87b3864959076d))
