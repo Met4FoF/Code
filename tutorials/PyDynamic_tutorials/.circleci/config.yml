@@ -7,7 +7,7 @@ version: 2.1
 executors:
   # Define a parameterized executor which accepts two parameters to choose the python
   # version which will be used for the docker image and the tox actions.
-  tester:
+  venv_tester:
     working_directory: ~/repo
     parameters:
       tag:
@@ -15,15 +15,15 @@ executors:
         default: "3.8"
     docker:
       - image: circleci/python:<< parameters.tag >>
+  conda_tester:
+    working_directory: ~/repo
+    docker:
+      - image: cimg/base:2021.04
 
 commands:
   # Reusable command to prepare the environment for testing.
-  create_folders_and_venv:
-    description: "Prepare everything."
-    parameters:
-      pyenv:
-        type: string
-        default: "py38"
+  create_folders:
+    description: "Checkout code and prepare test results location."
     steps:
     # Checkout code.
     - checkout
@@ -33,6 +33,14 @@ commands:
         command: |
           mkdir test-results
 
+  # Reusable command to prepare the environment for testing.
+  create_venv:
+    description: "Prepare virtual environment."
+    parameters:
+      pyenv:
+        type: string
+        default: "py38"
+    steps:
     # Create PyDynamic_tutorials virtual environment.
     - run:
         name: Create virtual environment
@@ -75,9 +83,7 @@ commands:
   # Reusable command to store the previously generated test results.
   store_results:
     description: "Store test results and artifacts."
-    parameters:
-      pyenv:
-        type: string
+
     steps:
     # Store test results.
     - store_artifacts:
@@ -93,24 +99,26 @@ workflows:
     jobs:
       # Create 'test' job to test and install PyDynamic_tutorials for every commit.
       - test:
-          name: "test_python3.6"
+          name: "test_python36"
           tag: "3.6"
           pyenv: "py36"
       - test:
-          name: "test_python3.7"
+          name: "test_python37"
           tag: "3.7"
           pyenv: "py37"
       - test:
-          name: "test_python3.8"
+          name: "test_python38"
           tag: "3.8"
           pyenv: "py38"
+      - test_conda38
 
 jobs:
 
-  # Define one 'test' job with parameters to deal with all desired cases. The
-  # reason for this is the desire to ensure the following for all supported Python
-  # versions referring to the docs: all notebooks are guaranteed to produce the same
-  # output as they contain.
+  # Define one 'test' job with parameters to deal with all desired cases and one
+  # Anaconda test job. The reason for this is the desire to ensure the following for
+  # all supported Python versions referring to the docs: all notebooks are
+  # guaranteed to produce the same output as they contain, no matter if run with
+  # Python built-in venv or the Anaconda interpreter.
   test:
     # Define all parameters, where 'tag' is used for the docker image and 'pyenv' is
     # the string which is used to identify the current Python version. We reuse
@@ -125,16 +133,79 @@ jobs:
 
     # Specify the executor and hand over the docker image tag parameter.
     executor:
-      name: tester
+      name: venv_tester
       tag: << parameters.tag >>
 
     # Specify the steps to execute during this test jobs.
     steps:
-      - create_folders_and_venv:
+      - create_folders
+      - create_venv:
           pyenv: << parameters.pyenv >>
       - install_deps:
           pyenv: << parameters.pyenv >>
-      - execute_nbval:
-          pyenv: << parameters.pyenv >>
-      - store_results:
-          pyenv: << parameters.pyenv >>
+
+      # Call pytest with nbval.
+      - run:
+          name: Perform pytest --nbval testing
+          command: |
+            source << parameters.pyenv >>/bin/activate
+            pytest --nbval --current-env --sanitize-with nbval_sanitization | tee --append test-results/pytest.log
+
+      - store_results
+
+  test_conda38:
+
+    executor: conda_tester
+
+    steps:
+      - create_folders
+      - run:
+          name: Install Miniconda
+          command: |
+            wget "https://repo.anaconda.com/miniconda/\
+            Miniconda3-latest-Linux-x86_64.sh" -O $HOME/miniconda.sh
+            mkdir -p $HOME/.conda
+            bash $HOME/miniconda.sh -b -p /home/circleci/conda
+            source $HOME/conda/etc/profile.d/conda.sh
+            hash -r
+            conda config --set always_yes yes --set changeps1 no
+            conda update -q conda
+            echo 'export PATH=$HOME/conda/bin:$PATH' >> $BASH_ENV
+
+      # Download and cache dependencies.
+      - restore_cache:
+          keys:
+            # Specify the unique identifier for the cache.
+            - v1-conda-dependencies-{{ checksum "requirements/environment.yml" }}-{{checksum "requirements/requirements.txt" }}-{{ checksum "requirements/requirements-dev.txt" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - v1-conda-dependencies-
+
+      # Create environment and install extra_requires dependencies manually.
+      - run:
+          name: Create or update environment
+          command: |
+            if [ -d "$HOME/conda/envs/" ]; then
+                conda env update --prune --file requirements/environment.yml
+            else
+                conda env create -f requirements/environment.yml
+            fi
+            source $HOME/conda/etc/profile.d/conda.sh
+            conda activate PyDynamic_tutorials
+            pip install -r requirements/requirements-dev.txt
+
+      - save_cache:
+          paths:
+            - /home/circleci/conda/envs/
+          key: >-
+            v1-conda-dependencies-{{ checksum "requirements/environment.yml" }}-{{ checksum "requirements/requirements.txt" }}-{{ checksum "requirements/requirements-dev.txt" }}
+
+      # Run tests! We use pytest's test-runner.
+      - run:
+          name: Run tests
+          command: |
+            source $HOME/conda/etc/profile.d/conda.sh
+            conda activate PyDynamic_tutorials
+            pytest --nbval --current-env --sanitize-with nbval_sanitization | \
+            tee --append test-results/pytest.log
+
+      - store_results
