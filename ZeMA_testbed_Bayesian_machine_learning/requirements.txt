@@ -140,7 +140,7 @@ typing-extensions==3.10.0.0
     #   -r requirements.in
     #   arviz
     #   pymc3
-urllib3==1.26.4
+urllib3==1.26.5
     # via
     #   -r requirements.in
     #   requests
