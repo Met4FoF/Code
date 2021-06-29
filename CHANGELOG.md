@@ -2,6 +2,18 @@
 
 <!--next-version-placeholder-->
 
+## v0.14.2 (2021-06-29)
+### :lock:
+* :lock: Update ZeMA_testbed_Bayesian_machine_learning to update its depdencies to most current versions  ([`da07697`](https://github.com/Met4FoF/Code/commit/da07697aad9db0ad4d9f2d81d3fdcadc16c78d8f))
+* :lock: Update all dependencies to most current versions to fix security issues with older ones  ([`603ce05`](https://github.com/Met4FoF/Code/commit/603ce05af3e090d54e4bffceca65f28716df1f97))
+* :lock: Update agentMET4FOF to update its depdencies to most current versions  ([`dd3b42c`](https://github.com/Met4FoF/Code/commit/dd3b42c75f135b9552babea736dca7ab22aa7afd))
+* :lock: Update PyDynamic to update its depdencies to most current versions  ([`4b75700`](https://github.com/Met4FoF/Code/commit/4b75700e6c5c69d87321bda8a168d9927165f4e8))
+* :lock: Update agentMET4FOF_sensors to update its depdencies to most current versions  ([`3d1d935`](https://github.com/Met4FoF/Code/commit/3d1d93586767d0f8c4b8bc965999f8e7d959029f))
+* :lock: Update agentMET4FOF_ZeMA_emc to update its depdencies to most current versions  ([`dd6828b`](https://github.com/Met4FoF/Code/commit/dd6828b4f9d2810e8f16a05e9664201b5d5cdcd5))
+* :lock: Update agentMET4FOF_anomaly_detection to update its depdencies to most current versions  ([`6a05c25`](https://github.com/Met4FoF/Code/commit/6a05c251f29fdd62557e151367a718a5ddcc80dd))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.14.1...v0.14.2)**
+
 ## v0.14.1 (2021-05-04)
 ### :lock:
 * :lock: Update all dependencies to most current versions to fix security issues with older ones  ([`006577e`](https://github.com/Met4FoF/Code/commit/006577e6320a37e4402528379e0e739b8b126741))
