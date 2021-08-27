@@ -2,6 +2,26 @@
 
 <!--next-version-placeholder-->
 
+## v0.15.0 (2021-08-27)
+### :chart_with_upwards_trend:
+* :chart_with_upwards_trend: Update agentMET4FOF from 0.8.1 to 0.12.0 and thus introduce several new features  ([`cd857f7`](https://github.com/Met4FoF/Code/commit/cd857f7b5a029a53b6c6a12ff210137d44e93e7b))
+
+### :ambulance:
+* :ambulance: Update agentMET4FOF_ml to reflect changes in agentMET4FOF  ([`678e915`](https://github.com/Met4FoF/Code/commit/678e91508e442dc6e6a867a6110cf48840fb4933))
+* :ambulance: Update agentMET4FOF from 0.12.0 to 0.12.1 and thus fix a legacy import  ([`41abd99`](https://github.com/Met4FoF/Code/commit/41abd991a7da142d81dca163696f83bbdfaf2201))
+
+### :lock:
+* :lock: Update PyDynamic_tutorials to update its depdencies to most current versions  ([`5abd1f4`](https://github.com/Met4FoF/Code/commit/5abd1f4afa99bdd2fc0b21d856ef47d26e9b5424))
+* :lock: Recompile all dependencies to most current versions  ([`777968d`](https://github.com/Met4FoF/Code/commit/777968dbc19b719e98ed2e27acdcc3204b89832e))
+* :lock: Update agentMET4FOF_sensors to update its depdencies to most current versions  ([`0eb481e`](https://github.com/Met4FoF/Code/commit/0eb481ecf99b8583336fbad39663cfbc9f80b09f))
+
+### :speech_balloon:
+* :speech_balloon: Update time-series-metadata with some recent README refreshs  ([`b9478ff`](https://github.com/Met4FoF/Code/commit/b9478fff6264ae6beef064acb961642223e1de51))
+* :speech_balloon: Update PyDynamic with some recent docs and tests improvements  ([`3d51a07`](https://github.com/Met4FoF/Code/commit/3d51a07b70fdd8916481c238b0fd3ce5bdb447b8))
+* :speech_balloon: Update ZeMA_testbed_Bayesian_machine_learning with some recent docs improvements  ([`c3252f7`](https://github.com/Met4FoF/Code/commit/c3252f74bf46996b2eee1dba292e581a03fe0a11))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.14.2...v0.15.0)**
+
 ## v0.14.2 (2021-06-29)
 ### :lock:
 * :lock: Update ZeMA_testbed_Bayesian_machine_learning to update its depdencies to most current versions  ([`da07697`](https://github.com/Met4FoF/Code/commit/da07697aad9db0ad4d9f2d81d3fdcadc16c78d8f))
