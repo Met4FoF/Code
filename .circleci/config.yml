@@ -520,9 +520,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - agentMET4FOF_ml-v1-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
+            - agentMET4FOF_ml-v2-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - agentMET4FOF_ml-v1
+            - agentMET4FOF_ml-v2
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -538,7 +538,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            agentMET4FOF_ml-v1-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
+            agentMET4FOF_ml-v2-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
