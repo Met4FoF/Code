@@ -2,7 +2,7 @@ name: agentMET4FOF_ml
 channels:
     - defaults
 dependencies:
-    - python >=3.6
+    - python = 3.8
     - pip
     # pip dependencies have to be provided in `requirements.txt` syntax
     - pip:

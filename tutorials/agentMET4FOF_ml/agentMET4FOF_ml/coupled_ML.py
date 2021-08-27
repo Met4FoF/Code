@@ -1,20 +1,29 @@
-#AGENTMET4FOF modules
-from agentMET4FOF.agents import AgentMET4FOF, AgentNetwork, MonitorAgent, \
-    DataStreamAgent
-from agentMET4FOF.streams import extract_x_y
-
-#ML Dependencies
-from skmultiflow.data import WaveformGenerator
-from skmultiflow.bayes import NaiveBayes
-from skmultiflow.trees import HoeffdingTree
-from sklearn.model_selection import StratifiedKFold
 import numpy as np
-#We demonstrate the use of pre-made agents for machine learning : DataStream agent and ML_Model agent
-#The agents are compatible with scikit-multiflow package
-#Here we demonstrate the implementation of multi-data streams and multi machine learning models in parallel
+from agentMET4FOF.agents import (
+    AgentMET4FOF,
+    AgentNetwork,
+    DataStreamAgent,
+    MonitorAgent,
+)
+from sklearn.model_selection import StratifiedKFold
+from skmultiflow.bayes import NaiveBayes
+from skmultiflow.data import WaveformGenerator
+from skmultiflow.trees import HoeffdingTreeClassifier
+
+from agentMET4FOF_ml.ml_utilities import extract_x_y
+
+
+# We demonstrate the use of pre-made agents for machine learning : DataStream agent
+# and ML_Model agent
+# The agents are compatible with scikit-multiflow package
+# Here we demonstrate the implementation of multi-data streams and multi machine
+# learning models in parallel
+
 
 class ML_Model(AgentMET4FOF):
-    def init_parameters(self, mode="prequential", ml_model= HoeffdingTree(), split_type=None):
+    def init_parameters(
+        self, mode="prequential", ml_model=HoeffdingTreeClassifier(), split_type=None
+    ):
         self.mode = mode
         self.ml_model = ml_model
         self.results = []
@@ -24,9 +33,9 @@ class ML_Model(AgentMET4FOF):
             self.split_type = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)
 
     def on_received_message(self, message):
-        #handle data structure to extract features & target
+        # handle data structure to extract features & target
         try:
-            x,y = extract_x_y(message)
+            x, y = extract_x_y(message)
         except:
             raise Exception
 
@@ -70,9 +79,10 @@ def main():
     ml_agent_neuralNets = agentNetwork.add_agent(agentType=ML_Model)
     monitor_agent_1 = agentNetwork.add_agent(agentType=MonitorAgent)
     # init parameters
-    data_stream_agent_1.init_parameters(stream=WaveformGenerator(),
-                                        pretrain_size=1000, batch_size=100)
-    ml_agent_hoeffdingTree.init_parameters(ml_model=HoeffdingTree())
+    data_stream_agent_1.init_parameters(
+        stream=WaveformGenerator(), pretrain_size=1000, batch_size=100
+    )
+    ml_agent_hoeffdingTree.init_parameters(ml_model=HoeffdingTreeClassifier())
     ml_agent_neuralNets.init_parameters(ml_model=NaiveBayes())
     # connect agents
     agentNetwork.bind_agents(data_stream_agent_1, ml_agent_hoeffdingTree)
@@ -85,9 +95,5 @@ def main():
     return agentNetwork
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
-
-
-
-
