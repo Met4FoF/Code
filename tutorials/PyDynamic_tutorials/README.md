@@ -1,14 +1,14 @@
 # _PyDynamic tutorials_
 
-[![CircleCI](https://circleci.com/gh/PTB-PSt1/PyDynamic_tutorials.svg?style=shield)](https://circleci.com/gh/PTB-PSt1/PyDynamic_tutorials)
+[![CircleCI](https://circleci.com/gh/PTB-M4D/PyDynamic_tutorials.svg?style=shield)](https://circleci.com/gh/PTB-M4D/PyDynamic_tutorials)
 [![Documentation Status](https://readthedocs.org/projects/pydynamic-tutorials/badge/?version=latest)](https://pydynamic-tutorials.readthedocs.io/en/latest/?badge=latest)
 
 We prepared a collection of tutorials and examples to document, explain and illustrate
-the possibilities offered by [_PyDynamic_](https://github.com/PTB-PSt1/PyDynamic). We
+the possibilities offered by [_PyDynamic_](https://github.com/PTB-M4D/PyDynamic). We
 will add more and more examples over time, especially those that are currently
 included in _PyDynamic_'s codebase subfolders
-[examples](https://github.com/PTB-PSt1/PyDynamic/tree/master/examples) and
-[tutorials](https://github.com/PTB-PSt1/PyDynamic/tree/master/tutorials).
+[examples](https://github.com/PTB-M4D/PyDynamic/tree/master/examples) and
+[tutorials](https://github.com/PTB-M4D/PyDynamic/tree/master/tutorials).
 
 ## Getting started
 
@@ -17,7 +17,7 @@ a local copy and experiment offline on your machine.
  
 ### Quick start in current browser session
  
-To start working in the notebooks directly in the browser, click [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PTB-PSt1/PyDynamic_tutorials/master).
+To start working in the notebooks directly in the browser, click [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PTB-M4D/PyDynamic_tutorials/master).
  
 ### Get a local copy to work offline
 
@@ -34,7 +34,7 @@ To get started on your local machine, follow these simple steps:
 #### 1. Clone the repository
 
 ```shell
-$ git clone https://github.com/PTB-PSt1/PyDynamic_tutorials.git
+$ git clone https://github.com/PTB-M4D/PyDynamic_tutorials.git
 Cloning into 'PyDynamic_tutorials'...
 [...]
 Receiving objects: 100% (3/3), done.
@@ -101,7 +101,7 @@ After a click on _PyDynamic_tutorials_ the source code can be edited and execute
 
 ## PyDynamic
 
-The [sourcecode of PyDynamic is available on GitHub](https://github.com/PTB-PSt1/PyDynamic).
+The [sourcecode of PyDynamic is available on GitHub](https://github.com/PTB-M4D/PyDynamic).
 The detailed documentation of _PyDynamic_'s source code is available on
 [pydynamic.readthedocs.io](https://pydynamic.readthedocs.io/). The tutorial notebooks
 are all linked on these pagKes along with additional material.
