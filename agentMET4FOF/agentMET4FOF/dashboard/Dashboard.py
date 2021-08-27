@@ -19,7 +19,7 @@ class AgentDashboard:
     An internal _Dashboard_Control object is instantiated inside this object, which manages access to the AgentNetwork.
     """
     def __init__(self, dashboard_modules=[], dashboard_layouts=[],
-                 dashboard_update_interval = 3, max_monitors=10, ip_addr="127.0.0.1",
+                 dashboard_update_interval = 3, max_monitors=10, ip_addr="0.0.0.0",
                  port=8050, agentNetwork="127.0.0.1", agent_ip_addr=3333,
                  agent_port=None, network_stylesheet=[], hide_default_edge=True, **kwargs):
         """
@@ -54,7 +54,7 @@ class AgentDashboard:
 
         """
         super(AgentDashboard, self).__init__()
-        if self.is_port_available(ip_addr, port):
+        if self.is_port_at_ip_available(ip_addr, port):
             if dashboard_modules is not None and dashboard_modules is not False:
 
                 #initialise the dashboard layout and its control here
@@ -77,16 +77,32 @@ class AgentDashboard:
     def run(self):
         """This is actually executed on calling start() and brings up the server"""
         if hasattr(self, "_server"):
-            print(
-                f"\n--------------------------------------------------------------\n"
-                f"|                                                            |\n"
-                f"| Your agent network is starting up. Open your browser and   |\n"
-                f"| visit the agentMET4FOF dashboard on "
-                f"http://{self.ip_addr}:{self.port}/ |\n"
-                f"|                                                            |\n"
-                f"--------------------------------------------------------------\n"
-            )
+            self._show_startup_message()
             self._server.serve_forever()
+
+    def _show_startup_message(self):
+        """This method prints the startup message of the webserver/dashboard"""
+        ip_to_print = "127.0.0.1" if self.ip_addr == "0.0.0.0" else self.ip_addr
+        crucial_line = (
+            f"\n| visit the agentMET4FOF dashboard on http:/"
+            f"/{ip_to_print}:{self.port}/ |"
+        )
+        crucial_line_len = len(crucial_line)
+
+        print(
+            f"\n|-".ljust(crucial_line_len - 1, "-"),
+            "|\n|".ljust(crucial_line_len, " "),
+            "|\n"
+            f"| Your agent network is starting up. Open your browser and".ljust(
+                crucial_line_len, " "
+            ),
+            "|",
+            crucial_line,
+            "\n|".ljust(crucial_line_len - 1, " "),
+            f"|" f"\n|-".ljust(crucial_line_len, "-"),
+            "|\n",
+            sep="",
+        )
 
     def init_app_layout(self,update_interval_seconds=3, max_monitors=10,
                         dashboard_layouts=[],
@@ -150,8 +166,8 @@ class AgentDashboard:
                     return [dashboard_layout.get_layout()]
         return app
 
-    def is_port_available(self, ip_addr, _port):
-        """Check if desired ip and port are available."""
+    def is_port_at_ip_available(self, ip_addr: str, _port: int) -> bool:
+        """Check if desired port at ip is available"""
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             # Set timeout to wait for response on ip:port.
             sock.settimeout(1)

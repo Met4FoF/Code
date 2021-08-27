@@ -3,7 +3,7 @@
    much the way they presented their tutorials, examples and actual
    documentation of the code side by side.
 
-:github_url: https://github.com/PTB-PSt1/PyDynamic_tutorials
+:github_url: https://github.com/PTB-M4D/PyDynamic_tutorials
 
 PyDynamic_tutorials - Assistance in understanding uncertainty propagation with PyDynamic
 ========================================================================================
@@ -14,7 +14,7 @@ examples to more in-depth use cases in the context of `our work at PTB <https://
 .ptb.de/cms/en/ptb/ptb-management/pstab/pst-1-coordination-digitalization.html>`_.
 
 For the *PyDynamic_tutorials* homepage go to
-`GitHub <https://github.com/PTB-PSt1/PyDynamic_tutorials>`_.
+`GitHub <https://github.com/PTB-M4D/PyDynamic_tutorials>`_.
 
 *PyDynamic_tutorials* are written in Python 3.
 
@@ -45,7 +45,7 @@ For the *PyDynamic_tutorials* homepage go to
    PyDynamic_tutorials/uncertainty/03 Basic extrapolation.ipynb
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

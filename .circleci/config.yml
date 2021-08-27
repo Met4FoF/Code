@@ -477,14 +477,18 @@ jobs:
             # Fallback to using the latest cache if no exact match is found.
             - agentMET4FOF_sensors-v1
 
-      # Install dependencies and Codecov reporter if necessary.
+      # Install dependencies. Suddenly since 2021-08-27 we observed an error with
+      # previously successful configurations. That is why we introduced the gcc flag
+      # as proposed by https://forum.manjaro.org/t/pip-install-rpi-gpio-fail/25788.
+      # The error can be viewed here:
+      # https://app.circleci.com/pipelines/github/Met4FoF/Code/455/workflows/81c97c42-a5a6-464e-9347-bee5bae44d9a/jobs/3662
       - run:
          name: Install dependencies
          command: |
            python3 -m venv venv
            source venv/bin/activate
            pip install --upgrade pip pip-tools
-           pip-sync tutorials/agentMET4FOF_sensors/requirements.txt
+           CFLAGS="-fcommon" pip-sync tutorials/agentMET4FOF_sensors/requirements.txt
            pip install --upgrade pytest
 
 
@@ -516,9 +520,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - agentMET4FOF_ml-v1-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
+            - agentMET4FOF_ml-v2-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - agentMET4FOF_ml-v1
+            - agentMET4FOF_ml-v2
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -534,7 +538,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            agentMET4FOF_ml-v1-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
+            agentMET4FOF_ml-v2-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
