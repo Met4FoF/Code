@@ -89,7 +89,7 @@ patsy==0.5.1
     # via
     #   -r requirements.in
     #   pymc3
-pillow==8.2.0
+pillow==8.3.2
     # via matplotlib
 pymc3==3.11.2
     # via -r requirements.in
@@ -127,10 +127,10 @@ six==1.16.0
     #   patsy
     #   python-dateutil
     #   theano
-theano-pymc==1.1.2
-    # via pymc3
 theano==1.0.5
     # via -r requirements.in
+theano-pymc==1.1.2
+    # via pymc3
 threadpoolctl==2.1.0
     # via scikit-learn
 tqdm==4.61.1
