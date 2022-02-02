@@ -2,7 +2,7 @@
 
 [![DOI](https://zenodo.org/badge/138772091.svg)](https://zenodo.org/badge/latestdoi/138772091)
 [![CircleCI](https://circleci.com/gh/Met4FoF/Code.svg?style=shield&circle-token=3566560a243f21fa06fafbe49e92ac2a6d3fc250)](https://circleci.com/gh/Met4FoF/Code)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0761272aabbc4010bba5921015ab084f)](https://www.codacy.com/app/PTB-PSt1/Code?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Met4FoF/Code&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b72908cff3174e529487518065aded8b)](https://www.codacy.com/gh/Met4FoF/Code/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Met4FoF/Code&amp;utm_campaign=Badge_Grade)
 
 ![met4fof.eu](https://www.ptb.de/empir2018/fileadmin/documents/empir/Met4FoF/images/Metrology-Factory-Future_Logo_200px.png)
 
