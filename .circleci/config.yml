@@ -391,6 +391,7 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run:
           name: Run tests
+          no_output_timeout: 60m
           command: |
             TEST_FILES=$(circleci tests glob "PyDynamic/test/**/test_*.py" | \
               circleci tests split --split-by=timings)
