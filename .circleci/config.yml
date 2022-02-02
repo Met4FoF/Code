@@ -230,7 +230,6 @@ commands:
         type: string
         default: ""
     steps:
-    # Run tests! We use pytest's test-runner.
     - run:
         name: Run tests
         command: |
@@ -357,11 +356,12 @@ jobs:
   test_PyDynamic:
     executor: tester
 
+    parallelism: 8
+
     # Specify the steps to execute during this test jobs.
     steps:
       - checkout
-      - create_result_folder:
-          subfolder: PyDynamic
+      - create_result_folder
 
       # Download and cache dependencies.
       - restore_cache:
@@ -389,8 +389,21 @@ jobs:
             PyDynamic-v2-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_venv_tests:
-          subtree: PyDynamic
+      - run:
+          name: Run tests
+          command: |
+            TEST_FILES=$(circleci tests glob "PyDynamic/test/**/test_*.py" | \
+              circleci tests split --split-by=timings)
+            source venv/bin/activate
+            pytest -v --junitxml=test-results/junit.xml \
+            PyDynamic | tee test-results/pytest.log
+
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+
+      - store_test_results:
+          path: test-results
 
   test_agentMET4FOF:
     executor: tester
