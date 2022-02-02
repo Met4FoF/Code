@@ -1,45 +1,46 @@
-PyDynamic - Analysis of dynamic measurements
-============================================
+:github_url: https://github.com/PTB-M4D/PyDynamic
 
-PyDynamic is a Python software package developed jointly by mathematicians from
-`Physikalisch-Technische Bundesanstalt <www.ptb.de>`_ (Germany) and
-`National Physical Laboratory <www.npl.co.uk>`_ (UK) as part of the joint
-European Research Project
-`EMPIR 14SIP08 Dynamic <https://www.euramet.org/research-innovation/search
--research-projects/details/project/standards-and-software-to-maximise-end-user
--uptake-of-nmi-calibrations-of-dynamic-force-torque-and/>`_.
+.. image:: https://raw.githubusercontent.com/PTB-M4D/PyDynamic/master/docs/PyDynamic_logo.svg
+  :alt: PyDynamic logo
 
-For the PyDynamic homepage go to
-`GitHub <https://github.com/PTB-M4D/PyDynamic>`_.
-
-*PyDynamic* is written in Python 3 and strives to run with `all Python versions with
-upstream support <https://devguide.python.org/#status-of-python-branches>`_. Currently
-it is tested to work with Python 3.6 to 3.9.
-
+Python library for the analysis of dynamic measurements
+=======================================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Getting started:
 
-   Getting started.md
-   Examples.rst
-   CONTRIBUTING.md
+   README
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
+   :caption: Detailed information:
 
-   PyDynamic.uncertainty.rst
-   PyDynamic.model_estimation.rst
-   PyDynamic.deconvolution.rst
-   PyDynamic.identification.rst
-   PyDynamic.misc.rst
+   INSTALL
+   CHANGELOG
+   CODE_OF_CONDUCT
+   CONTRIBUTING
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Examples:
+
+   Examples
 
 .. toctree::
    :maxdepth: 2
    :caption: Tutorials:
 
-   Tutorials.rst
+   Tutorials
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Code Reference:
+
+   PyDynamic.uncertainty
+   PyDynamic.model_estimation
+   PyDynamic.misc
+   PyDynamic.signals
 
 Indices and tables
 ==================
@@ -75,29 +76,33 @@ References
                 Metrologia, vol 45 464-473, 2008
                 https://dx.doi.org/10.1088/0026-1394/45/4/013
 
-.. [Link2009]   A. Link and C. Elster
-                Uncertainty evaluation for IIR filtering using a state-space
-                approach
-                Meas. Sci. Technol. vol. 20, 2009
-                https://dx.doi.org/10.1088/0957-0233/20/5/055104
+.. [Link2009] A. Link and C. Elster
+              Uncertainty evaluation for IIR filtering using a state-space
+              approach
+              Meas. Sci. Technol. vol. 20, 2009
+              https://dx.doi.org/10.1088/0957-0233/20/5/055104
 
-.. [Vuer1996]   R. Vuerinckx, Y. Rolain, J. Schoukens and R. Pintelon
-                Design of stable IIR filters in the complex domain by
-                automatic delay selection
-                IEEE Trans. Signal Proc., 44, 2339-44, 1996
-                https://dx.doi.org/10.1109/78.536690
+.. [Vuer1996] R. Vuerinckx, Y. Rolain, J. Schoukens and R. Pintelon
+              Design of stable IIR filters in the complex domain by
+              automatic delay selection
+              IEEE Trans. Signal Proc., 44, 2339-44, 1996
+              https://dx.doi.org/10.1109/78.536690
 
-.. [Smith]      Smith, J.O. Introduction to Digital Filters with Audio
-                Applications, https://ccrma.stanford.edu/~jos/filters/, online
-                book
+.. [Smith] Smith, J.O. Introduction to Digital Filters with Audio
+           Applications, https://ccrma.stanford.edu/~jos/filters/, online
+           book
 
-.. [Savitzky]   A. Savitzky, M. J. E. Golay, Smoothing and Differentiation of
-                Data by Simplified Least Squares Procedures. Analytical
-                Chemistry, 1964, 36 (8), pp 1627-1639.
+.. [Savitzky] A. Savitzky, M. J. E. Golay, Smoothing and Differentiation of
+              Data by Simplified Least Squares Procedures. Analytical
+              Chemistry, 1964, 36 (8), pp 1627-1639.
 
-.. [NumRec]     Numerical Recipes 3rd Edition: The Art of Scientific Computing
-                W.H. Press, S.A. Teukolsky, W.T. Vetterling, B.P. Flannery
-                Cambridge University Press ISBN-13: 9780521880688
+.. [NumRec] Numerical Recipes 3rd Edition: The Art of Scientific Computing
+            W.H. Press, S.A. Teukolsky, W.T. Vetterling, B.P. Flannery
+            Cambridge University Press ISBN-13: 9780521880688
 
-.. [White2017]  White, D.R. Int J Thermophys (2017) 38: 39.
-                https://doi.org/10.1007/s10765-016-2174-6
+.. [White2017] White, D.R. Int J Thermophys (2017) 38: 39.
+               https://doi.org/10.1007/s10765-016-2174-6
+
+.. [Zhivomirov2018] Zhivomirov, H. 2018. A Method for Colored Noise Generation.
+                     Romanian Journal of Acoustics and Vibration. 15, 1 (Aug. 2018),
+                     14-19: http://rjav.sra.ro/index.php/rjav/article/view/40

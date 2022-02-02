@@ -230,7 +230,6 @@ commands:
         type: string
         default: ""
     steps:
-    # Run tests! We use pytest's test-runner.
     - run:
         name: Run tests
         command: |
@@ -357,19 +356,20 @@ jobs:
   test_PyDynamic:
     executor: tester
 
+    parallelism: 8
+
     # Specify the steps to execute during this test jobs.
     steps:
       - checkout
-      - create_result_folder:
-          subfolder: PyDynamic
+      - create_result_folder
 
       # Download and cache dependencies.
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - PyDynamic-v1-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
+            - PyDynamic-v2-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - PyDynamic-v1
+            - PyDynamic-v2
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -380,16 +380,32 @@ jobs:
             pip install --upgrade pip pip-tools
             pip-sync PyDynamic/requirements/requirements-py38.txt \
                 PyDynamic/requirements/dev-requirements-py38.txt
+            pip install ./PyDynamic
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            PyDynamic-v1-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
+            PyDynamic-v2-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
 
       # Run tests! We use pytest's test-runner.
-      - run_venv_tests:
-          subtree: PyDynamic
+      - run:
+          name: Run tests
+          no_output_timeout: 60m
+          command: |
+            source venv/bin/activate
+            cd PyDynamic
+            TEST_FILES=$(circleci tests glob "test/**/test_*.py" | \
+              circleci tests split --split-by=timings)
+            pytest -v --junitxml=$CIRCLE_WORKING_DIRECTORY/test-results/junit.xml \
+              $TEST_FILES
+
+      - store_artifacts:
+          path: test-results
+          destination: test-results
+
+      - store_test_results:
+          path: test-results
 
   test_agentMET4FOF:
     executor: tester

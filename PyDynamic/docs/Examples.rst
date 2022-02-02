@@ -1,10 +1,10 @@
 Examples
 ========
 
-On the project website in the *examples* and *tutorials* subfolders and the separate
+On the project website in the *examples* subfolder and the separate
 `PyDynamic_tutorials <https://github.com/PTB-M4D/PyDynamic_tutorials>`_
 repository you can find various examples illustrating the application of PyDynamic.
-Here is just a short list to get you started.
+Here we provide only a quick starter.
 
 Quick Examples
 --------------
@@ -41,12 +41,14 @@ intervals *Py* corresponding to the specified percentiles.
     from PyDynamic.uncertainty.propagate_MonteCarlo import SMC
     y, uy, Py = SMC(x, sigma, b, a, Uab, runs=1000, Perc=[0.025,0.975])
 
+.. image:: Deconvolution.png
+
 Detailed examples
 -----------------
 
 More comprehensive examples you can find in provided Jupyter notebooks, which require
 additional dependencies to be installed. This can be achieved by appending
-:code:`[examples]` to PyDynamic in all of the above, e.g.
+:code:`[examples]` to PyDynamic in the install command, e.g.
 
 .. code-block:: shell
 
@@ -60,3 +62,6 @@ Afterwards you can browser through the following list:
    Deconvolution by FIR.rst
    Uncertainty propagation for IIR filters.rst
    Deconvolution in the DFT domain.rst
+   examples/DFT and iDFT with PyDynamic - best practice guide and use cases
+   examples/Shock calibration/Input estimation for shock acceleration example
+   examples/digital_filtering/Design of a digital deconvolution filter (FIR type).ipynb

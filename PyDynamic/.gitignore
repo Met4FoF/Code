@@ -4,16 +4,25 @@ build/
 dist/
 PyDynamic.egg-info/
 docs/_build
+docs/CHANGELOG.md
+docs/CONTRIBUTING.md
+docs/INSTALL.md
+docs/README.md
+docs/CODE_OF_CONDUCT.md
+docs/**/*.ipynb
 
 # Testing artifacts #
 #####################
-.pytest_cache/
 __pycache__/
+.hypothesis/
+.pytest_cache/
+.tox
+test-results/
 .coverage
 .coverage.*
-pytest.xml
-.hypothesis
-.tox
+coverage.xml
+junit.xml
+codecov*
 
 # Jupyter Notebook artifacts #
 ##############################

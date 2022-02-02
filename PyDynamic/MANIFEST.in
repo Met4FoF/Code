@@ -1,0 +1,4 @@
+graft src/PyDynamic/examples/uncertainty_for_dft
+graft requirements
+prune test
+include licence.txt
