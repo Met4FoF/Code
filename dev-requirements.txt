@@ -8,19 +8,19 @@ bleach==4.1.0
     # via
     #   -c requirements.txt
     #   readme-renderer
-certifi==2021.5.30
+certifi==2021.10.8
     # via
     #   -c requirements.txt
     #   requests
-cffi==1.14.6
+cffi==1.15.0
     # via
     #   -c requirements.txt
     #   cryptography
-charset-normalizer==2.0.3
+charset-normalizer==2.0.11
     # via
     #   -c requirements.txt
     #   requests
-click==7.1.2
+click==8.0.3
     # via
     #   -c requirements.txt
     #   click-log
@@ -33,11 +33,11 @@ colorama==0.4.4
     # via
     #   -c requirements.txt
     #   twine
-cryptography==3.4.8
+cryptography==36.0.1
     # via
     #   -c requirements.txt
     #   secretstorage
-docutils==0.16
+docutils==0.17.1
     # via
     #   -c requirements.txt
     #   readme-renderer
@@ -45,19 +45,19 @@ dotty-dict==1.3.0
     # via
     #   -c requirements.txt
     #   python-semantic-release
-gitdb==4.0.7
+gitdb==4.0.9
     # via
     #   -c requirements.txt
     #   gitpython
-gitpython==3.1.18
+gitpython==3.1.26
     # via
     #   -c requirements.txt
     #   python-semantic-release
-idna==3.2
+idna==3.3
     # via
     #   -c requirements.txt
     #   requests
-importlib-metadata==4.7.1
+importlib-metadata==4.10.1
     # via
     #   -c requirements.txt
     #   keyring
@@ -71,43 +71,44 @@ jeepney==0.7.1
     #   -c requirements.txt
     #   keyring
     #   secretstorage
-keyring==23.1.0
+keyring==23.5.0
     # via
     #   -c requirements.txt
     #   twine
-packaging==21.0
+packaging==21.3
     # via
     #   -c requirements.txt
     #   bleach
-pkginfo==1.7.1
+    #   setuptools-scm
+pkginfo==1.8.2
     # via
     #   -c requirements.txt
     #   twine
-pycparser==2.20
+pycparser==2.21
     # via
     #   -c requirements.txt
     #   cffi
-pygments==2.10.0
+pygments==2.11.2
     # via
     #   -c requirements.txt
     #   readme-renderer
-pyparsing==2.4.7
+pyparsing==3.0.7
     # via
     #   -c requirements.txt
     #   packaging
-python-gitlab==2.10.0
+python-gitlab==2.10.1
     # via
     #   -c requirements.txt
     #   python-semantic-release
-python-semantic-release==7.19.1
+python-semantic-release==7.24.0
     # via
     #   -c requirements.txt
     #   -r dev-requirements.in
-readme-renderer==29.0
+readme-renderer==32.0
     # via
     #   -c requirements.txt
     #   twine
-requests==2.26.0
+requests==2.27.1
     # via
     #   -c requirements.txt
     #   python-gitlab
@@ -119,7 +120,7 @@ requests-toolbelt==0.9.1
     #   -c requirements.txt
     #   python-gitlab
     #   twine
-rfc3986==1.5.0
+rfc3986==2.0.0
     # via
     #   -c requirements.txt
     #   twine
@@ -131,7 +132,7 @@ semver==2.13.0
     # via
     #   -c requirements.txt
     #   python-semantic-release
-setuptools-scm==6.0.1
+setuptools-scm==6.4.2
     # via
     #   -c requirements.txt
     #   dotty-dict
@@ -139,24 +140,27 @@ six==1.16.0
     # via
     #   -c requirements.txt
     #   bleach
-    #   readme-renderer
-smmap==4.0.0
+smmap==5.0.0
     # via
     #   -c requirements.txt
     #   gitdb
+tomli==2.0.0
+    # via
+    #   -c requirements.txt
+    #   setuptools-scm
 tomlkit==0.7.0
     # via
     #   -c requirements.txt
     #   python-semantic-release
-tqdm==4.61.2
+tqdm==4.62.3
     # via
     #   -c requirements.txt
     #   twine
-twine==3.4.2
+twine==3.7.1
     # via
     #   -c requirements.txt
     #   python-semantic-release
-urllib3==1.26.6
+urllib3==1.26.8
     # via
     #   -c requirements.txt
     #   requests
@@ -164,11 +168,11 @@ webencodings==0.5.1
     # via
     #   -c requirements.txt
     #   bleach
-wheel==0.37.0
+wheel==0.37.1
     # via
     #   -c requirements.txt
     #   python-semantic-release
-zipp==3.5.0
+zipp==3.7.0
     # via
     #   -c requirements.txt
     #   importlib-metadata
