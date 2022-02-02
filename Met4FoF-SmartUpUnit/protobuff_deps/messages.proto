@@ -23,6 +23,7 @@ message DataMessage {
   optional float Data_14 =19;           //Data of 14th channel as float number
   optional float Data_15 =20;           //Data of 15th channel as float number
   optional float Data_16 =21;           //Data of 16th channel as float number
+  optional uint64 time_ticks=22;		 //Raw timestamp of the input capture counter
 }
 
 message DescriptionMessage {
@@ -35,6 +36,7 @@ message DescriptionMessage {
   RESOLUTION = 3;                                          // Float field contains the number of steps between Min and Max Value eg [256] for an 8 bit Sensor or [1024] for an 10 bit sensor
   MIN_SCALE = 4;                                           // Float field contains the maximal possible value for an data channel
   MAX_SCALE = 5;                                           // Float field contains the minmal possible value for an data channel
+  HIERARCHY = 6;                                           // string field contains information about hircala strctur of data se examples
   }
   required DESCRIPTION_TYPE Description_Type =3;
   optional string str_Data_01 =4 [(nanopb).max_size = 40];
@@ -69,4 +71,5 @@ message DescriptionMessage {
   optional float f_Data_14 =33;
   optional float f_Data_15 =34;
   optional float f_Data_16 =35;
+  required bool has_time_ticks =36;		// has 64bit raw timestamp or not
 }

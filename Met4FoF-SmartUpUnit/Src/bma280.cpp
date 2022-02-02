@@ -92,6 +92,7 @@ float BMA280::getConversionfactor() {
 void BMA280::init(uint8_t aRes, uint8_t BW, uint8_t power_Mode, uint8_t sleep_dur) {
 	_aRes=aRes;
 	_conversionfactor=getConversionfactor();
+
 	writeByte(BMA280_PMU_RANGE, aRes);         // set full-scale range
 	uint8_t aresSet=readByte(BMA280_PMU_RANGE);
 	uint16_t count=0;
@@ -102,10 +103,21 @@ void BMA280::init(uint8_t aRes, uint8_t BW, uint8_t power_Mode, uint8_t sleep_du
 	}
 	writeByte(BMA280_PMU_BW, BW);     // set bandwidth (and thereby sample rate)
 	writeByte(BMA280_PMU_LPW, power_Mode << 5 | sleep_dur << 1); // set power mode and sleep duration
-
 	writeByte(BMA280_INT_EN_1, 0x10);        // set data ready interrupt (bit 4)
 	writeByte(BMA280_INT_MAP_1, 0x01); // map data ready interrupt to INT1 (bit 0)
 	writeByte(BMA280_INT_OUT_CTRL, 0x04 | 0x01); // interrupts push-pull, active HIGH (bits 0:3)
+	switch(BW) {
+		case BW_1000Hz:  _NominalSamplingFreq=2000.0; break;
+		case BW_500Hz:  _NominalSamplingFreq=1000.0; break;
+		case BW_250Hz:  _NominalSamplingFreq=500.0; break;
+		case BW_125Hz:  _NominalSamplingFreq=250.0; break;
+		case BW_62_5Hz:  _NominalSamplingFreq=125.0; break;
+		case BW_31_25Hz:  _NominalSamplingFreq=62.5; break;
+		case BW_15_63Hz:  _NominalSamplingFreq=15.63*2; break;
+		case BW_7_81Hz:  _NominalSamplingFreq=15.62; break;
+		default:_NominalSamplingFreq=-1 ; break;
+	}
+	_SampleCount=0;
 }
 
 void BMA280::fastCompensation() {
@@ -241,14 +253,22 @@ bool BMA280::readBytes(uint8_t subAddress,uint8_t count, uint8_t* dest) {
 	return retVal;
 }
 
-int BMA280::getData(DataMessage * Message,uint64_t RawTimeStamp,uint32_t CaptureCount){
+uint32_t BMA280::getSampleCount(){
+	return _SampleCount;
+}
+
+float BMA280::getNominalSamplingFreq(){
+	return _NominalSamplingFreq;
+}
+int BMA280::getData(DataMessage * Message,uint64_t RawTimeStamp){
 	memcpy(Message,&empty_DataMessage,sizeof(DataMessage));//Copy default values into array
 	int result=0;
+	_SampleCount++;
 	Message->id=_ID;
 	Message->unix_time=0XFFFFFFFF;
 	Message->time_uncertainty=(uint32_t)((RawTimeStamp & 0xFFFFFFFF00000000) >> 32);//high word
 	Message->unix_time_nsecs=(uint32_t)(RawTimeStamp & 0x00000000FFFFFFFF);// low word
-	Message->sample_number=CaptureCount;
+	Message->sample_number=	_SampleCount;
 	uint8_t  rawData[7];  // x/y/z accel register data stored here
 	int16_t rawArray[3]={0,0,0};
 	if(readBytes( BMA280_ACCD_X_LSB, 7, &rawData[0])==true){ // Read the 6 raw data registers into data array
@@ -266,10 +286,10 @@ int BMA280::getData(DataMessage * Message,uint64_t RawTimeStamp,uint32_t Capture
 	Message->has_Data_10=true;
 	Message->Data_10=23.0+0.5*int8_t(rawData[6]);
 	result=1;
+
 	}
 	return result;
 }
-
 int BMA280::getDescription(DescriptionMessage * Message,DescriptionMessage_DESCRIPTION_TYPE DESCRIPTION_TYPE){
 	memcpy(Message,&empty_DescriptionMessage,sizeof(DescriptionMessage));//Copy default values into array
 	int retVal=0;
@@ -330,6 +350,17 @@ int BMA280::getDescription(DescriptionMessage * Message,DescriptionMessage_DESCR
 		Message->f_Data_02=8191*_conversionfactor*g_to_ms2;
 		Message->f_Data_03=8191*_conversionfactor*g_to_ms2;
 		Message->f_Data_10=86.5;
+	}
+	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_HIERARCHY)
+	{
+		Message->has_str_Data_01=true;
+		Message->has_str_Data_02=true;
+		Message->has_str_Data_03=true;
+		Message->has_str_Data_10=true;
+		strncpy(Message->str_Data_01,"Acceleration/0\0",sizeof(Message->str_Data_01));
+		strncpy(Message->str_Data_02,"Acceleration/1\0",sizeof(Message->str_Data_02));
+		strncpy(Message->str_Data_03,"Acceleration/2\0",sizeof(Message->str_Data_03));
+		strncpy(Message->str_Data_10,"Temperature/0\0",sizeof(Message->str_Data_10));
 	}
 	return retVal;
 }

@@ -30,6 +30,7 @@
 
 #include "pb.h"
 #include "message.pb.h"
+#include "Met4FoFSensor.h"
 /* Register Map BMA280
 // http://www.mouser.com/ds/2/783/BST-BMA280-DS000-11_published-786496.pdf
 */
@@ -133,13 +134,13 @@
  * BMA280 triple axis, digital interface, accelerometer.
  */
 
-class BMA280
+class BMA280:public Met4FoFSensor
 {
   public:
   BMA280(GPIO_TypeDef* SPICSTypeDef, uint16_t SPICSPin,SPI_HandleTypeDef* bmaspi,uint32_t BaseID);
   void init(uint8_t aRes,uint8_t BW, uint8_t power_Mode, uint8_t sleep_dur);
   void reset();
-  int getData(DataMessage * Message,uint64_t RawTimeStamp,uint32_t CaptureCount);
+  int getData(DataMessage * Message,uint64_t RawTimeStamps);
   int getDescription(DescriptionMessage * Message,DescriptionMessage_DESCRIPTION_TYPE DESCRIPTION_TYPE);
   int setBaseID(uint32_t BaseID);
   uint8_t getChipID();
@@ -148,6 +149,9 @@ class BMA280
   void fastCompensation();
   void selfTest();
   void activateDataRDYINT();
+  uint32_t getSampleCount();
+  void increaseCaptureCountWORead(){_SampleCount++;return ;};
+  float getNominalSamplingFreq();
   private:
   float getConversionfactor();
   void writeByte(uint8_t subAddress, uint8_t data);
@@ -161,6 +165,8 @@ class BMA280
   uint32_t _BaseID;
   uint16_t _SetingsID;
   uint8_t _aRes;
+  uint32_t _SampleCount=0;
+  float _NominalSamplingFreq=-1;
 };
 
 #endif /*__ BMA280_H */

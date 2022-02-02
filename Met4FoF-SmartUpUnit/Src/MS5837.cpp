@@ -68,7 +68,6 @@ bool MS5837::init(uint32_t BaseID) {
 	return false; // CRC fail
 }
 
-
 void MS5837::setFluidDensity(float density) {
 	fluidDensity = density;
 }
@@ -183,14 +182,15 @@ float MS5837::altitude() {
 	return (1-pow((pressure()/1013.25),.190284))*145366.45*.3048;
 }
 
-int MS5837::getData(DataMessage * Message,uint32_t unix_time,uint32_t unix_time_nsecs,uint32_t time_uncertainty,uint32_t CaptureCount){
+int MS5837::getData(DataMessage * Message,uint64_t RawTimeStamp){
 	memcpy(Message,&empty_DataMessage,sizeof(DataMessage));//Copy default values into array
 	int result=0;
+	_SampleCount++;
 	Message->id=_ID;
-	Message->unix_time=unix_time;
-	Message->time_uncertainty=time_uncertainty;
-	Message->unix_time_nsecs=unix_time_nsecs;
-	Message->sample_number=CaptureCount;
+	Message->unix_time=0xFFFFFFFF;
+	Message->time_uncertainty=(uint32_t)((RawTimeStamp & 0xFFFFFFFF00000000) >> 32);//high word
+	Message->unix_time_nsecs=(uint32_t)(RawTimeStamp & 0x00000000FFFFFFFF);// low word
+	Message->sample_number=_SampleCount;
 	MS5837::read();
 	MS5837::calculate();
 	Message->Data_01=MS5837::temperature();
@@ -212,7 +212,6 @@ int MS5837::getDescription(DescriptionMessage * Message,DescriptionMessage_DESCR
 	Message->Description_Type=DESCRIPTION_TYPE;
 	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_PHYSICAL_QUANTITY)
 	{
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_PHYSICAL_QUANTITY;
 		Message->has_str_Data_01=true;
 		Message->has_str_Data_02=true;
 		strncpy(Message->str_Data_01,"Temperature\0",sizeof(Message->str_Data_01));
@@ -220,7 +219,6 @@ int MS5837::getDescription(DescriptionMessage * Message,DescriptionMessage_DESCR
 	}
 	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_UNIT)
 	{
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_UNIT;
 		Message->has_str_Data_01=true;
 		Message->has_str_Data_02=true;
 		strncpy(Message->str_Data_01,"\\degreecelsius\0",sizeof(Message->str_Data_01));
@@ -229,7 +227,6 @@ int MS5837::getDescription(DescriptionMessage * Message,DescriptionMessage_DESCR
 	if(_model==MS5837::MS5837::MS5837_02BA){
 	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_RESOLUTION)
 	{
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_RESOLUTION;
 		Message->has_f_Data_01=true;
 		Message->has_f_Data_02=true;
 		Message->f_Data_01=12500;
@@ -238,7 +235,6 @@ int MS5837::getDescription(DescriptionMessage * Message,DescriptionMessage_DESCR
 	//TODO add min and max scale values as calls member vars so they have not to be calculated all the time
 	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_MIN_SCALE)
 	{
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_MIN_SCALE;
 		Message->has_f_Data_01=true;
 		Message->has_f_Data_02=true;
 		Message->f_Data_01=-40;
@@ -246,17 +242,22 @@ int MS5837::getDescription(DescriptionMessage * Message,DescriptionMessage_DESCR
 	}
 	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_MAX_SCALE)
 	{
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_MAX_SCALE;
 		Message->has_f_Data_01=true;
 		Message->has_f_Data_02=true;
 		Message->f_Data_01=85;
 		Message->f_Data_02=120000;
 	}
+	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_HIERARCHY)
+	{
+		Message->has_str_Data_01=true;
+		Message->has_str_Data_02=true;
+		strncpy(Message->str_Data_01,"Temperature/0\0",sizeof(Message->str_Data_01));
+		strncpy(Message->str_Data_02,"Pressure/0\0",sizeof(Message->str_Data_10));
+	}
 	}
 	if(_model==MS5837::MS5837_30BA){
 	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_RESOLUTION)
 	{
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_RESOLUTION;
 		Message->has_f_Data_01=true;
 		Message->has_f_Data_02=true;
 		Message->f_Data_01=12500;
@@ -265,7 +266,6 @@ int MS5837::getDescription(DescriptionMessage * Message,DescriptionMessage_DESCR
 	//TODO add min and max scale values as calls member vars so they have not to be calculated all the time
 	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_MIN_SCALE)
 	{
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_MIN_SCALE;
 		Message->has_f_Data_01=true;
 		Message->has_f_Data_02=true;
 		Message->f_Data_01=-40;
@@ -273,11 +273,24 @@ int MS5837::getDescription(DescriptionMessage * Message,DescriptionMessage_DESCR
 	}
 	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_MAX_SCALE)
 	{
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_MAX_SCALE;
 		Message->has_f_Data_01=true;
 		Message->has_f_Data_02=true;
 		Message->f_Data_01=85;
 		Message->f_Data_02=3e6;
+	}
+	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_PHYSICAL_QUANTITY)
+	{
+		Message->has_str_Data_01=true;
+		Message->has_str_Data_02=true;
+		strncpy(Message->str_Data_01,"Temperature\0",sizeof(Message->str_Data_01));
+		strncpy(Message->str_Data_02,"Pressure\0",sizeof(Message->str_Data_02));
+	}
+	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_HIERARCHY)
+	{
+		Message->has_str_Data_01=true;
+		Message->has_str_Data_02=true;
+		strncpy(Message->str_Data_01,"Temperature/0\0",sizeof(Message->str_Data_01));
+		strncpy(Message->str_Data_02,"Pressure/0\0",sizeof(Message->str_Data_10));
 	}
 	}
 	return retVal;

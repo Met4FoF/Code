@@ -97,8 +97,8 @@
 #define HSPI_INSTANCE							&hspi3
 
 //CHIP SELECT PIN AND PORT, STANDARD GPIO
-#define LCD_CS_PORT								LCD_CS_GPIO_Port
-#define LCD_CS_PIN								LCD_CS_Pin
+//#define LCD_CS_PORT								LCD_CS_GPIO_Port
+//#define LCD_CS_PIN								LCD_CS_Pin
 
 //DATA COMMAND PIN AND PORT, STANDARD GPIO
 #define LCD_DC_PORT								LCD_DC_RS_GPIO_Port
@@ -142,6 +142,7 @@ void ILI9341_Write_Command(uint8_t Command);
 void ILI9341_Write_Data(uint8_t Data);
 void ILI9341_Set_Address(uint16_t X1, uint16_t Y1, uint16_t X2, uint16_t Y2);
 void ILI9341_Reset(void);
+void ILI9341_Soft_Reset(void);
 void ILI9341_Set_Rotation(uint8_t Rotation);
 void ILI9341_Enable(void);
 void ILI9341_Init(void);

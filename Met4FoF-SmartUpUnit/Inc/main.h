@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under Ultimate Liberty license
@@ -53,7 +53,6 @@ extern "C" {
 
 /* Exported functions prototypes ---------------------------------------------*/
 void Error_Handler(void);
-void SystemClock_Config(void);
 
 /* USER CODE BEGIN EFP */
 
@@ -64,10 +63,10 @@ void SystemClock_Config(void);
 #define USER_Btn_GPIO_Port GPIOC
 #define LCD_RESET_Pin GPIO_PIN_0
 #define LCD_RESET_GPIO_Port GPIOF
-#define LCD_CS_Pin GPIO_PIN_6
-#define LCD_CS_GPIO_Port GPIOF
-#define SD_Detect_Pin GPIO_PIN_7
-#define SD_Detect_GPIO_Port GPIOF
+#define SIG_HARDFAULT_Pin GPIO_PIN_1
+#define SIG_HARDFAULT_GPIO_Port GPIOF
+#define T_IRQ_Pin GPIO_PIN_5
+#define T_IRQ_GPIO_Port GPIOF
 #define MCO_Pin GPIO_PIN_0
 #define MCO_GPIO_Port GPIOH
 #define RMII_MDC_Pin GPIO_PIN_1
@@ -84,30 +83,24 @@ void SystemClock_Config(void);
 #define RMII_RXD1_GPIO_Port GPIOC
 #define LD1_Pin GPIO_PIN_0
 #define LD1_GPIO_Port GPIOB
+#define GPIO_3_Pin GPIO_PIN_2
+#define GPIO_3_GPIO_Port GPIOB
 #define LED_BT2_Pin GPIO_PIN_15
 #define LED_BT2_GPIO_Port GPIOF
-#define CAN1_MODE_Pin GPIO_PIN_0
-#define CAN1_MODE_GPIO_Port GPIOG
+#define GPIO_1_Pin GPIO_PIN_11
+#define GPIO_1_GPIO_Port GPIOB
+#define GPIO_2_Pin GPIO_PIN_12
+#define GPIO_2_GPIO_Port GPIOB
 #define RMII_TXD1_Pin GPIO_PIN_13
 #define RMII_TXD1_GPIO_Port GPIOB
 #define LD3_Pin GPIO_PIN_14
 #define LD3_GPIO_Port GPIOB
+#define GPIO_4_Pin GPIO_PIN_15
+#define GPIO_4_GPIO_Port GPIOB
 #define STLK_RX_Pin GPIO_PIN_8
 #define STLK_RX_GPIO_Port GPIOD
 #define STLK_TX_Pin GPIO_PIN_9
 #define STLK_TX_GPIO_Port GPIOD
-#define GPIO1_2_Pin GPIO_PIN_10
-#define GPIO1_2_GPIO_Port GPIOD
-#define GPIO1_1_Pin GPIO_PIN_11
-#define GPIO1_1_GPIO_Port GPIOD
-#define GPIO2_2_Pin GPIO_PIN_12
-#define GPIO2_2_GPIO_Port GPIOD
-#define GPIO3_2_Pin GPIO_PIN_13
-#define GPIO3_2_GPIO_Port GPIOD
-#define GPIO2_1_Pin GPIO_PIN_14
-#define GPIO2_1_GPIO_Port GPIOD
-#define GPIO3_1_Pin GPIO_PIN_15
-#define GPIO3_1_GPIO_Port GPIOD
 #define BT_1_Pin GPIO_PIN_4
 #define BT_1_GPIO_Port GPIOG
 #define BT_2_Pin GPIO_PIN_5
@@ -116,8 +109,12 @@ void SystemClock_Config(void);
 #define USB_PowerSwitchOn_GPIO_Port GPIOG
 #define USB_OverCurrent_Pin GPIO_PIN_7
 #define USB_OverCurrent_GPIO_Port GPIOG
-#define USART6_RE_Pin GPIO_PIN_8
-#define USART6_RE_GPIO_Port GPIOC
+#define SENSOR_CS3_Pin GPIO_PIN_6
+#define SENSOR_CS3_GPIO_Port GPIOC
+#define SENSOR_CS4_Pin GPIO_PIN_8
+#define SENSOR_CS4_GPIO_Port GPIOC
+#define SENSOR_CS2_Pin GPIO_PIN_9
+#define SENSOR_CS2_GPIO_Port GPIOC
 #define USB_SOF_Pin GPIO_PIN_8
 #define USB_SOF_GPIO_Port GPIOA
 #define USB_VBUS_Pin GPIO_PIN_9
@@ -132,8 +129,8 @@ void SystemClock_Config(void);
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
-#define F_CS_Pin GPIO_PIN_2
-#define F_CS_GPIO_Port GPIOD
+#define T_CS_Pin GPIO_PIN_2
+#define T_CS_GPIO_Port GPIOD
 #define RMII_TX_EN_Pin GPIO_PIN_11
 #define RMII_TX_EN_GPIO_Port GPIOG
 #define RMII_TXD0_Pin GPIO_PIN_13
@@ -144,8 +141,6 @@ void SystemClock_Config(void);
 #define LD2_GPIO_Port GPIOB
 #define SENSOR_CS1_Pin GPIO_PIN_8
 #define SENSOR_CS1_GPIO_Port GPIOB
-#define SENSOR_CS2_Pin GPIO_PIN_9
-#define SENSOR_CS2_GPIO_Port GPIOC
 #define LED_BT1_Pin GPIO_PIN_0
 #define LED_BT1_GPIO_Port GPIOE
 #define LCD_DC_RS_Pin GPIO_PIN_1

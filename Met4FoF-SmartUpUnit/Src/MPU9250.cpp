@@ -53,7 +53,7 @@ int MPU9250::begin(){
 	  if(writeRegister(PWR_MGMNT_1,CLOCK_SEL_PLL) < 0){
 	    return -1;
 	  }
-
+	  HAL_Delay(100);
 	  //read selftest data
 	  readRegisters(ACC_ST_X, 3, _AccST);
 	  readRegisters(GYRO_ST_X, 3, _GyroST);
@@ -62,69 +62,83 @@ int MPU9250::begin(){
 	  if(writeRegister(USER_CTRL,I2C_MST_EN) < 0){
 	    return -2;
 	  }
+	  HAL_Delay(100);
 	  // set the I2C bus speed to 400 kHz
 	  if(writeRegister(I2C_MST_CTRL,I2C_MST_CLK) < 0){
 	    return -3;
 	  }
+	  HAL_Delay(100);
 	  // set AK8963 to Power Down
 	  writeAK8963Register(AK8963_CNTL1,AK8963_PWR_DOWN);
 	  // reset the MPU9250
+	  HAL_Delay(100);
 	  writeRegister(PWR_MGMNT_1,PWR_RESET);
 	  // wait for MPU-9250 to come back up
 	  HAL_Delay(200);
 	  // reset the AK8963
 	  writeAK8963Register(AK8963_CNTL2,AK8963_RESET);
-
 	  HAL_Delay(200);
 	  // select clock source to gyro
 	  if(writeRegister(PWR_MGMNT_1,CLOCK_SEL_PLL) < 0){
 	    return -4;
 	  }
+	  HAL_Delay(200);
 	  // check the WHO AM I byte, expected value is 0x71 (decimal 113) or 0x73 (decimal 115)
 	  if((whoAmI() != 113)&&(whoAmI() != 115)){
 	    return -5;
 	  }
+	  HAL_Delay(200);
 	  // enable accelerometer and gyro
 	  if(writeRegister(PWR_MGMNT_2,SEN_ENABLE) < 0){
 	    return -6;
 	  }
+	  HAL_Delay(200);
 	  // setting accel range to 16G as default
 	  if(writeRegister(ACCEL_CONFIG,ACCEL_FS_SEL_16G) < 0){
 	    return -7;
 	  }
+	  HAL_Delay(200);
 	  _accelScale = G * 16.0f/32767.5f; // setting the accel scale to 4G
-	  _accelRange = ACCEL_RANGE_4G;
+	  _accelRange = ACCEL_RANGE_16G;
 	  // setting the gyro range to 2000DPS as default
 	  if(writeRegister(GYRO_CONFIG,GYRO_FS_SEL_2000DPS) < 0){
 	    return -8;
 	  }
+	  HAL_Delay(200);
 	  _gyroScale = 2000.0f/32767.5f * _d2r; // setting the gyro scale to 2000DPS
 	  _gyroRange = GYRO_RANGE_2000DPS;
 	  // setting bandwidth to 184Hz as default
 	  if(writeRegister(ACCEL_CONFIG2,ACCEL_DLPF_184) < 0){
 	    return -9;
 	  }
+	  HAL_Delay(200);
 	  if(writeRegister(CONFIG,GYRO_DLPF_184) < 0){ // setting gyro bandwidth to 184Hz
 	    return -10;
 	  }
+	  HAL_Delay(200);
 	  _bandwidth = DLPF_BANDWIDTH_184HZ;
 	  // setting the sample rate divider to 0 as default
 	  if(writeRegister(SMPDIV,0x00) < 0){
 	    return -11;
 	  }
+	  HAL_Delay(200);
 	  _srd = 0;
+	  _NominalSamplingFreq=1000.0;
 	  // enable I2C master mode
 	  if(writeRegister(USER_CTRL,I2C_MST_EN) < 0){
 	  	return -12;
 	  }
+	  HAL_Delay(200);
 		// set the I2C bus speed to 400 kHz
 		if( writeRegister(I2C_MST_CTRL,I2C_MST_CLK) < 0){
 			return -13;
 		}
+		HAL_Delay(200);
 		// check AK8963 WHO AM I register, expected value is 0x48 (decimal 72)
 		if( whoAmIAK8963() != 72 ){
 	    //return -14;
 		}
+		HAL_Delay(200);
 	  /* get the magnetometer calibration */
 	  // set AK8963 to Power Down
 	  if(writeAK8963Register(AK8963_CNTL1,AK8963_PWR_DOWN) < 0){
@@ -150,7 +164,7 @@ int MPU9250::begin(){
 	  if(writeAK8963Register(AK8963_CNTL1,AK8963_CNT_MEAS2) < 0){
 	    //return -18;
 	  }
-	 HAL_Delay(200); // long wait between AK8963 mode changes
+	  HAL_Delay(200);// long wait between AK8963 mode changes
 	  // select clock source to gyro
 	  if(writeRegister(PWR_MGMNT_1,CLOCK_SEL_PLL) < 0){
 	    //return -19;
@@ -165,6 +179,7 @@ int MPU9250::begin(){
 	  //Dummy read to active High speed SPI
 	  readSensor();
 	  readSensor();
+	  _SampleCount=0;
 	  // successful init, return 1
 	  return 1;
 	}
@@ -372,6 +387,7 @@ int MPU9250::setSrd(uint8_t srd) {
 	    return -4;
 	  }
 	  _srd = srd;
+	  _NominalSamplingFreq=1000.0/(_srd+1);
 	  return 1;
 	}
 
@@ -1019,9 +1035,13 @@ void MPU9250::setGyroSelfTest(uint8_t SelftestStatus){
 /* writes a byte to MPU9250 register given a register address and data */
 int MPU9250::writeRegister(uint8_t subAddress, uint8_t data){
   /* write data to device */
+
     if(_SPIHSBOUDRATEPRESCALERSLOW!=_MPU9250spi->Init.BaudRatePrescaler){
     	_MPU9250spi->Init.BaudRatePrescaler = _SPIHSBOUDRATEPRESCALERSLOW;
-    	HAL_SPI_Init(_MPU9250spi);
+    	HAL_StatusTypeDef SpiRetVal= HAL_ERROR;
+    	while(SpiRetVal== HAL_ERROR){
+    		SpiRetVal=HAL_SPI_Init(_MPU9250spi);
+    	}
     	_useSPILSOLD=true;
     }
     if(_useSPIHS){
@@ -1032,7 +1052,6 @@ int MPU9250::writeRegister(uint8_t subAddress, uint8_t data){
     		SpiRetVal=HAL_SPI_Init(_MPU9250spi);
     	}
     	_useSPILSOLD=false;
-
     }
     }
   	uint8_t buffer[2] = {subAddress, data };
@@ -1153,15 +1172,25 @@ int MPU9250::whoAmIAK8963(){
   return _buffer[0];
 }
 
-int MPU9250::getData(DataMessage * Message,uint64_t RawTimeStamp,uint32_t CaptureCount){
+uint32_t MPU9250::getSampleCount(){
+	return _SampleCount;
+}
+
+float MPU9250::getNominalSamplingFreq(){
+	return _NominalSamplingFreq;
+}
+
+int MPU9250::getData(DataMessage * Message,uint64_t RawTimeStamp){
+	_SampleCount++;
+	if (Message!=NULL){
+		int readresult=-1;
 	memcpy(Message,&empty_DataMessage,sizeof(DataMessage));//Copy default values into array
-	int result=0;
 	Message->id=_ID;
 	Message->unix_time=0XFFFFFFFF;
 	Message->time_uncertainty=(uint32_t)((RawTimeStamp & 0xFFFFFFFF00000000) >> 32);//high word
 	Message->unix_time_nsecs=(uint32_t)(RawTimeStamp & 0x00000000FFFFFFFF);// low word
-	Message->sample_number=CaptureCount;
-	result=MPU9250::readSensor();
+	Message->sample_number=	_SampleCount;
+	readresult=MPU9250::readSensor();
 	/*
 	  _ax = (((float)(tX[0]*_axcounts + tX[1]*_aycounts + tX[2]*_azcounts) * _accelScale) - _axb)*_axs;
 	  _ay = (((float)(tY[0]*_axcounts + tY[1]*_aycounts + tY[2]*_azcounts) * _accelScale) - _ayb)*_ays;
@@ -1193,18 +1222,21 @@ int MPU9250::getData(DataMessage * Message,uint64_t RawTimeStamp,uint32_t Captur
 	Message->Data_09=_hz;
 	Message->has_Data_10=true;
 	Message->Data_10=_t;
-	return result;
+	return readresult;
+	}
+	else
+	{
+		return -2;
+	}
 }
-
 int MPU9250::getDescription(DescriptionMessage * Message,DescriptionMessage_DESCRIPTION_TYPE DESCRIPTION_TYPE){
 	memcpy(Message,&empty_DescriptionMessage,sizeof(DescriptionMessage));//Copy default values into array
 	int retVal=0;
-	strncpy(Message->Sensor_name,"MPU 9250\0",sizeof(Message->Sensor_name));
+	strncpy(Message->Sensor_name,"MPU_9250\0",sizeof(Message->Sensor_name));
 	Message->id=_ID;
 	Message->Description_Type=DESCRIPTION_TYPE;
 	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_PHYSICAL_QUANTITY)
 	{
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_PHYSICAL_QUANTITY;
 		Message->has_str_Data_01=true;
 		Message->has_str_Data_02=true;
 		Message->has_str_Data_03=true;
@@ -1228,7 +1260,6 @@ int MPU9250::getDescription(DescriptionMessage * Message,DescriptionMessage_DESC
 	}
 	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_UNIT)
 	{
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_UNIT;
 		Message->has_str_Data_01=true;
 		Message->has_str_Data_02=true;
 		Message->has_str_Data_03=true;
@@ -1252,7 +1283,6 @@ int MPU9250::getDescription(DescriptionMessage * Message,DescriptionMessage_DESC
 	}
 	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_RESOLUTION)
 	{
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_RESOLUTION;
 		Message->has_f_Data_01=true;
 		Message->has_f_Data_02=true;
 		Message->has_f_Data_03=true;
@@ -1281,7 +1311,6 @@ int MPU9250::getDescription(DescriptionMessage * Message,DescriptionMessage_DESC
 		float gyrMIN=((float)(-32768) * _gyroScale) - _gxb;
 		float magMIN=(((float)(-32760) * _magScaleX) - _hxb)*_hxs;
 		float tempMIN= ((((float) -32768) - _tempOffset)/_tempScale) + _tempOffset;;
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_MIN_SCALE;
 		Message->has_f_Data_01=true;
 		Message->has_f_Data_02=true;
 		Message->has_f_Data_03=true;
@@ -1309,7 +1338,6 @@ int MPU9250::getDescription(DescriptionMessage * Message,DescriptionMessage_DESC
 		float gyrMAX=((float)(32767) * _gyroScale) - _gxb;
 		float magMAX=(((float)(32760) * _magScaleX) - _hxb)*_hxs;
 		float tempMAX= ((((float) 32767) - _tempOffset)/_tempScale) + _tempOffset;;
-		Message->Description_Type=DescriptionMessage_DESCRIPTION_TYPE_MAX_SCALE;
 		Message->has_f_Data_01=true;
 		Message->has_f_Data_02=true;
 		Message->has_f_Data_03=true;
@@ -1330,6 +1358,29 @@ int MPU9250::getDescription(DescriptionMessage * Message,DescriptionMessage_DESC
 		Message->f_Data_08=magMAX;
 		Message->f_Data_09=magMAX;
 		Message->f_Data_10=tempMAX;
+	}
+	if(DESCRIPTION_TYPE==DescriptionMessage_DESCRIPTION_TYPE_HIERARCHY)
+	{
+		Message->has_str_Data_01=true;
+		Message->has_str_Data_02=true;
+		Message->has_str_Data_03=true;
+		Message->has_str_Data_04=true;
+		Message->has_str_Data_05=true;
+		Message->has_str_Data_06=true;
+		Message->has_str_Data_07=true;
+		Message->has_str_Data_08=true;
+		Message->has_str_Data_09=true;
+		Message->has_str_Data_10=true;
+		strncpy(Message->str_Data_01,"Acceleration/0\0",sizeof(Message->str_Data_01));
+		strncpy(Message->str_Data_02,"Acceleration/1\0",sizeof(Message->str_Data_02));
+		strncpy(Message->str_Data_03,"Acceleration/2\0",sizeof(Message->str_Data_03));
+		strncpy(Message->str_Data_04,"Angular_velocity/0\0",sizeof(Message->str_Data_04));
+		strncpy(Message->str_Data_05,"Angular_velocity/1\0",sizeof(Message->str_Data_05));
+		strncpy(Message->str_Data_06,"Angular_velocity/2\0",sizeof(Message->str_Data_06));
+		strncpy(Message->str_Data_07,"Magnetic_flux_density/0\0",sizeof(Message->str_Data_07));
+		strncpy(Message->str_Data_08,"Magnetic_flux_density/1\0",sizeof(Message->str_Data_08));
+		strncpy(Message->str_Data_09,"Magnetic_flux_density/2\0",sizeof(Message->str_Data_09));
+		strncpy(Message->str_Data_10,"Temperature/0\0",sizeof(Message->str_Data_10));
 	}
 	return retVal;
 }
