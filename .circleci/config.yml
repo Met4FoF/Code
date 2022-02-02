@@ -393,11 +393,12 @@ jobs:
           name: Run tests
           no_output_timeout: 60m
           command: |
-            TEST_FILES=$(circleci tests glob "PyDynamic/test/**/test_*.py" | \
-              circleci tests split --split-by=timings)
             source venv/bin/activate
-            pytest -v --junitxml=test-results/junit.xml \
-            PyDynamic | tee test-results/pytest.log
+            cd PyDynamic
+            TEST_FILES=$(circleci tests glob "test/**/test_*.py" | \
+              circleci tests split --split-by=timings)
+            pytest -v --junitxml=$CIRCLE_WORKING_DIRECTORY/test-results/junit.xml \
+              $TEST_FILES | tee $CIRCLE_WORKING_DIRECTORY/test-results/pytest.log
 
       - store_artifacts:
           path: test-results
