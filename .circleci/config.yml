@@ -398,7 +398,7 @@ jobs:
             TEST_FILES=$(circleci tests glob "test/**/test_*.py" | \
               circleci tests split --split-by=timings)
             pytest -v --junitxml=$CIRCLE_WORKING_DIRECTORY/test-results/junit.xml \
-              $TEST_FILES | tee $CIRCLE_WORKING_DIRECTORY/test-results/pytest.log
+              $TEST_FILES
 
       - store_artifacts:
           path: test-results
