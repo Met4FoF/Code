@@ -1,12 +1,14 @@
-# -*- coding: utf-8 -*-
+"""Code from Jupyter notebook created by PTB's Ultrasonics Working Group,
 
-"""
-Code from Jupyter notebook created by
-Martin Weber, Volker Wilkens (Physikalisch-Technische Bundesanstalt, Ultrasonics Working Group)
+Authors
+-------
+Martin Weber, Volker Wilkens (Physikalisch-Technische Bundesanstalt,
+    Ultrasonics Working Group)
 """
 
 import numpy as np
 from scipy.signal import freqs, bessel, firwin, freqz
+
 
 def calcfreqscale(timeseries, sign2=1):
     """Calculates the appropriate time scale for a given (equidistant) time series
@@ -37,31 +39,35 @@ def calcfreqscale(timeseries, sign2=1):
 
     f = np.linspace(0, fmax, n)
 
-    f2 = np.hstack((f[0:int(n / 2. + 1)], sign * f[0:int(n / 2 + 1)]))
+    f2 = np.hstack((f[0 : int(n / 2.0 + 1)], sign * f[0 : int(n / 2 + 1)]))
     if sign2 == 0:
-        f2 = f[0:int(n / 2. + 1)]
+        f2 = f[0 : int(n / 2.0 + 1)]
 
     return f2
 
+
 # Return the amplitude of a PyDynamic-style vector
 def amplitude(data):
-    n=data.size
-    return np.sqrt(data[:n//2]**2+data[n//2:]**2)
+    n = data.size
+    return np.sqrt(data[: n // 2] ** 2 + data[n // 2 :] ** 2)
+
 
 # Return the phase (in rad) of a PyDynamic-style vector
 def phase(data):
-    n=data.size
-    return np.arctan2(data[n//2:],data[:n//2])
+    n = data.size
+    return np.arctan2(data[n // 2 :], data[: n // 2])
+
 
 # Return the real part of a PyDynamic-style vector
 def realpart(data):
-    n=data.size
-    return data[:n//2]
+    n = data.size
+    return data[: n // 2]
+
 
 # Return the imaginary part of a PyDynamic-style vector
 def imagpart(data):
-    n=data.size
-    return data[n//2:]
+    n = data.size
+    return data[n // 2 :]
 
 
 def pulseparamter(time, pressure, deltapressure):
@@ -115,10 +121,11 @@ def pulseparamter(time, pressure, deltapressure):
     # with correlation (+1). Note that the absolute value is considdered, to ensure the additive contributions of the uncertainties
 
     c = 2 * np.abs(pressure) * dt
-    result["ppsi_uncertainty"] = np.double(np.sqrt(
-        np.dot(deltapressure,c)*np.dot(c,deltapressure)
-        ))
+    result["ppsi_uncertainty"] = np.double(
+        np.sqrt(np.dot(deltapressure, c) * np.dot(c, deltapressure))
+    )
     return result
+
 
 def get_file_info(infos):
     i = infos["i"]
@@ -242,47 +249,63 @@ def get_file_info(infos):
     return infos, measurementfile, noisefile, hydfilename
 
 
-def findnearestmatch(liste,value):
+def findnearestmatch(liste, value):
     """This is a help function to to find the closest value in a list
     Its purpose is to find list indices fast
     For example when list is [1,2,3] and value = 2.2
     then the return value for the index will 1 as the number 2 in the list is the closest value to 2.2
     """
-    return np.argmin(abs(liste-value))
+    return np.argmin(abs(liste - value))
 
-def print_status(infos, measurement_data = None, hyd_data = None):
+
+def print_status(infos, measurement_data=None, hyd_data=None):
     # Summarise all information
     if measurement_data is not None:
         print("Measurement data")
-        dt = (measurement_data["time"][2] - measurement_data["time"][1])
-        print("Points time: {} dt: {} s fs: {} MHz".format(
-            len(measurement_data["time"]), dt * len(measurement_data["time"]), round(1 / dt) / 1E6))
-        df = (measurement_data["frequency"][2] - measurement_data["frequency"][1])
-        print("Points frequency: {} df: {} MHz fmax: {} MHz".format(
-            len(measurement_data["frequency"]), df / 1E6, max(measurement_data["frequency"]) / 1e6))
+        dt = measurement_data["time"][2] - measurement_data["time"][1]
+        print(
+            "Points time: {} dt: {} s fs: {} MHz".format(
+                len(measurement_data["time"]),
+                dt * len(measurement_data["time"]),
+                round(1 / dt) / 1e6,
+            )
+        )
+        df = measurement_data["frequency"][2] - measurement_data["frequency"][1]
+        print(
+            "Points frequency: {} df: {} MHz fmax: {} MHz".format(
+                len(measurement_data["frequency"]),
+                df / 1e6,
+                max(measurement_data["frequency"]) / 1e6,
+            )
+        )
     if hyd_data is not None:
         print("Hydrophone calibration data")
-        print("Points: {} fmin: {} MHz fmax: {} MHz df {} Hz".format(
-            len(hyd_data["frequency"]), hyd_data["frequency"][1] / 1E6,
-            hyd_data["frequency"][-1] / 1E6, hyd_data["frequency"][2] - hyd_data["frequency"][1]))
-
+        print(
+            "Points: {} fmin: {} MHz fmax: {} MHz df {} Hz".format(
+                len(hyd_data["frequency"]),
+                hyd_data["frequency"][1] / 1e6,
+                hyd_data["frequency"][-1] / 1e6,
+                hyd_data["frequency"][2] - hyd_data["frequency"][1],
+            )
+        )
 
 
 def bessel_analog(f, fcut, order=2):
-    b,a = bessel(order, 2*np.pi*fcut, analog = True)
-    return freqs(b, a, 2*np.pi*f)[1]
+    b, a = bessel(order, 2 * np.pi * fcut, analog=True)
+    return freqs(b, a, 2 * np.pi * f)[1]
 
-def kaiser(f,fcut,lporder,Fs):
-    b = firwin(lporder,2*fcut/Fs,window=('kaiser',8.0))
-    return freqz(b,worN=2*np.pi*f/Fs)[1]
+
+def kaiser(f, fcut, lporder, Fs):
+    b = firwin(lporder, 2 * fcut / Fs, window=("kaiser", 8.0))
+    return freqz(b, worN=2 * np.pi * f / Fs)[1]
 
 
 def simple_lowpass(f, fcut):
     return 1 / (1 + 1j * f / fcut) ** 2
 
+
 def butter(f, fcut, order=5):
-    """Buttworth low pass filter amplitude frequency response
-    """
+    """Buttworth low pass filter amplitude frequency response"""
     om = 2 * np.pi * f
     w0 = 2 * np.pi * fcut
     return np.sqrt(1.0 / (1 + (om / w0) ** (2 * order)))
@@ -313,7 +336,10 @@ def calc_awf(f, U, verbose=True, return_all=False):
 
     search_inds = np.nonzero((f >= f[indmax]) & (f <= f3x))[0]
     if verbose:
-        print("searching for f2 in interval [%g,%g] MHz" % (f[search_inds[0]] * 1e-6, f[search_inds[-1]] * 1e-6))
+        print(
+            "searching for f2 in interval [%g,%g] MHz"
+            % (f[search_inds[0]] * 1e-6, f[search_inds[-1]] * 1e-6)
+        )
 
     ind2 = np.nonzero(np.abs(U[search_inds]) >= U3dB)[0][-1] + indmax
     x2 = f[ind2]

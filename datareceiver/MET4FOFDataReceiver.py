@@ -76,6 +76,7 @@ class DataReceiver:
             socket.AF_INET, socket.SOCK_DGRAM  # Internet
         )  # UDP
 
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)# socket can be resued instantly for debugging
         # Try to open the UDP connection
         try:
             self.socket.bind((IP, Port))
@@ -450,6 +451,7 @@ class SensorDescription:
         """
         self.ID = ID
         self.SensorName = SensorName
+        self.has_time_ticks = False  # do the data contain a 64 bit raw timestamp
         self._complete = False
         self.Channels = AliasDict([])
         self.ChannelCount = 0
@@ -926,6 +928,11 @@ class Sensor:
                                 + str(self.params["ID"])
                             )
                             # print(str(Description.Description_Type))
+                            if(Description.has_time_ticks==True):
+                                print("Raw tick detected for " +Description.Sensor_name
+                                + " sensor with ID:"
+                                + str(self.params["ID"]))
+                                self.Description.has_time_ticks =True
                         if (
                             self.DescriptionsProcessed[Description.Description_Type]
                             == False
@@ -1173,6 +1180,8 @@ class Sensor:
             + str(message.Data_15)
             + ";"
             + str(message.Data_16)
+            + ";"
+            + str(message.time_ticks)
             + "\n"
         )
 
@@ -1196,12 +1205,15 @@ class Sensor:
 
 
 class HDF5Dumper:
-    def __init__(self, dscp, file, hdfffilelock, chunksize=2048,correcttimeglitches=True):
+    def __init__(self, dscp, file, hdfffilelock, chunksize=2048,correcttimeglitches=True,ignoreMissmatchErrors=True):
+        self.dscp=dscp
         self.hdflock = hdfffilelock
         self.pushlock = threading.Lock()
         self.dataframindexoffset = 4
         self.chunksize = chunksize
-        self.buffer = np.zeros([20, self.chunksize])
+        self.buffer = np.zeros([16, self.chunksize])
+        self.time_buffer = np.zeros([4,self.chunksize], dtype=np.uint64)
+        self.ticks_buffer = np.zeros( self.chunksize,dtype=np.uint64)
         self.chunkswritten = 0
         self.msgbufferd = 0
         self.lastdatatime=0
@@ -1233,10 +1245,13 @@ class HDF5Dumper:
                     + dscp.SensorName.replace(" ", "_")
                     + " existed allready !"
                 )
+
                 self.Datasets["Absolutetime"] = self.group["Absolutetime"]
                 self.Datasets["Absolutetime_uncertainty"] = self.group[
                     "Absolutetime_uncertainty"
                 ]
+                if(self.dscp.has_time_ticks):
+                    self.Datasets["Time_ticks"] = self.group["Time_ticks"]
                 self.Datasets["Sample_number"] = self.group["Sample_number"]
                 if (self.Datasets["Absolutetime"].shape[1] / self.chunksize) / int(
                     self.Datasets["Absolutetime"].shape[1] / self.chunksize
@@ -1249,61 +1264,102 @@ class HDF5Dumper:
                     self.Datasets["Absolutetime"].shape[1] / self.chunksize
                 )
                 for groupname in self.hieracy:
+                    #TODO add loop over dict with error mesaages for unmatched parirs this will save at least 50 lines code and will be way better readable
                     self.Datasets[groupname] = self.group[groupname]
                     if (
                         not self.Datasets[groupname].attrs["Unit"]
                         == self.hieracy[groupname]["UNIT"]
                     ):
-                        raise RuntimeError(
-                            "Unit missmatch !"
-                            + self.Datasets[groupname].attrs["Unit"]
-                            + " "
-                            + self.hieracy[groupname]["UNIT"]
-                        )
+                        if ignoreMissmatchErrors:
+                            raise RuntimeWarning(
+                                "Unit missmatch !"
+                                + self.Datasets[groupname].attrs["Unit"]
+                                + " "
+                                + self.hieracy[groupname]["UNIT"]
+                            )
+                        else:
+                            raise RuntimeError(
+                                "Unit missmatch !"
+                                + self.Datasets[groupname].attrs["Unit"]
+                                + " "
+                                + self.hieracy[groupname]["UNIT"]
+                            )
 
                     if not (
                         self.Datasets[groupname].attrs["Physical_quantity"]
                         == self.hieracy[groupname]["PHYSICAL_QUANTITY"]
                     ).all():
-                        raise RuntimeError(
-                            "Physical_quantity missmatch !"
-                            + self.Datasets[groupname].attrs["Physical_quantity"]
-                            + " "
-                            + self.hieracy[groupname]["PHYSICAL_QUANTITY"]
-                        )
+                        if ignoreMissmatchErrors:
+                            raise RuntimeWarning(
+                                "Physical_quantity missmatch !"
+                                + self.Datasets[groupname].attrs["Physical_quantity"]
+                                + " "
+                                + self.hieracy[groupname]["PHYSICAL_QUANTITY"]
+                            )
+                        else:
+                            raise RuntimeError(
+                                "Physical_quantity missmatch !"
+                                + self.Datasets[groupname].attrs["Physical_quantity"]
+                                + " "
+                                + self.hieracy[groupname]["PHYSICAL_QUANTITY"]
+                            )
 
                     if not (
-                        self.Datasets[groupname].attrs["Resolution"]
-                        == self.hieracy[groupname]["RESOLUTION"]
+                        np.nan_to_num(self.Datasets[groupname].attrs["Resolution"])
+                        == np.nan_to_num(self.hieracy[groupname]["RESOLUTION"])
                     ).all():
-                        raise RuntimeError(
-                            "Resolution  missmatch !"
-                            + self.Datasets[groupname].attrs["Resolution"]
-                            + " "
-                            + self.hieracy[groupname]["RESOLUTION"]
-                        )
+                        if ignoreMissmatchErrors:
+                            raise RuntimeWarning(
+                                "Resolution  missmatch !"
+                                + str(self.Datasets[groupname].attrs["Resolution"])
+                                + " "
+                                + str(self.hieracy[groupname]["RESOLUTION"])
+                            )
+                        else:
+                            raise RuntimeError(
+                                "Resolution  missmatch !"
+                                + str(self.Datasets[groupname].attrs["Resolution"])
+                                + " "
+                                + str(self.hieracy[groupname]["RESOLUTION"])
+                            )
 
                     if not (
-                        self.Datasets[groupname].attrs["Max_scale"]
-                        == self.hieracy[groupname]["MAX_SCALE"]
+                        np.nan_to_num(self.Datasets[groupname].attrs["Max_scale"])
+                        == np.nan_to_num(self.hieracy[groupname]["MAX_SCALE"])
                     ).all():
-                        raise RuntimeError(
-                            "Max scale missmatch !"
-                            + self.Datasets[groupname].attrs["Max_scale"]
-                            + " "
-                            + self.hieracy[groupname]["MAX_SCALE"]
-                        )
+                        if ignoreMissmatchErrors:
+                            raise RuntimeWarning(
+                                "Max scale missmatch !"
+                                + str(self.Datasets[groupname].attrs["Max_scale"])
+                                + " "
+                                + str(self.hieracy[groupname]["MAX_SCALE"])
+                            )
+                        else:
+                            raise RuntimeError(
+                                "Max scale missmatch !"
+                                + str(self.Datasets[groupname].attrs["Max_scale"])
+                                + " "
+                                + str(self.hieracy[groupname]["MAX_SCALE"])
+                            )
 
                     if not (
-                        self.Datasets[groupname].attrs["Min_scale"]
-                        == self.hieracy[groupname]["MIN_SCALE"]
+                        np.nan_to_num(self.Datasets[groupname].attrs["Min_scale"])
+                        == np.nan_to_num(self.hieracy[groupname]["MIN_SCALE"])
                     ).all():
-                        raise RuntimeError(
-                            "Min scale missmatch !"
-                            + self.Datasets[groupname].attrs["Min_scale"]
-                            + " "
-                            + self.hieracy[groupname]["MIN_SCALE"]
-                        )
+                        if ignoreMissmatchErrors:
+                            raise RuntimeWarning(
+                                "Min scale missmatch !"
+                                + str(self.Datasets[groupname].attrs["Min_scale"])
+                                + " "
+                                + str(self.hieracy[groupname]["MIN_SCALE"])
+                            )
+                        else:
+                            raise RuntimeError(
+                                "Min scale missmatch !"
+                                + str(self.Datasets[groupname].attrs["Min_scale"])
+                                + " "
+                                + str(self.hieracy[groupname]["MIN_SCALE"])
+                            )
             except KeyError:
                 self.group = self.f.create_group(
                     "RAWDATA/" + hex(dscp.ID) + "_" + dscp.SensorName.replace(" ", "_")
@@ -1312,6 +1368,25 @@ class HDF5Dumper:
                 self.group.attrs["Sensor_name"] = dscp.SensorName
                 self.group.attrs["Sensor_ID"] = dscp.ID
                 self.group.attrs["Data_description_json"] = json.dumps(dscp.asDict())
+                self.group.attrs["Data_point_number"]=0
+                if (self.dscp.has_time_ticks):
+                    self.Datasets["Time_Ticks"] = self.group.create_dataset(
+                        "Time_Ticks",
+                        ([1, chunksize]),
+                        maxshape=(1, None),
+                        dtype="uint64",
+                        compression="gzip",
+                        shuffle=True,
+                    )
+                    self.Datasets["Time_Ticks"]
+                    self.Datasets["Time_Ticks"].attrs["Unit"] = "\\one"
+                    self.Datasets["Time_Ticks"].attrs[
+                        "Physical_quantity"
+                    ] = "CPU Ticks since System Start"
+                    self.Datasets["Time_Ticks"].attrs["Resolution"] = np.exp2(64)
+                    self.Datasets["Time_Ticks"].attrs["Max_scale"] = np.exp2(64)
+                    self.Datasets["Time_Ticks"].attrs["Min_scale"] = 0
+
                 self.Datasets["Absolutetime"] = self.group.create_dataset(
                     "Absolutetime",
                     ([1, chunksize]),
@@ -1348,7 +1423,8 @@ class HDF5Dumper:
                 self.Datasets["Absolutetime_uncertainty"].attrs["Max_scale"] = np.exp2(
                     32
                 )
-                self.Datasets["Absolutetime_uncertainty"].attrs["Min_scale"] = 0
+                self.Datasets["Absolutetime_uncertainty"].attrs["Min_scale"] = 0.0
+
                 self.Datasets["Sample_number"] = self.group.create_dataset(
                     "Sample_number",
                     ([1, chunksize]),
@@ -1395,6 +1471,8 @@ class HDF5Dumper:
                     ]["MIN_SCALE"]
                 self.f.flush()
 
+    def __str__(self):
+        return str(self.f)+" "+hex(self.dscp.ID) + "_" + self.dscp.SensorName.replace(" ", "_")+' '+str(self.msgbufferd +self.chunksize * self.chunkswritten)+' msg received'
     def pushmsg(self, message, Description):
         with self.pushlock:
             time=message.unix_time*1e9+message.unix_time_nsecs
@@ -1405,19 +1483,17 @@ class HDF5Dumper:
                 if deltat<-2.5e8:
                     deltains=np.rint((deltat)/1e9)
                     self.timeoffset=self.timeoffset-deltains
-                    warnings.warn("Time difference is negative at IDX"+str(self.msgbufferd+self.chunksize * self.chunkswritten)+"with timme difference "+str(time-self.lastdatatime)+"nanoseconds "+str(deltains)+" in seconds "+str(self.timeoffset)+'accumulated deltat in seconds',category=RuntimeWarning)
+                    warnings.warn("Time difference is negative in Sensor "+self.dscp.SensorName+' ID '+hex(self.dscp.ID)+" at IDX "+str(self.msgbufferd+self.chunksize * self.chunkswritten)+"with timme difference "+str(time-self.lastdatatime)+" ns "+str(deltains)+" in seconds "+str(self.timeoffset)+' accumulated deltat in s',UserWarning)
                 if deltat > 2.5e8:
-                    deltains=np.rint((deltat)/1e9)
-                    self.timeoffset = self.timeoffset-deltains
-                    warnings.warn("Time difference is large positive at IDX"+str(self.msgbufferd+self.chunksize * self.chunkswritten)+"with timme difference "+str(time-self.lastdatatime)+"nanoseconds "+str(deltains)+" in seconds "+str(self.timeoffset)+'accumulated deltat in seconds. Accumulated deltat will be set to 0')
-                    self.timeoffset=0
+                    if self.timeoffset<0:
+                        deltains=np.rint((deltat)/1e9)
+                        self.timeoffset = self.timeoffset-deltains
+                        if self.timeoffset!=0:
+                            warnings.warn("Time difference is large positive in Sensor "+self.dscp.SensorName+' ID '+hex(self.dscp.ID)+"at IDX "+str(self.msgbufferd+self.chunksize * self.chunkswritten)+"with timme difference "+str(time-self.lastdatatime)+" ns "+str(deltains)+" in seconds "+str(self.timeoffset)+' accumulated deltat in seconds. Accumulated deltat will be set to 0',UserWarning)
+                        self.timeoffset=0
             self.lastdatatime=message.unix_time*1e9+message.unix_time_nsecs#store last timestamp for consysty check of time
             self.buffer[:, self.msgbufferd] = np.array(
                 [
-                    message.sample_number,
-                    message.unix_time+self.timeoffset,
-                    message.unix_time_nsecs,
-                    message.time_uncertainty+self.uncerpenaltyfortimeerrorns*self.timeoffset,
                     message.Data_01,
                     message.Data_02,
                     message.Data_03,
@@ -1436,23 +1512,33 @@ class HDF5Dumper:
                     message.Data_16,
                 ]
             )
-
+            self.time_buffer[:, self.msgbufferd] = np.array([
+                message.sample_number,
+                message.unix_time + self.timeoffset,
+                message.unix_time_nsecs,
+                message.time_uncertainty + self.uncerpenaltyfortimeerrorns * self.timeoffset])
+            self.ticks_buffer[self.msgbufferd] = message.time_ticks
             self.msgbufferd = self.msgbufferd + 1
             if self.msgbufferd == self.chunksize:
+                #print(hex(self.dscp.ID)+"waiting for lock "+str(self.hdflock))
                 with self.hdflock:
+                    #print(hex(self.dscp.ID)+"Aquired lock " + str(self.hdflock))
                     startIDX = self.chunksize * self.chunkswritten
                     #print("Start index is " + str(startIDX))
                     self.Datasets["Absolutetime"].resize([1, startIDX + self.chunksize])
                     time = (
-                        self.buffer[1, :] * 1e9
-                        + self.buffer[2, : startIDX + self.chunksize]
-                    ).astype(np.uint64)
+                        self.time_buffer[1, :] * 1000000000
+                        + self.time_buffer[2, : startIDX + self.chunksize]
+                    )
                     self.Datasets["Absolutetime"][:, startIDX:] = time
+                    if (self.dscp.has_time_ticks):
+                        self.Datasets["Time_Ticks"].resize([1, startIDX + self.chunksize])
+                        self.Datasets["Time_Ticks"][:, startIDX:] = self.ticks_buffer
 
                     self.Datasets["Absolutetime_uncertainty"].resize(
                         [1, startIDX + self.chunksize]
                     )
-                    Absolutetime_uncertainty = self.buffer[3, :].astype(np.uint32)
+                    Absolutetime_uncertainty = self.time_buffer[3, :].astype(np.uint32)
                     self.Datasets["Absolutetime_uncertainty"][
                         :, startIDX:
                     ] = Absolutetime_uncertainty
@@ -1465,7 +1551,7 @@ class HDF5Dumper:
                     self.Datasets["Sample_number"].resize(
                         [1, startIDX + self.chunksize]
                     )
-                    samplenumbers = self.buffer[0, :].astype(np.uint32)
+                    samplenumbers = self.time_buffer[0, :].astype(np.uint32)
                     self.Datasets["Sample_number"][:, startIDX:] = samplenumbers
 
                     for groupname in self.hieracy:
@@ -1476,7 +1562,7 @@ class HDF5Dumper:
                         data = self.buffer[
                             (
                                 self.hieracy[groupname]["copymask"]
-                                + self.dataframindexoffset
+                                #+ self.dataframindexoffset
                             ),
                             :,
                         ].astype("float32")
@@ -1484,7 +1570,63 @@ class HDF5Dumper:
                     # self.f.flush()
                     self.msgbufferd = 0
                     self.chunkswritten = self.chunkswritten + 1
+                    self.group.attrs["Data_point_number"] = self.chunkswritten*self.chunksize
+                    self.buffer.fill(np.NaN)
+                    self.ticks_buffer.fill(np.NaN)
+                    self.buffer[0:4,:]=np.zeros([4,self.chunksize])
 
+
+    def wirteRemainingToHDF(self):
+        warnings.warn('WARNING will generate zeros in the end of the data file if callback is active there will be an gap in the file ')
+        with self.hdflock:
+            startIDX = self.chunksize * self.chunkswritten
+            # print("Start index is " + str(startIDX))
+            self.Datasets["Absolutetime"].resize([1, startIDX + self.chunksize])
+            time = (
+                    self.time_buffer[1, :] * 1000000000
+                    + self.time_buffer[2, : startIDX + self.chunksize]
+            ).astype(np.uint64)
+            self.Datasets["Absolutetime"][:, startIDX:] = time
+            if (self.dscp.has_time_ticks):
+                self.Datasets["Time_Ticks"].resize([1, startIDX + self.chunksize])
+                self.Datasets["Time_Ticks"][:, startIDX:] = self.ticks_buffer
+
+            self.Datasets["Absolutetime_uncertainty"].resize(
+                [1, startIDX + self.chunksize]
+            )
+            Absolutetime_uncertainty = self.time_buffer[3, :].astype(np.uint32)
+            self.Datasets["Absolutetime_uncertainty"][
+            :, startIDX:
+            ] = Absolutetime_uncertainty
+            if not self.startimewritten:
+                self.group.attrs["Start_time"] = time[0]
+                self.group.attrs[
+                    "Start_time_uncertainty"
+                ] = Absolutetime_uncertainty[0]
+                self.startimewritten = True
+            self.Datasets["Sample_number"].resize(
+                [1, startIDX + self.chunksize]
+            )
+            samplenumbers = self.buffer[0, :].astype(np.uint32)
+            self.Datasets["Sample_number"][:, startIDX:] = samplenumbers
+
+            for groupname in self.hieracy:
+                vectorlength = len(self.hieracy[groupname]["copymask"])
+                self.Datasets[groupname].resize(
+                    [vectorlength, startIDX + self.chunksize]
+                )
+                data = self.buffer[
+                       (
+                               self.hieracy[groupname]["copymask"]
+                               #+ self.dataframindexoffset
+                       ),
+                       :,
+                       ].astype("float32")
+                self.Datasets[groupname][:, startIDX:] = data
+            self.f.flush()
+            self.group.attrs["Data_point_number"] = self.group.attrs["Data_point_number"] + self.msgbufferd
+            self.msgbufferd = 0
+            self.chunkswritten = self.chunkswritten + 1
 
 def startdumpingallsensorshdf(filename):
     hdfdumplock = threading.Lock()
@@ -1492,7 +1634,7 @@ def startdumpingallsensorshdf(filename):
     hdfdumper = []
     for SensorID in DR.AllSensors:
         hdfdumper.append(
-            HDF5Dumper(DR.AllSensors[SensorID].Description, hdfdumpfile, hdfdumplock)
+            HDF5Dumper(DR.AllSensors[SensorID].Description, hdfdumpfile, hdfdumplock,chunksize=1024,correcttimeglitches=False)
         )
         DR.AllSensors[SensorID].SetCallback(hdfdumper[-1].pushmsg)
     return hdfdumper, hdfdumpfile
@@ -1502,11 +1644,21 @@ def stopdumpingallsensorshdf(dumperlist, dumpfile):
     for SensorID in DR.AllSensors:
         DR.AllSensors[SensorID].UnSetCallback()
     for dumper in dumperlist:
+        print("closing"+str(dumper))
+        dumper.wirteRemainingToHDF()
         dumper.f.flush()
         del dumper
     dumpfile.close()
 
 
+    #for dumper in dumperlist:
+    #    print(str(dumper))
+
+
+
 if __name__ == "__main__":
     DR = DataReceiver("192.168.0.200", 7654)
-    # hdfdumpfile = h5py.File("multi_position_4.hdf5", 'w')
+    #time.sleep(10)
+    #dumperlist,file=startdumpingallsensorshdf("tetratest_2.hfd5")
+    #time.sleep(15)
+    #stopdumpingallsensorshdf(dumperlist,file)

@@ -8,6 +8,3 @@ nbsphinx
 recommonmark
 sphinx_rtd_theme
 nbval
-# This pinning is needed, since more current versions of Python (> 3.6) are less
-# compatible with more current versions of this package.
-dataclasses<=0.6

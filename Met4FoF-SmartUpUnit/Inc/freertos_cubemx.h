@@ -76,11 +76,26 @@ extern "C" {
 //#include "lwip/udp.h"
 #include "lwip.h"
 #include "SEGGER_RTT.h"
-#include <GPSTimesyn.hpp>
 #include "tim64extender.h"
 #define VERSION_MAJOR 0
-#define VERSION_MINOR 4
-#define VERSION_PATCH 0
+#define VERSION_MINOR 7
+#define VERSION_PATCH 2
+const uint8_t UDP_TARGET_DEFAULT_IP_ADDRESS[4] = { 192, 168, 0, 200 };
+
+
+#define NMEABUFFERSIZE 3
+#define NMEBUFFERLEN 900
+#define NMEAMINLEN 9
+#define MAXNEMASENTENCECOUNT NMEBUFFERLEN/NMEAMINLEN
+
+
+typedef struct {
+	uint64_t RawTimerCount;
+	uint32_t CaptureCount;
+	uint8_t NMEAMessage[NMEBUFFERLEN]; //248 3 NMEA Sentences
+	HAL_StatusTypeDef GPSUARTDMA_START_result; // result of the DMA start call
+}NMEASTamped;
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -93,7 +108,7 @@ extern "C" {
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define DATAMAILBUFFERSIZE 64
+#define DATAMAILBUFFERSIZE 128
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -109,7 +124,8 @@ extern osThreadId blinkTID;
 extern osThreadId WebServerTID;
 extern osThreadId LCDTID;
 extern osThreadId DataStreamerTID;
-
+extern osThreadId TempSensorTID;
+extern osThreadId NmeaParserTID;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -122,10 +138,13 @@ extern void StartBlinkThread(void const * argument);
 void StartLCDThread(void const * argument);
 void StartDataStreamerThread(void const * argument);
 void StartTempSensorThread(void const * argument);
+void StartNmeaParserThread(void const * argument);
 extern void MX_LWIP_Init(void);
 extern void MX_FATFS_Init(void);
 
 void MX_FREERTOS_Init(void);
+
+void NTP_time_CNT_update(time_t t,uint32_t us);
 
 /* (MISRA C 2004 rule 8.1) */
 #ifdef __cplusplus
