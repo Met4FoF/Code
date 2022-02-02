@@ -367,9 +367,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - PyDynamic-v1-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
+            - PyDynamic-v2-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - PyDynamic-v1
+            - PyDynamic-v2
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -380,12 +380,13 @@ jobs:
             pip install --upgrade pip pip-tools
             pip-sync PyDynamic/requirements/requirements-py38.txt \
                 PyDynamic/requirements/dev-requirements-py38.txt
+            pip install ./PyDynamic
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            PyDynamic-v1-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
+            PyDynamic-v2-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
