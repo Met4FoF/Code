@@ -1,3 +1,4 @@
+<img src="https://www.ptb.de/empir2018/fileadmin/documents/empir/Met4FoF/images/AM4FoF_Logo.svg" alt="agentMET4FOF logo">
 <p align="center">
   <!-- CircleCI Tests -->
   <a href="https://circleci.com/gh/Met4FoF/agentMET4FOF"><img alt="CircleCI pipeline
@@ -25,6 +26,9 @@
   <!-- Contributor Covenant -->
   <a href="https://github.com/Met4FoF/agentMET4FOF/blob/develop/CODE_OF_CONDUCT.md">
     <img src="https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg" alt="Contributor Covenant"></a>
+  <!-- Docker Hub -->
+  <a href="https://hub.docker.com/r/met4fof/agentmet4fof">
+    <img src="https://img.shields.io/docker/pulls/met4fof/agentmet4fof.svg" alt="Docker Hub badge"></a>
 </p>
 
 # Multi-Agent System for IIoT
@@ -146,6 +150,11 @@ Some notable features of agentMET4FOF include :
   - View and change the agents' parameters
   - View the agents' outputs as plotly or matplotlib plots or generate and embed your 
     own images  
+- Generic streams and agents that can be used as starting points in simulations
+  - A sine generator with an associated agent
+  - A generator for a sine signal with jitter dynamically or with fixed length
+  - A white noise agent
+  - A metrologically enabled sine generator agent which also handles measurement uncertainties
 
 ## 📈The agentMET4FOF dashboard
 
@@ -246,8 +255,8 @@ take a look at the [project board](https://github.com/Met4FoF/agentMET4FOF/proje
 ## 🖋Citation
 
 If you publish results obtained with the help of agentMET4FOF, please cite the linked
-[![](https://zenodo.org/badge/DOI/10.5281/zenodo.4560344.svg)
-](https://doi.org/10.5281/zenodo.4560344).
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.4560343.svg)
+](https://doi.org/10.5281/zenodo.4560343).
 
 ## 💎Acknowledgement
 
