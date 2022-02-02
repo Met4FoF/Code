@@ -1,191 +1,189 @@
-# Python CircleCI 2.1 configuration file
-#
 # Check https://circleci.com/docs/2.0/language-python/ for more details
-#
 version: 2.1
 
 executors:
-  # Define a parameterized executor which accepts two parameters to choose the python
-  # version which will be used for the docker image and the tox actions.
   venv_tester:
     working_directory: ~/repo
     parameters:
       tag:
         type: string
-        default: "3.8"
+        default: "3.10"
     docker:
-      - image: circleci/python:<< parameters.tag >>
+      - image: cimg/python:<< parameters.tag >>
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
   conda_tester:
     working_directory: ~/repo
     docker:
       - image: cimg/base:2021.04
-  # Define the executor for the Python semantic release.
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
   publisher:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/python:3.9
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
+    environment:
+      PYENV: "py310"
+  tweeter:
     working_directory: ~/repo
     parameters:
       tag:
         type: string
-        default: "3.8"
+        default: "3.10"
       pyenv:
         type: string
-        default: "py38"
+        default: "py310"
     docker:
-      - image: circleci/python:<< parameters.tag >>
+      - image: cimg/python:<< parameters.tag >>
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
     environment:
       PYENV: << parameters.pyenv >>
-
-commands:
-  # Reusable command to prepare the environment for testing.
-  create_folders:
-    description: "Checkout code and prepare test results location."
-    steps:
-    # Checkout code.
-    - checkout
-    # Create test-result folder.
-    - run:
-        name: Create test result folder
-        command: |
-          mkdir test-results
-
-  # Reusable command to prepare the environment for testing.
-  create_venv:
-    description: "Prepare virtual environment."
-    steps:
-    # Create PyDynamic virtual environment.
-    - run:
-        name: Create virtual environment
-        command: |
-          python3 -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip setuptools
-
-  # Reusable command to install production dependencies.
-  install_production_deps:
-    description: "Install production dependencies."
-    parameters:
-      pyenv:
-        type: string
-        default: "py38"
-    steps:
-
-    # Install dependencies.
-    - run:
-        name: Install production dependencies
-        command: |
-          source venv/bin/activate
-          pip install -r requirements/requirements-<< parameters.pyenv >>.txt
-
-  # Reusable command to install development dependencies.
-  install_development_deps:
-    description: "Install development dependencies."
-    parameters:
-      pyenv:
-        type: string
-        default: "py38"
-    steps:
-
-    # Install dependencies.
-    - run:
-        name: Install development dependencies
-        command: |
-          source venv/bin/activate
-          pip install -r requirements/dev-requirements-<< parameters.pyenv >>.txt
-
-  # Reusable command to conduct actual testing.
-  tox:
-    description: "Perform tox testing."
-    parameters:
-      pyenv:
-        type: string
-      posargs:
-        type: string
-        default: ""
-    steps:
-
-    # Perform tox testing.
-    - run:
-        name: Perform tox testing
-        command: |
-          source venv/bin/activate
-          tox -e << parameters.pyenv >> << parameters.posargs >>
-
-  # Reusable command to store the previously generated test results.
-  store_results:
-    description: "Store test results."
-    steps:
-    - store_test_results:
-        path: test-results
+  gh_releaser:
+    working_directory: ~/repo
+    docker:
+      - image: cimg/base:2021.04
+        auth:
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
 
 workflows:
+
+  check_for_upgraded_deps:
+    triggers:
+      - schedule:
+          cron: "0 0 1 * *"
+          filters:
+            branches:
+              only: /master/
+    jobs:
+      - test_with_updated_deps:
+          name: "test_with_updated_deps_py37"
+          tag: "3.7"
+          toxenvs: "py37"
+          context:
+            - Docker publishing as bludoc
+      - test_with_updated_deps:
+          name: "test_with_updated_deps_py38"
+          tag: "3.8"
+          toxenvs: "py38"
+          context:
+            - Docker publishing as bludoc
+      - test_with_updated_deps:
+          name: "test_with_updated_deps_py39"
+          tag: "3.9"
+          toxenvs: "py39"
+          context:
+            - Docker publishing as bludoc
+      - test_with_updated_deps:
+          name: "test_with_updated_deps_py310"
+          tag: "3.10"
+          toxenvs: "py310"
+          context:
+            - Docker publishing as bludoc
+      - commit_push_open_pr:
+          requires:
+            - test_with_updated_deps_py37
+            - test_with_updated_deps_py38
+            - test_with_updated_deps_py39
+            - test_with_updated_deps_py310
+          context:
+            - Docker publishing as bludoc
+            - GitHub pushes to BjoernLudwigPTB's public_repos
+
   nightly_test:
     triggers:
       - schedule:
-          cron: "0 0 * * *"
+          cron: "0 0 8,15,22 * *"
           filters:
             branches:
-              only: /.*/
+              only: /master/
     jobs:
-      # Create 'test' job to test PyDynamic every night thoroughly.
-      - test:
-          name: "nightly_test_python_py36"
-          tag: "3.6"
-          pyenv: "py36"
-          posargs: "-- ''"
       - test:
           name: "nightly_test_python_py37"
           tag: "3.7"
-          pyenv: "py37"
-          posargs: "-- ''"
+          toxenvs: "py37 -e py37-without_requirements"
+          context:
+            - Docker publishing as bludoc
       - test:
           name: "nightly_test_python_py38"
           tag: "3.8"
-          pyenv: "py38"
-          posargs: "-- ''"
+          toxenvs: "py38 -e py38-without_requirements"
+          context:
+            - Docker publishing as bludoc
       - test:
           name: "nightly_test_python_py39"
           tag: "3.9"
-          pyenv: "py39"
-          posargs: "-- ''"
-      - test_conda_py38:
-          name: "nightly_test_conda_py38"
-          posargs: "-- ''"
+          toxenvs: "py39 -e py39-without_requirements"
+          context:
+            - Docker publishing as bludoc
+      - test:
+          name: "nightly_test_python_py310"
+          tag: "3.10"
+          toxenvs: "py310 -e py310-without_requirements"
+          context:
+            - Docker publishing as bludoc
+      - test_conda_py39:
+          context:
+            - Docker publishing as bludoc
 
-  # Create workflow for testing and deploying PyDynamic.
+  quick_test:
+    jobs:
+      - test:
+          tag: "3.10"
+          toxenvs: "py310-without_requirements"
+          posargs: "-- -m 'not slow'"
+          parallelism: 4
+          context:
+            - Docker publishing as bludoc
+
   test_and_deploy:
     jobs:
-      # Create 'test' job to test and install PyDynamic for every commit.
-      - test:
-          name: "test_python_py36"
-          tag: "3.6"
-          pyenv: "py36"
       - test:
           name: "test_python_py37"
           tag: "3.7"
-          pyenv: "py37"
-          send_cov: true
+          toxenvs: "py37-without_requirements"
+          context:
+            - Docker publishing as bludoc
       - test:
           name: "test_python_py38"
           tag: "3.8"
-          pyenv: "py38"
+          toxenvs: "py38-without_requirements"
+          context:
+            - Docker publishing as bludoc
       - test:
           name: "test_python_py39"
           tag: "3.9"
-          pyenv: "py39"
-      - test_conda_py38:
-          requires:
-            - test_python_py38
+          toxenvs: "py39-without_requirements"
+          context:
+            - Docker publishing as bludoc
+      - test:
+          name: "test_python_py310"
+          tag: "3.10"
+          toxenvs: "py310-without_requirements"
+          context:
+            - Docker publishing as bludoc
+      - test_conda_py39:
+          context:
+            - Docker publishing as bludoc
       - preview_release:
-          # Test the 'release' job to avoid trouble when Pull Requests get merged and
-          # to preview publishing actions and the new changelog.
           requires:
-            - test_python_py36
             - test_python_py37
             - test_python_py38
             - test_python_py39
-            - test_conda_py38
+            - test_python_py310
+            - test_conda_py39
           filters:
             branches:
               ignore: /.*dev$/
+          context:
+            - Docker publishing as bludoc
       - confirm_previewed_release_actions:
           # This job allows for checking that the release we will create in the
           # next step actually is the desired release, by observing the result of
@@ -195,8 +193,9 @@ workflows:
             - preview_release
           filters:
             branches:
-              # This assures the job only being triggered on branch master.
               only: /master/
+          context:
+            - Docker publishing as bludoc
       - release:
           # Job to potentially create a release based on python-semantic-release's
           # decision and publish it on GitHub, Zenodo and PyPI.org. This requires manual
@@ -205,10 +204,177 @@ workflows:
           context:
             - pypi.org publishing for PyDynamic
             - GitHub pushes to BjoernLudwigPTB's public_repos
+            - Docker publishing as bludoc
           requires:
             - confirm_previewed_release_actions
+      - tweet:
+          context:
+            - Twitter.com publish release
+            - Docker publishing as bludoc
+          requires:
+            - release
+
+commands:
+  create_result_folder:
+    description: "Checkout code and prepare test results location."
+    steps:
+    - checkout
+    - run:
+        name: Create test result folder
+        command: |
+          mkdir test-results
+
+  create_venv:
+    description: "Prepare virtual environment."
+    steps:
+    - run:
+        name: Create virtual environment
+        command: |
+          python3 -m venv venv
+          source venv/bin/activate
+          python -m pip install --upgrade pip==21.3.0
+
+  split_tests:
+    description: "Split tests for shared execution."
+    steps:
+    - run:
+        name: Split tests for shared execution
+        command: |
+          set -e
+          echo 'export TEST_FILES=$(circleci tests glob "test/**/test_*.py" | \
+            circleci tests split --split-by=timings)' >> $BASH_ENV
+
+  install_development_deps:
+    description: "Install development dependencies."
+    parameters:
+      pyenv:
+        type: string
+        default: "py310"
+    steps:
+
+    - run:
+        name: Install development dependencies
+        command: |
+          source venv/bin/activate
+          pip install -r requirements/dev-requirements-<< parameters.pyenv >>.txt
+
+  tox:
+    description: "Perform tox testing."
+    parameters:
+      toxenvs:
+        type: string
+        default: ""
+      posargs:
+        type: string
+        default: ""
+      tests:
+        type: string
+        default: ""
+    steps:
+
+    - run:
+        name: Perform tox testing
+        no_output_timeout: 60m
+        command: |
+          source venv/bin/activate
+          tox -e << parameters.toxenvs >> << parameters.posargs >> \
+            << parameters.tests >>
+
+  store_results:
+    description: "Store test results."
+    steps:
+    - store_test_results:
+        path: test-results
 
 jobs:
+
+  test_with_updated_deps:
+    parameters:
+      tag:
+        type: string
+        default: "3.10"
+      toxenvs:
+        type: string
+        default: "py310"
+      posargs:
+        type: string
+        default: ""
+
+    parallelism: 8
+
+    executor:
+      name: venv_tester
+      tag: << parameters.tag >>
+
+    steps:
+      - create_result_folder
+      - create_venv
+      - run:
+          name: Recompile and sync deps
+          command: |
+            source venv/bin/activate
+            python -m pip install --upgrade tox pip-tools
+            python -m piptools compile --upgrade \
+              --output-file requirements/requirements-<< parameters.toxenvs >>.txt
+            python -m piptools compile --upgrade \
+              requirements/dev-requirements-<< parameters.toxenvs >>.in \
+              --output-file requirements/dev-requirements-<< parameters.toxenvs >>.txt
+            python -m piptools sync \
+              requirements/requirements-<< parameters.toxenvs >>.txt \
+              requirements/dev-requirements-<< parameters.toxenvs >>.txt
+            python -m pip install .
+      - split_tests
+      - tox:
+          toxenvs: << parameters.toxenvs >>
+          tests: ${TEST_FILES}
+      - store_results
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - requirements/requirements-<< parameters.toxenvs >>.txt
+            - requirements/dev-requirements-<< parameters.toxenvs >>.txt
+
+  commit_push_open_pr:
+    executor:
+      name: gh_releaser
+
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Commit and push changes
+          command: |
+            git config --global user.name "Bjoern Ludwig (via CircleCI)"
+            git config --global user.email "bjoern.ludwig@ptb.de"
+            NEW_BRANCH=recompile_deps
+            git checkout -b ${NEW_BRANCH}
+            git commit -am \
+              "build(deps): recompile Python (dev) deps"
+            git push -u origin  ${NEW_BRANCH}
+
+      - run:
+          name: Install GitHub CLI
+          command: |
+            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | \
+              sudo dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) \
+              signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] \
+              https://cli.github.com/packages stable main" | \
+              sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+            sudo apt update
+            sudo apt install gh
+
+      - run:
+          name: Open PR
+          command: |
+            gh pr create --base master --title "Update deps" \
+              --body "This PR provides recompiled deps for all outdated package \
+              versions. It was opened after the commited deps were succesfully \
+              compiled and all tests passed with the new versions. It should be \
+              merged as soon as possible to avoid any security issues due to \
+              outdated dependencies."
 
   # Define one 'test' job with parameters to deal with all desired cases. The
   # reason for this is the desire to ensure the following for all supported Python
@@ -216,84 +382,54 @@ jobs:
   #
   # - all tests are guaranteed to pass
   # - PyDynamic with respect to its `setup.py` successfully installs
-  #
-  # Additionally we want to create one coverage report during all these tests (which are
-  # of course the same for all versions).
   test:
-    # Define all parameters, where 'tag' is used for the docker image and 'pyenv' is
-    # the string which is used in tox to identify the current Python version. We reuse
-    # this variable basically everywhere we deal with the virtual environment.
-    # 'send_cov' is the conditional for either sending the produced coverage report
-    # to codecov or not. 'posargs' will be handed over to the commands of
-    # tox step. We use this to extend the default test suite execution from only
-    # those tests not marked with 'slow' to all tests during the nightly scheduled
-    # pipeline runs.
+    # Define all parameters, where 'tag' is used for the docker image and 'toxenvs' is
+    # the string which is used in tox to identify the desired entries of envlist.
+    # 'posargs' will be handed over to the commands of tox step. We use this to
+    # extend the default test suite execution from only those tests not marked with
+    # 'slow' to all tests during the nightly scheduled pipeline runs.
     parameters:
       tag:
         type: string
-        default: "3.8"
-      pyenv:
+        default: "3.10"
+      toxenvs:
         type: string
-        default: "py38"
-      send_cov:
-        type: boolean
-        default: false
+        default: ""
       posargs:
         type: string
         default: ""
+      parallelism:
+        type: integer
+        default: 8
 
-    # Specify the executor and hand over the docker image tag parameter.
+    parallelism: << parameters.parallelism >>
+
     executor:
       name: venv_tester
       tag: << parameters.tag >>
 
-    # Specify the steps to execute during this test jobs.
     steps:
-      - create_folders
+      - create_result_folder
       - create_venv
-      - install_production_deps:
-          pyenv: << parameters.pyenv >>
-      - install_development_deps:
-          pyenv: << parameters.pyenv >>
+      - run:
+          name: Install tox
+          command: |
+            source venv/bin/activate
+            pip install tox
+      - split_tests
       - tox:
-          pyenv: << parameters.pyenv >>
+          toxenvs: << parameters.toxenvs >>
           posargs: << parameters.posargs >>
+          tests: ${TEST_FILES}
       - store_results
 
-      # Upload coverage report if the according parameter is set to `true`.
-      - when:
-          condition: << parameters.send_cov >>
-          steps:
-            - run:
-                name: Upload coverage report
-                command: |
-                  source venv/bin/activate
-                  curl -s https://codecov.io/bash > codecov;
-                  VERSION=$(grep -o 'VERSION=\"[0-9\.]*\"' codecov | cut -d'"' -f2);
-                  for i in 1 256 512
-                  do
-                    shasum -a $i -c --ignore-missing <(curl -s "https://raw.githubusercontent.com/codecov/codecov-bash/${VERSION}/SHA${i}SUM") ||
-                    shasum -a $i -c <(curl -s "https://raw.githubusercontent.com/codecov/codecov-bash/${VERSION}/SHA${i}SUM")
-                  done
-                  chmod u+x codecov
-                  ./codecov
-
-  # Define one 'test' job to run the test suite against the
-  # installed dependencies from the environment.yml.
-  test_conda_py38:
-    # Define all parameters, where 'posargs' will be handed over to the commands of
-    # the tox step. We use this to extend the default test suite execution from only
-    # those tests not marked with 'slow' to all tests during the nightly scheduled
-    # pipeline runs.
-    parameters:
-      posargs:
-        type: string
-        default: ""
+  test_conda_py39:
+    parallelism: 8
 
     executor: conda_tester
 
     steps:
-      - create_folders
+      - create_result_folder
       - run:
           name: Install Miniconda
           command: |
@@ -307,15 +443,11 @@ jobs:
             conda update -q conda
             echo 'export PATH=$HOME/conda/bin:$PATH' >> $BASH_ENV
 
-      # Download and cache dependencies.
       - restore_cache:
           keys:
-            # Specify the unique identifier for the cache.
-            - v1-conda-dependencies-{{ checksum "requirements/environment.yml" }}-{{ checksum "requirements/requirements.txt" }}-{{ checksum "requirements/dev-requirements.txt" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - v1-conda-dependencies-
+            - v4-conda-dependencies-{{ checksum "requirements/environment.yml" }}-{{ checksum "requirements/requirements.txt" }}
+            - v4-conda-dependencies-
 
-      # Create environment and install extra_requires dependencies manually.
       - run:
           name: Create or update environment
           command: |
@@ -326,21 +458,35 @@ jobs:
             fi
             source $HOME/conda/etc/profile.d/conda.sh
             conda activate PyDynamic_conda_env
-            pip install -r requirements/dev-requirements.txt
+            conda install pytest pytest-cov hypothesis
 
       - save_cache:
           paths:
             - /home/circleci/conda/envs/
           key: >-
-            v1-conda-dependencies-{{ checksum "requirements/environment.yml" }}-{{ checksum "requirements/requirements.txt" }}-{{ checksum "requirements/dev-requirements.txt" }}
+            v4-conda-dependencies-{{ checksum "requirements/environment.yml" }}-{{ checksum "requirements/requirements.txt" }}
 
-      # Run tests! We use pytest's test-runner.
+      - split_tests
+
       - run:
           name: Run tests
+          no_output_timeout: 60m
           command: |
             source $HOME/conda/etc/profile.d/conda.sh
             conda activate PyDynamic_conda_env
-            tox << parameters.posargs >>
+            pytest --cov=PyDynamic --junitxml=test-results/junit.xml ${TEST_FILES}
+      - run:
+          name: Upload coverage report
+          command: |
+            curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
+            curl -Os \
+              https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
+            gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
+            shasum -a 256 -c codecov.SHA256SUM
+            chmod +x codecov
+            ./codecov
 
       - store_results
 
@@ -349,14 +495,11 @@ jobs:
       name: publisher
 
     steps:
-      - create_folders
+      - create_result_folder
       - create_venv
-      - install_production_deps:
-          pyenv: ${PYENV}
       - install_development_deps:
           pyenv: ${PYENV}
 
-      # Publish it, if there is anything to publish!
       - run:
           name: Run semantic-release publish
           command: |
@@ -370,15 +513,34 @@ jobs:
       name: publisher
 
     steps:
-      - create_folders
+      - create_result_folder
       - create_venv
-      - install_production_deps:
-          pyenv: ${PYENV}
       - install_development_deps:
           pyenv: ${PYENV}
 
-      # Fake publish, just to make sure everything works after merging a PR and
-      # before actual release jos run.
+      - run:
+          name: Generate file with tweet's content
+          command: |
+            source venv/bin/activate
+            new_version=$(semantic-release print-version)
+            if [ -z $new_version ]; then
+              rm -f tweet.txt
+              touch tweet.txt
+            else
+              echo "The generated tweet will be:"
+              echo "#PyDynamic "$new_version" just got released by \
+                  #PhysikalischTechnischeBundesanstalt! \
+                  Find out more about propagation \
+                  of #measurementuncertainty in #dynamicmeasurements on \
+                  https://github.com/PTB-M4D/PyDynamic/" \
+                  | tr -s ' ' | tee tweet.txt
+            fi
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - tweet.txt
+
       - run:
           name: Preview python-semantic-release actions
           command: |
@@ -398,3 +560,22 @@ jobs:
             python-semantic-release would perform the following actions:
             "
             semantic-release --noop publish
+
+  tweet:
+    executor:
+      name: tweeter
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+
+      - create_venv
+      - install_development_deps:
+          pyenv: ${PYENV}
+      - run:
+          name: Tweet on new releases
+          command: |
+            if [[ -s tweet.txt ]]; then
+              source venv/bin/activate
+              python setup.py tweet
+            fi
