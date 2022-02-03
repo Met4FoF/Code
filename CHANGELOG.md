@@ -2,6 +2,16 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.0 (2022-02-03)
+### :sparkles:
+* :sparkles: Update Met4FoF-SmartUpUnit to v3 and more recent Numpy version  ([`3a89b32`](https://github.com/Met4FoF/Code/commit/3a89b32641bce3520562f36437ef56a0c6163a34))
+* :sparkles: Update agentMET4FOF to version 0.13.1, thus fix math agent in tutorial 2  ([`5407d1b`](https://github.com/Met4FoF/Code/commit/5407d1b277388c3b146af313e53512d32e95a0e9))
+
+### :lock:
+* :lock: Recompile all dependencies to most current versions  ([`240f5f7`](https://github.com/Met4FoF/Code/commit/240f5f71a380658abfb952ee98673c62bd011b6e))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.15.0...v0.16.0)**
+
 ## v0.15.0 (2021-08-27)
 ### :chart_with_upwards_trend:
 * :chart_with_upwards_trend: Update agentMET4FOF from 0.8.1 to 0.12.0 and thus introduce several new features  ([`cd857f7`](https://github.com/Met4FoF/Code/commit/cd857f7b5a029a53b6c6a12ff210137d44e93e7b))
