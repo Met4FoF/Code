@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.1 (2022-02-03)
+### :bug:
+* :bug: Update agentMET4FOF to v0.13.2 and thus introduce bug fix for invalid Mesa agent names  ([`6837e59`](https://github.com/Met4FoF/Code/commit/6837e590f2e7c6324a1c78a90d9bc942e08dafb2))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.16.0...v0.16.1)**
+
 ## v0.16.0 (2022-02-03)
 ### :sparkles:
 * :sparkles: Update Met4FoF-SmartUpUnit to v3 and more recent Numpy version  ([`3a89b32`](https://github.com/Met4FoF/Code/commit/3a89b32641bce3520562f36437ef56a0c6163a34))
