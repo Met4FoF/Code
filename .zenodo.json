@@ -1,5 +1,11 @@
 {
   "upload_type": "software",
+  "communities": [
+    {
+      "identifier": "met4fof"
+    }
+  ],
+  "access_right": "open",
   "creators": [
     {
       "name": "Ludwig, Björn",
@@ -48,8 +54,7 @@
       "affiliation": "(IMBiH) Institute of Metrology of Bosnia and Herzegovina"
     },
     {
-      "name": "Aminian, Majid",
-      "affiliation": "(IMBiH) Institute of Metrology of Bosnia and Herzegovina"
+      "name": "Aminian, Majid"
     },
     {
       "name": "Weber, Martin",
@@ -57,8 +62,7 @@
       "orcid": "0000-0001-5919-5808"
     },
     {
-      "name": "Sieberer, Michael",
-      "affiliation": "(IMBiH) Institute of Metrology of Bosnia and Herzegovina"
+      "name": "Sieberer, Michael"
     },
     {
       "name": "Wagenschütz, Julian"
