@@ -79,11 +79,15 @@
   ],
   "license": "LGPLv3",
   "keywords": [
+    "Digitalization",
+    "EMPIR",
+    "European Union (EU)",
+    "Measurement Uncertainty",
+    "Metrology",
+    "Sensor Network",
     "Met4FoF",
     "IIoT",
-    "Metrology",
-    "agent-based model",
-    "SmartUpUnit"
+    "Agent-Based Model"
   ],
   "language": "eng"
 }
