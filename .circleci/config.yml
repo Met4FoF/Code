@@ -356,7 +356,7 @@ jobs:
   test_PyDynamic:
     executor: tester
 
-    parallelism: 8
+    parallelism: 16
 
     # Specify the steps to execute during this test jobs.
     steps:
