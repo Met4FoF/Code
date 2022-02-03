@@ -65,7 +65,7 @@ subfolder `Code`.
 
 Whenever you want to get the latest changes, navigate into your local repository folder (i.e. `~/your/local/folder/Met4FoF_Code`) and execute the command
 
-`$ git pull origin master`
+`$ git pull origin main`
 
 to get the latest version of all the official project related code.
 
