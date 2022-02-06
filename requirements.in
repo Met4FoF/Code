@@ -13,6 +13,8 @@
 -r tutorials/agentMET4FOF_ml/requirements.txt
 -c tutorials/agentMET4FOF_sensors/requirements.in
 -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in
--c tutorials/PyDynamic_tutorials/requirements/requirements.in
+# Unfortunately we have to comment out PyDynamic_tutorials' deps due to their support
+# of Python 3.7 which contradicts agentMet4FoF's requirement of Python >= 3.8.
+# -c file:tutorials/PyDynamic_tutorials/requirements/requirements.in
 -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt
 -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
