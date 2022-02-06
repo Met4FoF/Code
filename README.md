@@ -40,6 +40,7 @@ software development activities throughout the duration of the project.
   - [Getting into Git and GitHub](#getting-into-git-and-github)
   - [The content of this repository](#the-content-of-this-repository)
   - [Tutorials](#tutorials)
+- [Upstream links](#Upstream-links)
 - [Project's coding conventions and best practices
   ](#projects-coding-conventions-and-best-practices)
 - [Contributing](#contributing)
@@ -119,7 +120,36 @@ The majority of our code base is accompanied by a series of tutorials in form of
 Notebooks, Python scripts or even parts of our [video tutorial series
 ](https://www.ptb.de/empir2018/de/met4fof/information-communication/video-portal/). The
 videos require a self-registration which takes only a minute and serves to keep track of
-who is interested in our material. 
+who is interested in our material.
+
+## Upstream links
+
+The collected code originates from GitHub repositories which are of course directly
+accessible as well. The respective links are the following:
+
+### Main projects
+
+- [agentMET4FOF](https://github.com/Met4FoF/agentMET4FOF)
+- [Met4FoF-SmartUpUnit](https://github.com/Met4FoF/Met4FoF-SmartUpUnit)
+- [Met4FoF SmartUp Unit datareceiver](https://github.com/Met4FoF/datareceiver)
+- [Met4FoF-redundancy](https://github.com/Met4FoF/Met4FoF-redundancy)
+- [Bayesian Noise and Jitter removal algorithm](https://github.com/Met4FoF/npl-jitter-noise-removal-mcmc)
+- [ZeMA Testbed Bayesian Machine Learning](https://github.com/Met4FoF/ZeMA_testbed_Bayesian_machine_learning)
+- [time-series-buffer - a metrological time-series buffer](https://github.com/PTB-M4D/time-series-buffer)
+- [A metrologically enabled time-series metadata scheme](https://github.com/PTB-M4D/time-series-metadata)
+- [PyDynamic](https://github.com/PTB-M4D/PyDynamic)
+
+### Tutorials
+
+- [agentMET4FOF_anomaly_detection](#agentMET4FOF_anomaly_detection)
+- [agentMET4FOF_bayesian_neural_network_ZeMA](https://github.com/Met4FoF/agentMET4FOF_bayesian_neural_network_ZeMA)
+- [agentMET4FOF_ml](https://github.com/Met4FoF/agentMET4FOF_ml.git)
+- [agentMET4FOF_sensors](https://github.com/Met4FoF/agentMET4FOF_sensors.git)
+- [agentMET4FOF_ZeMA_emc](https://github.com/Met4FoF/agentMET4FOF_ZeMA_emc.git)
+- [connect-agentMET4FOF-smartupunit](#connect-agentMET4FOF-smartupunit)
+- [PyDynamic_tutorials](https://github.com/PTB-M4D/PyDynamic_tutorials.git)
+- [Strathcylde_AFRC_machine_learning_tutorials](https://github.com/harislulic/Strathcylde_AFRC_machine_learning_tutorials.git)
+- [ZeMA-machine-learning-tutorials](https://github.com/harislulic/ZeMA-machine-learning-tutorials.git)
 
 ## Project's coding conventions and best practices
 
