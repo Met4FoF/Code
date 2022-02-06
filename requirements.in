@@ -1,11 +1,11 @@
--e agentMET4FOF
+-e file:agentMET4FOF
 -r agentMET4FOF/dev-requirements.in
--e Met4FoF-redundancy
+-e file:Met4FoF-redundancy
 -c Met4FoF-redundancy/requirements/dev-requirements.txt
--e PyDynamic
+-e file:PyDynamic
 -c PyDynamic/requirements/dev-requirements.in
--e time-series-buffer
--e time-series-metadata
+-e file:time-series-buffer
+-e file:time-series-metadata
 -c time-series-metadata/requirements/dev-requirements.in
 -r tutorials/agentMET4FOF_anomaly_detection/requirements.in
 -c tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in
