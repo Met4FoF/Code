@@ -8,11 +8,11 @@ executors:
   tester:
     working_directory: ~/repo
     docker:
-      - image: circleci/python:3.8
+      - image: cimg/python:3.8
   publisher:
     working_directory: ~/repo
     docker:
-      - image: circleci/python:3.8
+      - image: cimg/python:3.8
 
 workflows:
   build_and_test_virtual_environments:
