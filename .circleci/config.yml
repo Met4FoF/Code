@@ -490,6 +490,15 @@ commands:
               circleci-agent step halt
           fi
 
+  set_git_user_name_and_email:
+    description: "Configure git to be commit-ready."
+    steps:
+    - run:
+        name: Set Git user.name and user.email
+        command: |
+            echo 'git config user.name "Bjoern Ludwig (via CircleCI)"' >> $BASH_ENV
+            echo 'git config --global user.email "bjoern.ludwig@ptb.de"' >> $BASH_ENV
+
 jobs:
 
   pull_subtrees:
@@ -504,6 +513,7 @@ jobs:
           fingerprints:
             - "93:e5:20:36:94:74:6f:e2:33:f6:91:07:4c:b4:89:1a"
       - checkout
+      - set_git_user_name_and_email
       - subtree_pull:
           subtree: agentMET4FOF
           upstream_url: git@github.com:Met4FoF/agentMET4FOF.git
@@ -616,11 +626,10 @@ jobs:
       - attach_workspace:
           at: .
       - check_for_new_deps_compilation
+      - set_git_user_name_and_email
       - run:
           name: Commit and push changes
           command: |
-            git config --global user.name "Bjoern Ludwig (via CircleCI)"
-            git config --global user.email "bjoern.ludwig@ptb.de"
             git commit -am "build(deps): recompile Python (dev) deps on $(date)"
             git push -u origin  ${CIRCLE_BRANCH}
       - run:
