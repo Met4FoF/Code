@@ -41,7 +41,6 @@ workflows:
           new_branch: most_recent_subtree_pulls
           context:
             - Docker pulls
-            - GitHub pushes to BjoernLudwigPTB's public_repos
 
   check_for_upgraded_deps:
     jobs:
@@ -510,6 +509,9 @@ jobs:
       name: gh_releaser
 
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "0c:60:7a:ac:81:97:ea:b5:af:2b:46:fc:bc:21:90:3a"
       - checkout
       - set_git_user_name_and_email
       - run: git checkout -b << parameters.new_branch >>
@@ -618,6 +620,9 @@ jobs:
       name: gh_releaser
 
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "0c:60:7a:ac:81:97:ea:b5:af:2b:46:fc:bc:21:90:3a"
       - checkout
       - attach_workspace:
           at: .
