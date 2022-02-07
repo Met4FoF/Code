@@ -3,11 +3,8 @@
 -e file:Met4FoF-redundancy
 -c Met4FoF-redundancy/requirements/dev-requirements.txt
 -e file:PyDynamic
-# Due to the relative dependency on itself in the dev deps, we cannot use their
-# dev-requirements for compilation.
-# -c PyDynamic/requirements/dev-requirements.in
-# Something seems to be wrong with pip-compile in conjunction with this dep as of now.
-#-e file:time-series-buffer
+-c PyDynamic/requirements/dev-requirements.in
+-e file:time-series-buffer
 -e file:time-series-metadata
 -c time-series-metadata/requirements/dev-requirements.in
 -r tutorials/agentMET4FOF_anomaly_detection/requirements.in
