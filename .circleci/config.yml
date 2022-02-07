@@ -327,9 +327,9 @@ commands:
     - restore_cache:
         keys:
           # Specify the unique identifier for the cache.
-          - venv-dependencies-{{ checksum "requirements.txt" }}
+          - v1-venv-dependencies-{{ checksum "requirements.txt" }}
           # Fallback to using the latest cache if no exact match is found.
-          - venv-dependencies-
+          - v1-venv-dependencies-
 
     # Install dependencies.
     - run:
@@ -345,7 +345,7 @@ commands:
         paths:
           - ./venv
         key: >-
-          venv-dependencies-{{ checksum "requirements.txt" }}
+          v1-venv-dependencies-{{ checksum "requirements.txt" }}
 
 
 
