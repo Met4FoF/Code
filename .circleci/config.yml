@@ -28,6 +28,144 @@ executors:
           password: $DOCKERHUB_PASSWORD
 
 workflows:
+
+  pull_subtrees_and_recompile_deps:
+    triggers:
+      - schedule:
+          cron: "0 0 1 * *"
+          filters:
+            branches:
+              only: /main/
+    jobs:
+      - pull_subtrees:
+          new_branch: most_recent_subtree_pulls
+          context:
+            - Docker pulls
+
+  check_for_upgraded_deps:
+    jobs:
+      - recompile_deps:
+          filters:
+            branches:
+              only: most_recent_subtree_pulls
+          context:
+            - Docker pulls
+      - commit_push_open_pr:
+          requires:
+            - recompile_deps
+          context:
+            - Docker pulls
+            - GitHub pushes to BjoernLudwigPTB's public_repos
+
+  nightly_test:
+    triggers:
+      - schedule:
+          cron: "0 0 8,15,22 * *"
+          filters:
+            branches:
+              only: /main/
+    jobs:
+      - build_and_test_conda_env:
+          context:
+            - Docker pulls
+      - build_and_test_venv_env:
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_agentMET4FOF_ml_against_conda
+          subtree: tutorials/agentMET4FOF_ml
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_agentMET4FOF_anomaly_detection_against_conda
+          subtree: tutorials/agentMET4FOF_anomaly_detection
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_time-series-buffer_against_conda
+          subtree: time-series-buffer
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_time-series-metadata_against_conda
+          subtree: time-series-metadata
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_agentMET4FOF_sensors_against_conda
+          subtree: tutorials/agentMET4FOF_sensors
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_agentMET4FOF_against_conda
+          subtree: agentMET4FOF
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_Met4FoF-redundancy_against_conda
+          subtree: Met4FoF-redundancy
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_agentMET4FOF_ml_against_venv
+          subtree: tutorials/agentMET4FOF_ml
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_agentMET4FOF_anomaly_detection_against_venv
+          subtree: tutorials/agentMET4FOF_anomaly_detection
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_time-series-buffer_against_venv
+          subtree: time-series-buffer
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_time-series-metadata_against_venv
+          subtree: time-series-metadata
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_agentMET4FOF_sensors_against_venv
+          subtree: tutorials/agentMET4FOF_sensors
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_agentMET4FOF_against_venv
+          subtree: agentMET4FOF
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_Met4FoF-redundancy_against_venv
+          subtree: Met4FoF-redundancy
+          context:
+            - Docker pulls
+      - test_PyDynamic:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF_ml:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF_anomaly_detection:
+          context:
+            - Docker pulls
+      - test_time-series-buffer:
+          context:
+            - Docker pulls
+      - test_time-series-metadata:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF_sensors:
+          context:
+            - Docker pulls
+      - test_Met4FoF-redundancy:
+          context:
+            - Docker pulls
+
   build_and_test_virtual_environments:
     jobs:
       - build_and_test_conda_env:
@@ -316,7 +454,187 @@ commands:
     - store_test_results:
         path: test-results
 
+  subtree_pull:
+    description: "Check for any changes."
+    parameters:
+      subtree:
+        type: string
+        default: ""
+      branch:
+        type: string
+        default: ""
+    steps:
+    - run:
+        command: |
+          git subtree pull -q --prefix << parameters.subtree >> \ 
+            $(echo << parameters.subtree >> | sed -e "s|tutorials/||") \
+            << parameters.branch >> -m "Update 
+            $(echo << parameters.subtree >> | sed -e "s|tutorials/||") to most 
+            recent version"
+
+  check_for_new_deps_compilation:
+    description: "Check for any changes."
+    steps:
+    - run:
+        name: Abort if no new deps were compiled
+        command: |
+          git add .
+          set +e
+          git status | grep modified
+          if [ $? -ne 0 ]; then
+              set -e
+              echo "No updated subtrees or deps. Nothing to test and commit. We are all 
+                good."
+              circleci-agent step halt
+          fi
+
 jobs:
+
+  pull_subtrees:
+    parameters:
+      new_branch:
+        type: string
+    executor:
+      name: gh_releaser
+
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "93:e5:20:36:94:74:6f:e2:33:f6:91:07:4c:b4:89:1a"
+      - checkout
+      - subtree_pull:
+          subtree: agentMET4FOF
+          branch: develop
+      - subtree_pull:
+          subtree: datareceiver
+          branch: master
+      - subtree_pull:
+          subtree: Met4FoF-redundancy
+          branch: master
+      - subtree_pull:
+          subtree: Met4FoF-SmartUpUnit
+          branch: SSU_V3
+      - subtree_pull:
+          subtree: PyDynamic
+          branch: master
+      - subtree_pull:
+          subtree: PySensorNetwork
+          branch: master
+      - subtree_pull:
+          subtree: time-series-buffer
+          branch: master
+      - subtree_pull:
+          subtree: time-series-metadata
+          branch: main
+      - subtree_pull:
+          subtree: tutorials/agentMET4FOF_anomaly_detection
+          branch: master
+      - subtree_pull:
+          subtree: tutorials/agentMET4FOF_bayesian_neural_network_ZeMA
+          branch: master
+      - subtree_pull:
+          subtree: tutorials/agentMET4FOF_ml
+          branch: master
+      - subtree_pull:
+          subtree: tutorials/agentMET4FOF_sensors
+          branch: master
+      - subtree_pull:
+          subtree: tutorials/agentMET4FOF_ZeMA_emc
+          branch: master
+      - subtree_pull:
+          subtree: tutorials/connect-agentMET4FOF-smartupunit
+          branch: master
+      - subtree_pull:
+          subtree: tutorials/PyDynamic_tutorials
+          branch: main
+      - subtree_pull:
+          subtree: tutorials/Strathcylde_AFRC_machine_learning_tutorials
+          branch: master
+      - subtree_pull:
+          subtree: tutorials/ZeMA-machine-learning-tutorials
+          branch: master
+      - subtree_pull:
+          subtree: ZeMA_testbed_Bayesian_machine_learning
+          branch: master
+      - run:
+          name: Abort if no new commit was added
+          command: |
+            if [ $(git rev-parse HEAD) == ${CIRCLE_SHA1}]; then
+                circleci-agent step halt
+            fi
+      - run: git push -fu origin << parameters.new_branch >>
+
+  recompile_deps:
+    executor:
+      name: tester
+    steps:
+      - checkout
+      - create_result_folder
+      - run:
+          name: Recompile and sync deps
+          command: |
+            pip install --upgrade pip pip-tools
+            python -m piptools compile --upgrade
+            python -m piptools compile --upgrade dev-requirements.in
+            python -m piptools sync requirements.txt dev-requirements.txt
+      - check_for_new_deps_compilation
+      - persist_to_workspace:
+          root: .
+          paths:
+            - requirements.txt
+            - dev-requirements.txt
+
+  commit_push_open_pr:
+    executor:
+      name: gh_releaser
+
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "93:e5:20:36:94:74:6f:e2:33:f6:91:07:4c:b4:89:1a"
+      - checkout
+      - attach_workspace:
+          at: .
+      - check_for_new_deps_compilation
+      - run:
+          name: Commit and push changes
+          command: |
+            git config --global user.name "Bjoern Ludwig (via CircleCI)"
+            git config --global user.email "bjoern.ludwig@ptb.de"
+            git commit -am "build(deps): recompile Python (dev) deps on $(date)"
+            git push -u origin  ${CIRCLE_BRANCH}
+      - run:
+          name: Install GitHub CLI
+          command: |
+            curl -fsSL \
+              https://cli.github.com/packages/githubcli-archive-keyring.gpg |\
+              sudo dd of=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) \
+              signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg]\
+              https://cli.github.com/packages stable main" | \
+              sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+            sudo apt update
+            sudo apt install gh
+      - run:
+          name: Check for an existing PR or create one
+          command: |
+            set +e
+            gh pr list --head=$NEW_BRANCH | grep $NEW_BRANCH
+            if [ $? -eq 1 ]; then
+                set -e
+                gh pr create --base=main --title "Update deps" \
+                  --body "This PR provides recompiled deps for all outdated \
+                  package versions. It was opened after all subtrees were \
+                  successfully updated and afterwards the deps \
+                  were succesfully compiled. If all tests pass with the \
+                  new versions, it should be merged as soon as possible to \
+                  avoid any security issues due to outdated dependencies."
+            else
+                set -e
+                echo "There already was a PR opened earlier. The 
+                  current changes were used to update the existing branch."
+            fi
+
   # Define one 'test' job with parameters to deal with all subtrees and let them
   # run their test suites against the installed dependencies from the environment.yml.
   test_against_conda:
