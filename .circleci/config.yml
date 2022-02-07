@@ -514,6 +514,7 @@ jobs:
             - "93:e5:20:36:94:74:6f:e2:33:f6:91:07:4c:b4:89:1a"
       - checkout
       - set_git_user_name_and_email
+      - run: git checkout -b << parameters.new_branch >>
       - subtree_pull:
           subtree: agentMET4FOF
           upstream_url: git@github.com:Met4FoF/agentMET4FOF.git
@@ -592,7 +593,7 @@ jobs:
             if [ $(git rev-parse HEAD) == ${CIRCLE_SHA1}]; then
                 circleci-agent step halt
             fi
-      - run: git push -u origin << parameters.new_branch >>
+      - run: git push -fu origin << parameters.new_branch >>
 
   recompile_deps:
     executor:
