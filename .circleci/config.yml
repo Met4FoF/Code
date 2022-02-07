@@ -466,11 +466,7 @@ commands:
     steps:
     - run:
         command: |
-          git subtree pull -q --prefix << parameters.subtree >> \ 
-            $(echo << parameters.subtree >> | sed -e "s|tutorials/||") \
-            << parameters.branch >> -m "Update 
-            $(echo << parameters.subtree >> | sed -e "s|tutorials/||") to most 
-            recent version"
+          git subtree pull -q --prefix << parameters.subtree >> $(echo << parameters.subtree >> | sed -e "s|tutorials/||") << parameters.branch >> -m "Update $(echo << parameters.subtree >> | sed -e "s|tutorials/||") to most recent version"
 
   check_for_new_deps_compilation:
     description: "Check for any changes."
