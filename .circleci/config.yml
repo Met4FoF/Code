@@ -30,12 +30,12 @@ executors:
 workflows:
 
   pull_subtrees_and_recompile_deps:
-#    triggers:
-#      - schedule:
-#          cron: "0 0 1 * *"
-#          filters:
-#            branches:
-#              only: /main/
+    triggers:
+      - schedule:
+          cron: "0 0 1 * *"
+          filters:
+            branches:
+              only: /main/
     jobs:
       - pull_subtrees:
           new_branch: most_recent_subtree_pulls
@@ -57,114 +57,114 @@ workflows:
             - Docker pulls
             - GitHub pushes to BjoernLudwigPTB's public_repos
 
-#  nightly_test:
-#    triggers:
-#      - schedule:
-#          cron: "0 0 8,15,22 * *"
-#          filters:
-#            branches:
-#              only: /main/
-#    jobs:
-#      - build_and_test_conda_env:
-#          context:
-#            - Docker pulls
-#      - build_and_test_venv_env:
-#          context:
-#            - Docker pulls
-#      - test_against_conda:
-#          name: test_agentMET4FOF_ml_against_conda
-#          subtree: tutorials/agentMET4FOF_ml
-#          context:
-#            - Docker pulls
-#      - test_against_conda:
-#          name: test_agentMET4FOF_anomaly_detection_against_conda
-#          subtree: tutorials/agentMET4FOF_anomaly_detection
-#          context:
-#            - Docker pulls
-#      - test_against_conda:
-#          name: test_time-series-buffer_against_conda
-#          subtree: time-series-buffer
-#          context:
-#            - Docker pulls
-#      - test_against_conda:
-#          name: test_time-series-metadata_against_conda
-#          subtree: time-series-metadata
-#          context:
-#            - Docker pulls
-#      - test_against_conda:
-#          name: test_agentMET4FOF_sensors_against_conda
-#          subtree: tutorials/agentMET4FOF_sensors
-#          context:
-#            - Docker pulls
-#      - test_against_conda:
-#          name: test_agentMET4FOF_against_conda
-#          subtree: agentMET4FOF
-#          context:
-#            - Docker pulls
-#      - test_against_conda:
-#          name: test_Met4FoF-redundancy_against_conda
-#          subtree: Met4FoF-redundancy
-#          context:
-#            - Docker pulls
-#      - test_against_venv:
-#          name: test_agentMET4FOF_ml_against_venv
-#          subtree: tutorials/agentMET4FOF_ml
-#          context:
-#            - Docker pulls
-#      - test_against_venv:
-#          name: test_agentMET4FOF_anomaly_detection_against_venv
-#          subtree: tutorials/agentMET4FOF_anomaly_detection
-#          context:
-#            - Docker pulls
-#      - test_against_venv:
-#          name: test_time-series-buffer_against_venv
-#          subtree: time-series-buffer
-#          context:
-#            - Docker pulls
-#      - test_against_venv:
-#          name: test_time-series-metadata_against_venv
-#          subtree: time-series-metadata
-#          context:
-#            - Docker pulls
-#      - test_against_venv:
-#          name: test_agentMET4FOF_sensors_against_venv
-#          subtree: tutorials/agentMET4FOF_sensors
-#          context:
-#            - Docker pulls
-#      - test_against_venv:
-#          name: test_agentMET4FOF_against_venv
-#          subtree: agentMET4FOF
-#          context:
-#            - Docker pulls
-#      - test_against_venv:
-#          name: test_Met4FoF-redundancy_against_venv
-#          subtree: Met4FoF-redundancy
-#          context:
-#            - Docker pulls
-#      - test_PyDynamic:
-#          context:
-#            - Docker pulls
-#      - test_agentMET4FOF:
-#          context:
-#            - Docker pulls
-#      - test_agentMET4FOF_ml:
-#          context:
-#            - Docker pulls
-#      - test_agentMET4FOF_anomaly_detection:
-#          context:
-#            - Docker pulls
-#      - test_time-series-buffer:
-#          context:
-#            - Docker pulls
-#      - test_time-series-metadata:
-#          context:
-#            - Docker pulls
-#      - test_agentMET4FOF_sensors:
-#          context:
-#            - Docker pulls
-#      - test_Met4FoF-redundancy:
-#          context:
-#            - Docker pulls
+  nightly_test:
+    triggers:
+      - schedule:
+          cron: "0 0 8,15,22 * *"
+          filters:
+            branches:
+              only: /main/
+    jobs:
+      - build_and_test_conda_env:
+          context:
+            - Docker pulls
+      - build_and_test_venv_env:
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_agentMET4FOF_ml_against_conda
+          subtree: tutorials/agentMET4FOF_ml
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_agentMET4FOF_anomaly_detection_against_conda
+          subtree: tutorials/agentMET4FOF_anomaly_detection
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_time-series-buffer_against_conda
+          subtree: time-series-buffer
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_time-series-metadata_against_conda
+          subtree: time-series-metadata
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_agentMET4FOF_sensors_against_conda
+          subtree: tutorials/agentMET4FOF_sensors
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_agentMET4FOF_against_conda
+          subtree: agentMET4FOF
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_Met4FoF-redundancy_against_conda
+          subtree: Met4FoF-redundancy
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_agentMET4FOF_ml_against_venv
+          subtree: tutorials/agentMET4FOF_ml
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_agentMET4FOF_anomaly_detection_against_venv
+          subtree: tutorials/agentMET4FOF_anomaly_detection
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_time-series-buffer_against_venv
+          subtree: time-series-buffer
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_time-series-metadata_against_venv
+          subtree: time-series-metadata
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_agentMET4FOF_sensors_against_venv
+          subtree: tutorials/agentMET4FOF_sensors
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_agentMET4FOF_against_venv
+          subtree: agentMET4FOF
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_Met4FoF-redundancy_against_venv
+          subtree: Met4FoF-redundancy
+          context:
+            - Docker pulls
+      - test_PyDynamic:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF_ml:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF_anomaly_detection:
+          context:
+            - Docker pulls
+      - test_time-series-buffer:
+          context:
+            - Docker pulls
+      - test_time-series-metadata:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF_sensors:
+          context:
+            - Docker pulls
+      - test_Met4FoF-redundancy:
+          context:
+            - Docker pulls
 
   build_and_test_virtual_environments:
     jobs:
@@ -174,128 +174,128 @@ workflows:
       - build_and_test_venv_env:
           context:
             - Docker pulls
-#      - test_against_conda:
-#          name: test_agentMET4FOF_ml_against_conda
-#          subtree: tutorials/agentMET4FOF_ml
-#          context:
-#            - Docker pulls
-#      - test_against_conda:
-#          name: test_agentMET4FOF_anomaly_detection_against_conda
-#          subtree: tutorials/agentMET4FOF_anomaly_detection
-#          context:
-#            - Docker pulls
-#      - test_against_conda:
-#          name: test_time-series-buffer_against_conda
-#          subtree: time-series-buffer
-#          context:
-#            - Docker pulls
-#      - test_against_conda:
-#          name: test_time-series-metadata_against_conda
-#          subtree: time-series-metadata
-#          context:
-#            - Docker pulls
-#      - test_against_conda:
-#          name: test_agentMET4FOF_sensors_against_conda
-#          subtree: tutorials/agentMET4FOF_sensors
-#          context:
-#            - Docker pulls
+      - test_against_conda:
+          name: test_agentMET4FOF_ml_against_conda
+          subtree: tutorials/agentMET4FOF_ml
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_agentMET4FOF_anomaly_detection_against_conda
+          subtree: tutorials/agentMET4FOF_anomaly_detection
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_time-series-buffer_against_conda
+          subtree: time-series-buffer
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_time-series-metadata_against_conda
+          subtree: time-series-metadata
+          context:
+            - Docker pulls
+      - test_against_conda:
+          name: test_agentMET4FOF_sensors_against_conda
+          subtree: tutorials/agentMET4FOF_sensors
+          context:
+            - Docker pulls
       - test_against_conda:
           name: test_agentMET4FOF_against_conda
           subtree: agentMET4FOF
           context:
             - Docker pulls
-#      - test_against_conda:
-#          name: test_Met4FoF-redundancy_against_conda
-#          subtree: Met4FoF-redundancy
-#          context:
-#            - Docker pulls
-#      - test_against_venv:
-#          name: test_agentMET4FOF_ml_against_venv
-#          subtree: tutorials/agentMET4FOF_ml
-#          context:
-#            - Docker pulls
-#      - test_against_venv:
-#          name: test_agentMET4FOF_anomaly_detection_against_venv
-#          subtree: tutorials/agentMET4FOF_anomaly_detection
-#          context:
-#            - Docker pulls
-#      - test_against_venv:
-#          name: test_time-series-buffer_against_venv
-#          subtree: time-series-buffer
-#          context:
-#            - Docker pulls
-#      - test_against_venv:
-#          name: test_time-series-metadata_against_venv
-#          subtree: time-series-metadata
-#          context:
-#            - Docker pulls
-#      - test_against_venv:
-#          name: test_agentMET4FOF_sensors_against_venv
-#          subtree: tutorials/agentMET4FOF_sensors
-#          context:
-#            - Docker pulls
+      - test_against_conda:
+          name: test_Met4FoF-redundancy_against_conda
+          subtree: Met4FoF-redundancy
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_agentMET4FOF_ml_against_venv
+          subtree: tutorials/agentMET4FOF_ml
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_agentMET4FOF_anomaly_detection_against_venv
+          subtree: tutorials/agentMET4FOF_anomaly_detection
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_time-series-buffer_against_venv
+          subtree: time-series-buffer
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_time-series-metadata_against_venv
+          subtree: time-series-metadata
+          context:
+            - Docker pulls
+      - test_against_venv:
+          name: test_agentMET4FOF_sensors_against_venv
+          subtree: tutorials/agentMET4FOF_sensors
+          context:
+            - Docker pulls
       - test_against_venv:
           name: test_agentMET4FOF_against_venv
           subtree: agentMET4FOF
           context:
             - Docker pulls
-#      - test_against_venv:
-#          name: test_Met4FoF-redundancy_against_venv
-#          subtree: Met4FoF-redundancy
-#          context:
-#            - Docker pulls
-#      - test_PyDynamic:
-#          context:
-#            - Docker pulls
+      - test_against_venv:
+          name: test_Met4FoF-redundancy_against_venv
+          subtree: Met4FoF-redundancy
+          context:
+            - Docker pulls
+      - test_PyDynamic:
+          context:
+            - Docker pulls
       - test_agentMET4FOF:
           context:
             - Docker pulls
-#      - test_agentMET4FOF_ml:
-#          context:
-#            - Docker pulls
-#      - test_agentMET4FOF_anomaly_detection:
-#          context:
-#            - Docker pulls
-#      - test_time-series-buffer:
-#          context:
-#            - Docker pulls
-#      - test_time-series-metadata:
-#          context:
-#            - Docker pulls
-#      - test_agentMET4FOF_sensors:
-#          context:
-#            - Docker pulls
-#      - test_Met4FoF-redundancy:
-#          context:
-#            - Docker pulls
+      - test_agentMET4FOF_ml:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF_anomaly_detection:
+          context:
+            - Docker pulls
+      - test_time-series-buffer:
+          context:
+            - Docker pulls
+      - test_time-series-metadata:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF_sensors:
+          context:
+            - Docker pulls
+      - test_Met4FoF-redundancy:
+          context:
+            - Docker pulls
       - preview_release:
           # Test the 'release' job to avoid trouble when Pull Requests get merged and
           # to preview publishing actions and the new changelog.
           requires:
               - build_and_test_conda_env
               - build_and_test_venv_env
-#              - test_agentMET4FOF_ml_against_conda
-#              - test_agentMET4FOF_ml_against_venv
-#              - test_agentMET4FOF_anomaly_detection_against_conda
-#              - test_agentMET4FOF_anomaly_detection_against_venv
-#              - test_time-series-buffer_against_conda
-#              - test_time-series-buffer_against_venv
-#              - test_time-series-metadata_against_conda
-#              - test_time-series-metadata_against_venv
-#              - test_agentMET4FOF_sensors_against_conda
-#              - test_agentMET4FOF_sensors_against_venv
+              - test_agentMET4FOF_ml_against_conda
+              - test_agentMET4FOF_ml_against_venv
+              - test_agentMET4FOF_anomaly_detection_against_conda
+              - test_agentMET4FOF_anomaly_detection_against_venv
+              - test_time-series-buffer_against_conda
+              - test_time-series-buffer_against_venv
+              - test_time-series-metadata_against_conda
+              - test_time-series-metadata_against_venv
+              - test_agentMET4FOF_sensors_against_conda
+              - test_agentMET4FOF_sensors_against_venv
               - test_agentMET4FOF_against_conda
               - test_agentMET4FOF_against_venv
-#              - test_Met4FoF-redundancy_against_conda
-#              - test_Met4FoF-redundancy_against_venv
-#              - test_PyDynamic
+              - test_Met4FoF-redundancy_against_conda
+              - test_Met4FoF-redundancy_against_venv
+              - test_PyDynamic
               - test_agentMET4FOF
-#              - test_agentMET4FOF_ml
-#              - test_agentMET4FOF_anomaly_detection
-#              - test_time-series-buffer
-#              - test_time-series-metadata
-#              - test_agentMET4FOF_sensors
-#              - test_Met4FoF-redundancy
+              - test_agentMET4FOF_ml
+              - test_agentMET4FOF_anomaly_detection
+              - test_time-series-buffer
+              - test_time-series-metadata
+              - test_agentMET4FOF_sensors
+              - test_Met4FoF-redundancy
       - confirm_previewed_release_actions:
           # This job allows for checking that the release we will create in the
           # next step actually is the desired release, by observing the result of
