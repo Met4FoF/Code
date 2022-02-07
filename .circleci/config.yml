@@ -511,7 +511,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "0c:60:7a:ac:81:97:ea:b5:af:2b:46:fc:bc:21:90:3a"
+            - "0f:4e:bb:cb:6a:fc:0a:23:db:5b:de:7a:3e:34:80:80"
       - checkout
       - set_git_user_name_and_email
       - run: git checkout -b << parameters.new_branch >>
@@ -622,7 +622,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "0c:60:7a:ac:81:97:ea:b5:af:2b:46:fc:bc:21:90:3a"
+            - "0f:4e:bb:cb:6a:fc:0a:23:db:5b:de:7a:3e:34:80:80"
       - checkout
       - attach_workspace:
           at: .
