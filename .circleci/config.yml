@@ -9,66 +9,127 @@ executors:
     working_directory: ~/repo
     docker:
       - image: cimg/python:3.8
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
   publisher:
     working_directory: ~/repo
     docker:
       - image: cimg/python:3.8
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
+  gh_releaser:
+    working_directory: ~/repo
+    docker:
+      - image: cimg/base:2021.04
+        auth:
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD
 
 workflows:
   build_and_test_virtual_environments:
     jobs:
-      - build_and_test_conda_env
-      - build_and_test_venv_env
+      - build_and_test_conda_env:
+          context:
+            - Docker pulls
+      - build_and_test_venv_env:
+          context:
+            - Docker pulls
       - test_against_conda:
           name: test_agentMET4FOF_ml_against_conda
           subtree: tutorials/agentMET4FOF_ml
+          context:
+            - Docker pulls
       - test_against_conda:
           name: test_agentMET4FOF_anomaly_detection_against_conda
           subtree: tutorials/agentMET4FOF_anomaly_detection
+          context:
+            - Docker pulls
       - test_against_conda:
           name: test_time-series-buffer_against_conda
           subtree: time-series-buffer
+          context:
+            - Docker pulls
       - test_against_conda:
           name: test_time-series-metadata_against_conda
           subtree: time-series-metadata
+          context:
+            - Docker pulls
       - test_against_conda:
           name: test_agentMET4FOF_sensors_against_conda
           subtree: tutorials/agentMET4FOF_sensors
+          context:
+            - Docker pulls
       - test_against_conda:
           name: test_agentMET4FOF_against_conda
           subtree: agentMET4FOF
+          context:
+            - Docker pulls
       - test_against_conda:
           name: test_Met4FoF-redundancy_against_conda
           subtree: Met4FoF-redundancy
+          context:
+            - Docker pulls
       - test_against_venv:
           name: test_agentMET4FOF_ml_against_venv
           subtree: tutorials/agentMET4FOF_ml
+          context:
+            - Docker pulls
       - test_against_venv:
           name: test_agentMET4FOF_anomaly_detection_against_venv
           subtree: tutorials/agentMET4FOF_anomaly_detection
+          context:
+            - Docker pulls
       - test_against_venv:
           name: test_time-series-buffer_against_venv
           subtree: time-series-buffer
+          context:
+            - Docker pulls
       - test_against_venv:
           name: test_time-series-metadata_against_venv
           subtree: time-series-metadata
+          context:
+            - Docker pulls
       - test_against_venv:
           name: test_agentMET4FOF_sensors_against_venv
           subtree: tutorials/agentMET4FOF_sensors
+          context:
+            - Docker pulls
       - test_against_venv:
           name: test_agentMET4FOF_against_venv
           subtree: agentMET4FOF
+          context:
+            - Docker pulls
       - test_against_venv:
           name: test_Met4FoF-redundancy_against_venv
           subtree: Met4FoF-redundancy
-      - test_PyDynamic
-      - test_agentMET4FOF
-      - test_agentMET4FOF_ml
-      - test_agentMET4FOF_anomaly_detection
-      - test_time-series-buffer
-      - test_time-series-metadata
-      - test_agentMET4FOF_sensors
-      - test_Met4FoF-redundancy
+          context:
+            - Docker pulls
+      - test_PyDynamic:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF_ml:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF_anomaly_detection:
+          context:
+            - Docker pulls
+      - test_time-series-buffer:
+          context:
+            - Docker pulls
+      - test_time-series-metadata:
+          context:
+            - Docker pulls
+      - test_agentMET4FOF_sensors:
+          context:
+            - Docker pulls
+      - test_Met4FoF-redundancy:
+          context:
+            - Docker pulls
       - preview_release:
           # Test the 'release' job to avoid trouble when Pull Requests get merged and
           # to preview publishing actions and the new changelog.
