@@ -460,13 +460,19 @@ commands:
       subtree:
         type: string
         default: ""
+      upstream_url:
+        type: string
+        default: ""
       branch:
         type: string
         default: ""
     steps:
     - run:
         command: |
-          git subtree pull -q --prefix << parameters.subtree >> $(echo << parameters.subtree >> | sed -e "s|tutorials/||") << parameters.branch >> -m "Update $(echo << parameters.subtree >> | sed -e "s|tutorials/||") to most recent version"
+          git subtree pull -q --prefix << parameters.subtree >> \
+            << parameters.upstream_url >> << parameters.branch >> \
+            -m "Update $(echo << parameters.subtree >> | sed -e "s|tutorials/||") 
+            to most recent version"
 
   check_for_new_deps_compilation:
     description: "Check for any changes."
@@ -500,57 +506,75 @@ jobs:
       - checkout
       - subtree_pull:
           subtree: agentMET4FOF
+          upstream_url: git@github.com:Met4FoF/agentMET4FOF.git
           branch: develop
       - subtree_pull:
           subtree: datareceiver
+          upstream_url: git@github.com:Met4FoF/datareceiver.git
           branch: master
       - subtree_pull:
           subtree: Met4FoF-redundancy
+          upstream_url: git@github.com:Met4FoF/Met4FoF-redundancy.git
           branch: master
       - subtree_pull:
           subtree: Met4FoF-SmartUpUnit
+          upstream_url: git@github.com:Met4FoF/Met4FoF-SmartUpUnit.git
           branch: SSU_V3
       - subtree_pull:
           subtree: PyDynamic
+          upstream_url: git@github.com:PTB-M4D/PyDynamic.git
           branch: master
       - subtree_pull:
           subtree: PySensorNetwork
+          upstream_url: git@github.com:Met4FoF/PySensorNetwork.git
           branch: master
       - subtree_pull:
           subtree: time-series-buffer
+          upstream_url: git@github.com:PTB-M4D/time-series-buffer.git
           branch: master
       - subtree_pull:
           subtree: time-series-metadata
+          upstream_url: git@github.com:PTB-M4D/time-series-metadata.git
           branch: main
       - subtree_pull:
           subtree: tutorials/agentMET4FOF_anomaly_detection
+          upstream_url: git@github.com:Met4FoF/agentMET4FOF_anomaly_detection.git
           branch: master
       - subtree_pull:
           subtree: tutorials/agentMET4FOF_bayesian_neural_network_ZeMA
+          upstream_url: git@github.com:Met4FoF/agentMET4FOF_bayesian_neural_network_ZeMA.git
           branch: master
       - subtree_pull:
           subtree: tutorials/agentMET4FOF_ml
+          upstream_url: git@github.com:Met4FoF/agentMET4FOF_ml.git
           branch: master
       - subtree_pull:
           subtree: tutorials/agentMET4FOF_sensors
+          upstream_url: git@github.com:Met4FoF/agentMET4FOF_sensors.git
           branch: master
       - subtree_pull:
           subtree: tutorials/agentMET4FOF_ZeMA_emc
+          upstream_url: git@github.com:Met4FoF/agentMET4FOF_ZeMA_emc.git
           branch: master
       - subtree_pull:
           subtree: tutorials/connect-agentMET4FOF-smartupunit
+          upstream_url: git@github.com:Met4FoF/connect-agentMET4FOF-smartupunit.git
           branch: master
       - subtree_pull:
           subtree: tutorials/PyDynamic_tutorials
+          upstream_url: git@github.com:PTB-M4D/PyDynamic_tutorials.git
           branch: main
       - subtree_pull:
           subtree: tutorials/Strathcylde_AFRC_machine_learning_tutorials
+          upstream_url: git@github.com:harislulic/Strathcylde_AFRC_machine_learning_tutorials.git
           branch: master
       - subtree_pull:
           subtree: tutorials/ZeMA-machine-learning-tutorials
+          upstream_url: git@github.com:harislulic/ZeMA-machine-learning-tutorials.git
           branch: master
       - subtree_pull:
           subtree: ZeMA_testbed_Bayesian_machine_learning
+          upstream_url: git@github.com:Met4FoF/ZeMA_testbed_Bayesian_machine_learning.git
           branch: master
       - run:
           name: Abort if no new commit was added
@@ -558,7 +582,7 @@ jobs:
             if [ $(git rev-parse HEAD) == ${CIRCLE_SHA1}]; then
                 circleci-agent step halt
             fi
-      - run: git push -fu origin << parameters.new_branch >>
+      - run: git push -u origin << parameters.new_branch >>
 
   recompile_deps:
     executor:
