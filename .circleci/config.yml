@@ -604,7 +604,7 @@ jobs:
       - run:
           name: Recompile and sync deps
           command: |
-            pip install --upgrade pip pip-tools
+            pip install --upgrade pip pip-tools numpy
             python -m piptools compile --upgrade
             python -m piptools compile --upgrade dev-requirements.in
             sed -i "s/torch==/#torch==/" requirements.txt
