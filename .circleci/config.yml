@@ -633,6 +633,7 @@ jobs:
       - run:
           name: Commit and push changes
           command: |
+            git checkout -b ${NEW_BRANCH}
             git commit -am "build(deps): recompile Python (dev) deps on $(date)"
             git push -fu origin  ${NEW_BRANCH}
       - run:
