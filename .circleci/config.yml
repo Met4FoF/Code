@@ -607,6 +607,7 @@ jobs:
             pip install --upgrade pip pip-tools
             python -m piptools compile --upgrade
             python -m piptools compile --upgrade dev-requirements.in
+            sed -i "s/torch==/#torch==/" requirements.txt
             python -m piptools sync requirements.txt dev-requirements.txt
       - check_for_new_deps_compilation
       - persist_to_workspace:
