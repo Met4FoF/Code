@@ -1102,7 +1102,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            - v1-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Install dependencies.
       - run:
@@ -1117,7 +1117,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            v1-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Publish it, if there is anything to publish!
       - run:
@@ -1140,7 +1140,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            - v1-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Install dependencies.
       - run:
@@ -1155,7 +1155,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            v1-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Fake publish, just to make sure everything works after merging a PR and
       # before actual release jos run.
