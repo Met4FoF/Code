@@ -141,12 +141,12 @@ accessible as well. The respective links are the following:
 
 ### Tutorials
 
-- [agentMET4FOF_anomaly_detection](#agentMET4FOF_anomaly_detection)
+- [agentMET4FOF_anomaly_detection](https://github.com/Met4FoF/agentMET4FOF_anomaly_detection)
 - [agentMET4FOF_bayesian_neural_network_ZeMA](https://github.com/Met4FoF/agentMET4FOF_bayesian_neural_network_ZeMA)
 - [agentMET4FOF_ml](https://github.com/Met4FoF/agentMET4FOF_ml.git)
 - [agentMET4FOF_sensors](https://github.com/Met4FoF/agentMET4FOF_sensors.git)
 - [agentMET4FOF_ZeMA_emc](https://github.com/Met4FoF/agentMET4FOF_ZeMA_emc.git)
-- [connect-agentMET4FOF-smartupunit](#connect-agentMET4FOF-smartupunit)
+- [connect-agentMET4FOF-smartupunit](https://github.com/Met4FoF/connect-agentMET4FOF-smartupunit)
 - [PyDynamic_tutorials](https://github.com/PTB-M4D/PyDynamic_tutorials.git)
 - [Strathcylde_AFRC_machine_learning_tutorials](https://github.com/harislulic/Strathcylde_AFRC_machine_learning_tutorials.git)
 - [ZeMA-machine-learning-tutorials](https://github.com/harislulic/ZeMA-machine-learning-tutorials.git)
