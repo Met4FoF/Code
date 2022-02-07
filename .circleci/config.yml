@@ -629,11 +629,12 @@ jobs:
           at: .
       - check_for_new_deps_compilation
       - set_git_user_name_and_email
+      - run: echo 'export NEW_BRANCH=recompile_deps' >> $BASH_ENV
       - run:
           name: Commit and push changes
           command: |
             git commit -am "build(deps): recompile Python (dev) deps on $(date)"
-            git push -u origin  ${CIRCLE_BRANCH}
+            git push -fu origin  ${NEW_BRANCH}
       - run:
           name: Install GitHub CLI
           command: |
