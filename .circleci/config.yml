@@ -376,9 +376,9 @@ commands:
     - restore_cache:
         keys:
           # Specify the unique identifier for the cache.
-          - v1-conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}
+          - v2-conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}
           # Fallback to using the latest cache if no exact match is found.
-          - v1-conda-dependencies-
+          - v2-conda-dependencies-
 
     # Create environment.
     - run:
@@ -394,7 +394,7 @@ commands:
         paths:
           - /home/circleci/conda/envs/
         key: >-
-          v1-conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}
+          v2-conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}
 
   create_result_folder:
     description: "Create test-result folder."
