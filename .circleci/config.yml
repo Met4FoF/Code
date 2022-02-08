@@ -76,11 +76,14 @@ workflows:
           subtree: tutorials/agentMET4FOF_ml
           context:
             - Docker pulls
-      - test_against_conda:
-          name: test_agentMET4FOF_anomaly_detection_against_conda
-          subtree: tutorials/agentMET4FOF_anomaly_detection
-          context:
-            - Docker pulls
+# At some point the installation of torch==1.10.2 started to fail for the big
+# environment, so we deactivated it. agentMET4FOF_anomaly_detection still is tested
+# against its own dependencies.
+#      - test_against_conda:
+#          name: test_agentMET4FOF_anomaly_detection_against_conda
+#          subtree: tutorials/agentMET4FOF_anomaly_detection
+#          context:
+#            - Docker pulls
       - test_against_conda:
           name: test_time-series-buffer_against_conda
           subtree: time-series-buffer
@@ -182,11 +185,14 @@ workflows:
           subtree: tutorials/agentMET4FOF_ml
           context:
             - Docker pulls
-      - test_against_conda:
-          name: test_agentMET4FOF_anomaly_detection_against_conda
-          subtree: tutorials/agentMET4FOF_anomaly_detection
-          context:
-            - Docker pulls
+# At some point the installation of torch==1.10.2 started to fail for the big
+# environment, so we deactivated it. agentMET4FOF_anomaly_detection still is tested
+# against its own dependencies.
+#      - test_against_conda:
+#          name: test_agentMET4FOF_anomaly_detection_against_conda
+#          subtree: tutorials/agentMET4FOF_anomaly_detection
+#          context:
+#            - Docker pulls
       - test_against_conda:
           name: test_time-series-buffer_against_conda
           subtree: time-series-buffer
@@ -282,7 +288,7 @@ workflows:
               - build_and_test_venv_env
               - test_agentMET4FOF_ml_against_conda
               - test_agentMET4FOF_ml_against_venv
-              - test_agentMET4FOF_anomaly_detection_against_conda
+#              - test_agentMET4FOF_anomaly_detection_against_conda
 #              - test_agentMET4FOF_anomaly_detection_against_venv
               - test_time-series-buffer_against_conda
               - test_time-series-buffer_against_venv
