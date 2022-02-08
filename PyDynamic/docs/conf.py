@@ -51,7 +51,7 @@ html_theme_options = {
 
 # This should make SciPy documentation available inside our docs.
 intersphinx_mapping = {
-    "SciPy": ("https://docs.scipy.org/doc/scipy/reference", None),
+    "SciPy": ("https://scipy.github.io/devdocs/", None),
     "PyDynamic_tutorials": (
         "https://pydynamic-tutorials.readthedocs.io/en/latest/",
         None,
@@ -154,7 +154,7 @@ author = "S. Eichstädt, M. Gruber, B. Ludwig, T. Bruns, M. Weber, I. Smith"
 # built documents.K
 #
 # The short X.Y version.
-version = "2.1.1"
+version = "2.1.2"
 # The full version, including alpha/beta/rc tags.
 # release = "1.3.1"
 
