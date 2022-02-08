@@ -15,8 +15,8 @@ setuptools.setup(
     "for time-series with measurement uncertainties.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/PTB-PSt1/time-series-metadata",
-    download_url="https://github.com/PTB-PSt1/time-series-metadata/releases/download/"
+    url="https://github.com/PTB-M4D/time-series-metadata",
+    download_url="https://github.com/PTB-M4D/time-series-metadata/releases/download/"
     "v{0}/time-series-metadata-{0}.tar.gz".format(version),
     packages=setuptools.find_packages(exclude=["tests"]),
     keywords="metadata time-series uncertainty metrology",
@@ -24,10 +24,10 @@ setuptools.setup(
         "Documentation": "https://time-series-metadata.readthedocs.io/en/v{}/".format(
             version
         ),
-        "Source": "https://github.com/PTB-PSt1/time-series-metadata/tree/v{}/".format(
+        "Source": "https://github.com/PTB-M4D/time-series-metadata/tree/v{}/".format(
             version
         ),
-        "Tracker": "https://github.com/PTB-PSt1/time-series-metadata/issues",
+        "Tracker": "https://github.com/PTB-M4D/time-series-metadata/issues",
     },
     classifiers=[
         "Topic :: Utilities",
@@ -38,12 +38,12 @@ setuptools.setup(
         "License :: OSI Approved :: GNU Lesser General Public License v3 or later ("
         "LGPLv3+)",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "Operating System :: OS Independent",
         "Typing :: Typed",
     ],
-    python_requires=">=3.5",
+    python_requires=">=3.7",
 )
