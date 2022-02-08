@@ -10,7 +10,7 @@
 # setup.py and the development dependencies into the dev-requirements.in-file.
 # Actually since at the moment we do not have production dependencies, the
 # install_requires section does not get compiled into its own requirements file.
-# Refer to github.com/PTB-PSt1/PyDynamic for a draft how to include this compilation
+# Refer to github.com/PTB-M4D/PyDynamic for a draft how to include this compilation
 # step into this script, once it gets relevant.
 # For execution the script needs virtual environments, one for each of the upstream
 # supported Python versions, with pip-tools installed. Those environments need to be
@@ -35,7 +35,7 @@ Compile dependencies for Python 3.$PYVENV
     "
     # Activate according Python environment.
     source ../envs/time-series-metadata-3.$PYVENV/bin/activate && \
-    python -m pip install --upgrade pip==21.3.0 pip-tools && \
+    python -m pip install --upgrade pip pip-tools && \
     # Create dev-requirements...txt from dev-requirements...in.
     python -m piptools compile --upgrade requirements/dev-requirements.in \
     --output-file requirements/dev-requirements-py3$PYVENV.txt && \
