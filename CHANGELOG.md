@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.16.2 (2022-02-08)
+### :speech_balloon:
+* :speech_balloon: Introduce tutorials README with upstream links and descriptions  ([`45b704a`](https://github.com/Met4FoF/Code/commit/45b704a0f96693548722165dad2f4ebce51de8e8))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.16.1...v0.16.2)**
+
 ## v0.16.1 (2022-02-03)
 ### :bug:
 * :bug: Update agentMET4FOF to v0.13.2 and thus introduce bug fix for invalid Mesa agent names  ([`6837e59`](https://github.com/Met4FoF/Code/commit/6837e590f2e7c6324a1c78a90d9bc942e08dafb2))
