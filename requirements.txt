@@ -4,7 +4,7 @@
 #
 #    pip-compile
 #
--e ./agentMET4FOF
+-e file:agentMET4FOF
     # via
     #   -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in
     #   -c tutorials/agentMET4FOF_sensors/requirements.in
@@ -12,20 +12,20 @@
     #   -r tutorials/agentMET4FOF_anomaly_detection/requirements.in
     #   -r tutorials/agentMET4FOF_ml/requirements.txt
     #   met4fof-redundancy
--e ./Met4FoF-redundancy
+-e file:Met4FoF-redundancy
     # via -r requirements.in
--e ./PyDynamic
+-e file:PyDynamic
     # via
-    #   -c tutorials/PyDynamic_tutorials/requirements/requirements.in
+    #   -c agentMET4FOF/requirements.txt
     #   -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt
     #   -r requirements.in
--e ./time-series-buffer
+-e file:time-series-buffer
     # via
     #   -c agentMET4FOF/requirements.txt
     #   -r requirements.in
     #   agentmet4fof
     #   pydynamic
--e ./time-series-metadata
+-e file:time-series-metadata
     # via
     #   -c agentMET4FOF/requirements.txt
     #   -r requirements.in
@@ -37,26 +37,33 @@ arrow==1.2.2
     #   -c agentMET4FOF/requirements.txt
     #   jinja2-time
 asttokens==2.0.5
-    # via stack-data
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   stack-data
 attrs==21.4.0
     # via
+    #   -c agentMET4FOF/requirements.txt
     #   hypothesis
     #   jsonschema
     #   pytest
 babel==2.9.1
     # via sphinx
 backcall==0.2.0
-    # via ipython
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   ipython
 binaryornot==0.4.4
     # via
     #   -c agentMET4FOF/requirements.txt
     #   cookiecutter
 black[jupyter]==22.1.0
     # via
-    #   -c PyDynamic/requirements/dev-requirements.in
+    #   -c agentMET4FOF/requirements.txt
+    #   -r agentMET4FOF/dev-requirements.in
     #   ipython
 bleach==4.1.0
     # via
+    #   -c agentMET4FOF/requirements.txt
     #   nbconvert
     #   readme-renderer
 brotli==1.0.9
@@ -69,7 +76,9 @@ certifi==2021.10.8
     #   -c agentMET4FOF/requirements.txt
     #   requests
 cffi==1.15.0
-    # via cryptography
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   cryptography
 chardet==4.0.0
     # via
     #   -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
@@ -136,9 +145,13 @@ dash-table==5.0.0
     #   -c agentMET4FOF/requirements.txt
     #   dash
 decorator==5.1.1
-    # via ipython
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   ipython
 defusedxml==0.7.1
-    # via nbconvert
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   nbconvert
 dill==0.3.4
     # via
     #   -c agentMET4FOF/requirements.txt
@@ -155,12 +168,15 @@ docutils==0.17.1
     #   sphinx-rtd-theme
 dotty-dict==1.3.0
     # via python-semantic-release
-entrypoints==0.3
+entrypoints==0.4
     # via
+    #   -c agentMET4FOF/requirements.txt
     #   jupyter-client
     #   nbconvert
 executing==0.8.2
-    # via stack-data
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   stack-data
 filelock==3.4.2
     # via
     #   tox
@@ -183,9 +199,7 @@ gitdb==4.0.9
 gitpython==3.1.26
     # via python-semantic-release
 hypothesis==6.36.1
-    # via
-    #   -c PyDynamic/requirements/dev-requirements.in
-    #   -r agentMET4FOF/dev-requirements.in
+    # via -r agentMET4FOF/dev-requirements.in
 idna==3.3
     # via
     #   -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
@@ -206,18 +220,21 @@ invoke==1.6.0
     # via python-semantic-release
 ipython==8.0.1
     # via
-    #   -c PyDynamic/requirements/dev-requirements.in
-    #   -c tutorials/PyDynamic_tutorials/requirements/requirements.in
+    #   -c agentMET4FOF/requirements.txt
     #   -r agentMET4FOF/dev-requirements.in
     #   black
 ipython-genutils==0.2.0
-    # via nbformat
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   nbformat
 itsdangerous==2.0.1
     # via
     #   -c agentMET4FOF/requirements.txt
     #   flask
 jedi==0.18.1
-    # via ipython
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   ipython
 jeepney==0.7.1
     # via
     #   keyring
@@ -241,16 +258,23 @@ joblib==1.1.0
     #   -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
     #   scikit-learn
 jsonschema==4.4.0
-    # via nbformat
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   nbformat
 jupyter-client==7.1.2
-    # via nbclient
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   nbclient
 jupyter-core==4.9.1
     # via
+    #   -c agentMET4FOF/requirements.txt
     #   jupyter-client
     #   nbconvert
     #   nbformat
 jupyterlab-pygments==0.1.2
-    # via nbconvert
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   nbconvert
 keyring==23.5.0
     # via twine
 kiwisolver==1.3.2
@@ -266,7 +290,6 @@ matplotlib==3.2.2
     # via
     #   -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
     #   -c agentMET4FOF/requirements.txt
-    #   -c tutorials/PyDynamic_tutorials/requirements/requirements.in
     #   -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt
     #   -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in
     #   -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt
@@ -275,41 +298,53 @@ matplotlib==3.2.2
     #   pydynamic
     #   scikit-multiflow
 matplotlib-inline==0.1.3
-    # via ipython
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   ipython
 mesa==0.9.0
     # via
     #   -c agentMET4FOF/requirements.txt
     #   agentmet4fof
 mistune==0.8.4
-    # via nbconvert
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   nbconvert
 mpld3==0.5.7
     # via
     #   -c agentMET4FOF/requirements.txt
     #   agentmet4fof
 mpmath==1.2.1
-    # via sympy
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   sympy
 multiprocess==0.70.12.2
     # via
     #   -c agentMET4FOF/requirements.txt
     #   -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt
     #   agentmet4fof
 mypy-extensions==0.4.3
-    # via black
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   black
 nbclient==0.5.10
-    # via nbconvert
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   nbconvert
 nbconvert==6.4.1
-    # via nbsphinx
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   nbsphinx
 nbformat==5.1.3
     # via
+    #   -c agentMET4FOF/requirements.txt
     #   nbclient
     #   nbconvert
     #   nbsphinx
 nbsphinx==0.8.8
-    # via
-    #   -c PyDynamic/requirements/dev-requirements.in
-    #   -r agentMET4FOF/dev-requirements.in
+    # via -r agentMET4FOF/dev-requirements.in
 nest-asyncio==1.5.4
     # via
+    #   -c agentMET4FOF/requirements.txt
     #   jupyter-client
     #   nbclient
 networkx==2.6.3
@@ -318,11 +353,10 @@ networkx==2.6.3
     #   -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt
     #   agentmet4fof
     #   mesa
-numpy==1.22.1
+numpy==1.22.2
     # via
     #   -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
     #   -c agentMET4FOF/requirements.txt
-    #   -c tutorials/PyDynamic_tutorials/requirements/requirements.in
     #   -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt
     #   -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in
     #   -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt
@@ -348,6 +382,7 @@ osbrain==0.6.5
 packaging==21.3
     # via
     #   -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
+    #   -c agentMET4FOF/requirements.txt
     #   bleach
     #   pytest
     #   setuptools-scm
@@ -357,7 +392,6 @@ pandas==1.4.0
     # via
     #   -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
     #   -c agentMET4FOF/requirements.txt
-    #   -c tutorials/PyDynamic_tutorials/requirements/requirements.in
     #   -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt
     #   -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in
     #   -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt
@@ -367,25 +401,35 @@ pandas==1.4.0
     #   pydynamic
     #   scikit-multiflow
 pandocfilters==1.5.0
-    # via nbconvert
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   nbconvert
 parso==0.8.3
-    # via jedi
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   jedi
 pathspec==0.9.0
-    # via black
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   black
 pexpect==4.8.0
-    # via ipython
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   ipython
 pickleshare==0.7.5
-    # via ipython
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   ipython
 pkginfo==1.8.2
     # via twine
 platformdirs==2.4.1
     # via
+    #   -c agentMET4FOF/requirements.txt
     #   black
     #   virtualenv
 plotly==5.5.0
     # via
     #   -c agentMET4FOF/requirements.txt
-    #   -c tutorials/PyDynamic_tutorials/requirements/requirements.in
     #   -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt
     #   -r tutorials/agentMET4FOF_anomaly_detection/requirements.in
     #   agentmet4fof
@@ -399,24 +443,33 @@ poyo==0.5.0
     #   -c agentMET4FOF/requirements.txt
     #   cookiecutter
 prompt-toolkit==3.0.26
-    # via ipython
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   ipython
 psutil==5.9.0
     # via
     #   -c tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in
     #   -r agentMET4FOF/dev-requirements.in
 ptyprocess==0.7.0
-    # via pexpect
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   pexpect
 pure-eval==0.2.2
-    # via stack-data
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   stack-data
 py==1.11.0
     # via
     #   -c tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in
     #   pytest
     #   tox
 pycparser==2.21
-    # via cffi
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   cffi
 pygments==2.11.2
     # via
+    #   -c agentMET4FOF/requirements.txt
     #   ipython
     #   jupyterlab-pygments
     #   nbconvert
@@ -432,20 +485,19 @@ pyro4==4.82
     #   -c agentMET4FOF/requirements.txt
     #   osbrain
 pyrsistent==0.18.1
-    # via jsonschema
-pytest==6.2.5
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   jsonschema
+pytest==7.0.0
     # via
     #   -c Met4FoF-redundancy/requirements/dev-requirements.txt
-    #   -c PyDynamic/requirements/dev-requirements.in
     #   -c time-series-metadata/requirements/dev-requirements.in
     #   -c tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in
     #   -r agentMET4FOF/dev-requirements.in
     #   pytest-cov
     #   pytest-timeout
 pytest-cov==3.0.0
-    # via
-    #   -c PyDynamic/requirements/dev-requirements.in
-    #   -r agentMET4FOF/dev-requirements.in
+    # via -r agentMET4FOF/dev-requirements.in
 pytest-timeout==2.1.0
     # via
     #   -c tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in
@@ -462,7 +514,6 @@ python-gitlab==2.10.1
     # via python-semantic-release
 python-semantic-release==7.24.0
     # via
-    #   -c PyDynamic/requirements/dev-requirements.in
     #   -c time-series-metadata/requirements/dev-requirements.in
     #   -r agentMET4FOF/dev-requirements.in
 python-slugify==5.0.2
@@ -476,7 +527,9 @@ pytz==2021.3
     #   babel
     #   pandas
 pywavelets==1.2.0
-    # via pydynamic
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   pydynamic
 pyzmq==22.3.0
     # via
     #   -c agentMET4FOF/requirements.txt
@@ -486,7 +539,6 @@ readme-renderer==32.0
     # via twine
 recommonmark==0.7.1
     # via
-    #   -c PyDynamic/requirements/dev-requirements.in
     #   -c time-series-metadata/requirements/dev-requirements.in
     #   -r agentMET4FOF/dev-requirements.in
 requests==2.27.1
@@ -519,7 +571,7 @@ scikit-learn==1.0.2
     #   scikit-multiflow
 scikit-multiflow==0.5.3
     # via -r tutorials/agentMET4FOF_ml/requirements.txt
-scipy==1.7.3
+scipy==1.8.0
     # via
     #   -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
     #   -c agentMET4FOF/requirements.txt
@@ -563,7 +615,6 @@ sortedcontainers==2.4.0
     #   scikit-multiflow
 sphinx==4.4.0
     # via
-    #   -c PyDynamic/requirements/dev-requirements.in
     #   -c time-series-metadata/requirements/dev-requirements.in
     #   -r agentMET4FOF/dev-requirements.in
     #   nbsphinx
@@ -571,7 +622,6 @@ sphinx==4.4.0
     #   sphinx-rtd-theme
 sphinx-rtd-theme==1.0.0
     # via
-    #   -c PyDynamic/requirements/dev-requirements.in
     #   -c time-series-metadata/requirements/dev-requirements.in
     #   -r agentMET4FOF/dev-requirements.in
 sphinxcontrib-applehelp==1.0.2
@@ -587,15 +637,21 @@ sphinxcontrib-qthelp==1.0.3
 sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
 stack-data==0.1.4
-    # via ipython
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   ipython
 sympy==1.9
-    # via pydynamic
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   pydynamic
 tenacity==8.0.1
     # via
     #   -c agentMET4FOF/requirements.txt
     #   plotly
 testpath==0.5.0
-    # via nbconvert
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   nbconvert
 text-unidecode==1.3
     # via
     #   -c agentMET4FOF/requirements.txt
@@ -605,17 +661,17 @@ threadpoolctl==3.1.0
 tokenize-rt==4.2.1
     # via black
 toml==0.10.2
-    # via
-    #   pytest
-    #   tox
+    # via tox
 tomli==2.0.0
     # via
+    #   -c agentMET4FOF/requirements.txt
     #   black
     #   coverage
+    #   pytest
     #   setuptools-scm
 tomlkit==0.7.0
     # via python-semantic-release
-torch==1.10.2
+#torch==1.10.2
     # via
     #   -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt
     #   -r tutorials/agentMET4FOF_anomaly_detection/requirements.in
@@ -626,7 +682,6 @@ tornado==6.1
     #   mesa
 tox==3.24.5
     # via
-    #   -c PyDynamic/requirements/dev-requirements.in
     #   -c time-series-metadata/requirements/dev-requirements.in
     #   -r agentMET4FOF/dev-requirements.in
 tqdm==4.62.3
@@ -637,6 +692,7 @@ tqdm==4.62.3
     #   twine
 traitlets==5.1.1
     # via
+    #   -c agentMET4FOF/requirements.txt
     #   ipython
     #   jupyter-client
     #   jupyter-core
@@ -645,7 +701,7 @@ traitlets==5.1.1
     #   nbconvert
     #   nbformat
     #   nbsphinx
-twine==3.7.1
+twine==3.8.0
     # via python-semantic-release
 typing-extensions==4.0.1
     # via
@@ -661,16 +717,21 @@ urllib3==1.26.8
     #   -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
     #   -c agentMET4FOF/requirements.txt
     #   requests
-virtualenv==20.13.0
+    #   twine
+virtualenv==20.13.1
     # via tox
 visdcc==0.0.40
     # via
     #   -c agentMET4FOF/requirements.txt
     #   agentmet4fof
 wcwidth==0.2.5
-    # via prompt-toolkit
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   prompt-toolkit
 webencodings==0.5.1
-    # via bleach
+    # via
+    #   -c agentMET4FOF/requirements.txt
+    #   bleach
 werkzeug==2.0.2
     # via
     #   -c agentMET4FOF/requirements.txt

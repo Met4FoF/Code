@@ -156,7 +156,7 @@ tqdm==4.62.3
     # via
     #   -c requirements.txt
     #   twine
-twine==3.7.1
+twine==3.8.0
     # via
     #   -c requirements.txt
     #   python-semantic-release
@@ -164,6 +164,7 @@ urllib3==1.26.8
     # via
     #   -c requirements.txt
     #   requests
+    #   twine
 webencodings==0.5.1
     # via
     #   -c requirements.txt
