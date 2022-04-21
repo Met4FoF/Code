@@ -79,6 +79,7 @@ commands:
     steps:
     - run:
         name: Perform pytest --nbval testing
+        no_output_timeout: 30m
         command: |
           source << parameters.pyenv >>/bin/activate
           pytest --nbval --current-env --sanitize-with nbval_sanitization | \
@@ -205,11 +206,15 @@ jobs:
 
       - store_results
 
-      - persist_to_workspace:
-          root: .
-          paths:
-            - requirements/requirements.txt
-            - requirements/requirements-dev.txt
+      - when:
+          condition:
+            equal: [ "py310", << parameters.pyenv >> ]
+          steps:
+            - persist_to_workspace:
+                root: .
+                paths:
+                  - requirements/requirements.txt
+                  - requirements/requirements-dev.txt
 
   commit_push_open_pr:
     executor:
@@ -319,9 +324,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v2-conda-dependencies-{{ checksum "requirements/environment.yml" }}-{{checksum "requirements/requirements.txt" }}-{{ checksum "requirements/requirements-dev.txt" }}
+            - v3-conda-dependencies-{{ checksum "requirements/environment.yml" }}-{{checksum "requirements/requirements.txt" }}-{{ checksum "requirements/requirements-dev.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - v2-conda-dependencies-
+            - v3-conda-dependencies-
 
       # Create environment and install extra_requires dependencies manually.
       - run:
@@ -340,11 +345,12 @@ jobs:
           paths:
             - /home/circleci/conda/envs/
           key: >-
-            v2-conda-dependencies-{{ checksum "requirements/environment.yml" }}-{{ checksum "requirements/requirements.txt" }}-{{ checksum "requirements/requirements-dev.txt" }}
+            v3-conda-dependencies-{{ checksum "requirements/environment.yml" }}-{{ checksum "requirements/requirements.txt" }}-{{ checksum "requirements/requirements-dev.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run:
           name: Run tests
+          no_output_timeout: 30m
           command: |
             source $HOME/conda/etc/profile.d/conda.sh
             conda activate PyDynamic_tutorials
