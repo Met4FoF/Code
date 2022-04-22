@@ -801,10 +801,10 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
+            cd PyDynamic
             pip install --upgrade pip pip-tools
             pip-sync PyDynamic/requirements/requirements-py38.txt \
                 PyDynamic/requirements/dev-requirements-py38.txt
-            pip install ./PyDynamic
 
       - save_cache:
           paths:
