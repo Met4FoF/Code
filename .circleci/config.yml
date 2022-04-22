@@ -803,8 +803,8 @@ jobs:
             source venv/bin/activate
             cd PyDynamic
             pip install --upgrade pip pip-tools
-            pip-sync PyDynamic/requirements/requirements-py38.txt \
-                PyDynamic/requirements/dev-requirements-py38.txt
+            pip-sync requirements/requirements-py38.txt \
+                requirements/dev-requirements-py38.txt
 
       - save_cache:
           paths:
