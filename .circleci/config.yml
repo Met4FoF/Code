@@ -339,9 +339,9 @@ commands:
     - restore_cache:
         keys:
           # Specify the unique identifier for the cache.
-          - v1-venv-dependencies-{{ checksum "requirements.txt" }}
+          - v2-venv-dependencies-{{ checksum "requirements.txt" }}
           # Fallback to using the latest cache if no exact match is found.
-          - v1-venv-dependencies-
+          - v2-venv-dependencies-
 
     # Install dependencies.
     - run:
@@ -357,7 +357,7 @@ commands:
         paths:
           - ./venv
         key: >-
-          v1-venv-dependencies-{{ checksum "requirements.txt" }}
+          v2-venv-dependencies-{{ checksum "requirements.txt" }}
 
 
 
@@ -791,9 +791,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - PyDynamic-v3-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
+            - PyDynamic-v4-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - PyDynamic-v3
+            - PyDynamic-v4
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -801,16 +801,16 @@ jobs:
           command: |
             python3 -m venv venv
             source venv/bin/activate
+            cd PyDynamic
             pip install --upgrade pip pip-tools
-            pip-sync PyDynamic/requirements/requirements-py38.txt \
-                PyDynamic/requirements/dev-requirements-py38.txt
-            pip install ./PyDynamic
+            pip-sync requirements/requirements-py38.txt \
+                requirements/dev-requirements-py38.txt
 
       - save_cache:
           paths:
             - ./venv
           key: >-
-            PyDynamic-v3-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
+            PyDynamic-v4-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run:
@@ -843,9 +843,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - agentMET4FOF-v3-{{ checksum "agentMET4FOF/requirements.txt" }}-{{ checksum "agentMET4FOF/dev-requirements.txt" }}
+            - agentMET4FOF-v4-{{ checksum "agentMET4FOF/requirements.txt" }}-{{ checksum "agentMET4FOF/dev-requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - agentMET4FOF-v3
+            - agentMET4FOF-v4
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -859,7 +859,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            agentMET4FOF-v3-{{ checksum "agentMET4FOF/requirements.txt" }}-{{ checksum "agentMET4FOF/dev-requirements.txt" }}
+            agentMET4FOF-v4-{{ checksum "agentMET4FOF/requirements.txt" }}-{{ checksum "agentMET4FOF/dev-requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -877,9 +877,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - agentMET4FOF_anomaly_detection-v2-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
+            - agentMET4FOF_anomaly_detection-v3-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - agentMET4FOF_anomaly_detection-v2
+            - agentMET4FOF_anomaly_detection-v3
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -895,7 +895,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            agentMET4FOF_anomaly_detection-v2-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
+            agentMET4FOF_anomaly_detection-v3-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -913,9 +913,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - agentMET4FOF_sensors-v2-{{ checksum "tutorials/agentMET4FOF_sensors/requirements.txt" }}
+            - agentMET4FOF_sensors-v3-{{ checksum "tutorials/agentMET4FOF_sensors/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - agentMET4FOF_sensors-v2
+            - agentMET4FOF_sensors-v3
 
       # Install dependencies. Suddenly since 2021-08-27 we observed an error with
       # previously successful configurations. That is why we introduced the gcc flag
@@ -936,7 +936,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            agentMET4FOF_sensors-v2-{{ checksum "tutorials/agentMET4FOF_sensors/requirements.txt" }}
+            agentMET4FOF_sensors-v3-{{ checksum "tutorials/agentMET4FOF_sensors/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -960,9 +960,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - agentMET4FOF_ml-v3-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
+            - agentMET4FOF_ml-v4-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - agentMET4FOF_ml-v3
+            - agentMET4FOF_ml-v4
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -978,7 +978,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            agentMET4FOF_ml-v3-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
+            agentMET4FOF_ml-v4-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -1002,9 +1002,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - time-series-buffer-v2-{{ checksum "time-series-buffer/requirements.txt" }}
+            - time-series-buffer-v3-{{ checksum "time-series-buffer/requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - time-series-buffer-v2
+            - time-series-buffer-v3
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -1020,7 +1020,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            time-series-buffer-v2-{{ checksum "time-series-buffer/requirements.txt" }}
+            time-series-buffer-v3-{{ checksum "time-series-buffer/requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -1044,9 +1044,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - time-series-metadata-v2-{{ checksum "time-series-metadata/requirements/dev-requirements-py38.txt" }}
+            - time-series-metadata-v3-{{ checksum "time-series-metadata/requirements/dev-requirements-py38.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - time-series-metadata-v2
+            - time-series-metadata-v3
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -1063,7 +1063,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            time-series-metadata-v2-{{ checksum "time-series-metadata/requirements/dev-requirements-py38.txt" }}
+            time-series-metadata-v3-{{ checksum "time-series-metadata/requirements/dev-requirements-py38.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -1081,9 +1081,9 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - Met4FoF-redundancy-v3-{{ checksum "Met4FoF-redundancy/requirements/requirements.txt" }}-{{ checksum "Met4FoF-redundancy/requirements/dev-requirements.txt" }}
+            - Met4FoF-redundancy-v4-{{ checksum "Met4FoF-redundancy/requirements/requirements.txt" }}-{{ checksum "Met4FoF-redundancy/requirements/dev-requirements.txt" }}
             # Fallback to using the latest cache if no exact match is found.
-            - Met4FoF-redundancy-v3
+            - Met4FoF-redundancy-v4
 
       # Install dependencies and Codecov reporter if necessary.
       - run:
@@ -1097,7 +1097,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            Met4FoF-redundancy-v3-{{ checksum "Met4FoF-redundancy/requirements/requirements.txt" }}-{{ checksum "Met4FoF-redundancy/requirements/dev-requirements.txt" }}
+            Met4FoF-redundancy-v4-{{ checksum "Met4FoF-redundancy/requirements/requirements.txt" }}-{{ checksum "Met4FoF-redundancy/requirements/dev-requirements.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -1114,7 +1114,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v1-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            - v2-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Install dependencies.
       - run:
@@ -1129,7 +1129,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            v1-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            v2-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Publish it, if there is anything to publish!
       - run:
@@ -1152,7 +1152,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v1-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            - v2-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Install dependencies.
       - run:
@@ -1167,7 +1167,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            v1-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            v2-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Fake publish, just to make sure everything works after merging a PR and
       # before actual release jos run.

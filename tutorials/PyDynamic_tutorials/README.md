@@ -17,7 +17,7 @@ a local copy and experiment offline on your machine.
  
 ### Quick start in current browser session
  
-To start working in the notebooks directly in the browser, click [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PTB-M4D/PyDynamic_tutorials/master).
+To start working in the notebooks directly in the browser, click [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/PTB-M4D/PyDynamic_tutorials/main).
  
 ### Get a local copy to work offline
 
