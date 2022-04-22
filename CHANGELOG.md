@@ -2,6 +2,13 @@
 
 <!--next-version-placeholder-->
 
+## v0.17.0 (2022-04-22)
+### :sparkles:
+* :sparkles: Update PyDynamic to 2.2.0 with new convolution feature  ([`8108dbf`](https://github.com/Met4FoF/Code/commit/8108dbff259573ce9523fc4ded0d6a18bd05a058))
+* :sparkles: Update PyDynamic_tutorials to the most recent version with a spline tutorial and updated deps  ([`c29c962`](https://github.com/Met4FoF/Code/commit/c29c962427fd2f0d37bc25019e5f00920c3c2dcd))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.16.2...v0.17.0)**
+
 ## v0.16.2 (2022-02-08)
 ### :speech_balloon:
 * :speech_balloon: Introduce tutorials README with upstream links and descriptions  ([`45b704a`](https://github.com/Met4FoF/Code/commit/45b704a0f96693548722165dad2f4ebce51de8e8))
