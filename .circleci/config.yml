@@ -339,9 +339,9 @@ commands:
     - restore_cache:
         keys:
           # Specify the unique identifier for the cache.
-          - v1-venv-dependencies-{{ checksum "requirements.txt" }}
+          - v2-venv-dependencies-{{ checksum "requirements.txt" }}
           # Fallback to using the latest cache if no exact match is found.
-          - v1-venv-dependencies-
+          - v2-venv-dependencies-
 
     # Install dependencies.
     - run:
@@ -357,7 +357,7 @@ commands:
         paths:
           - ./venv
         key: >-
-          v1-venv-dependencies-{{ checksum "requirements.txt" }}
+          v2-venv-dependencies-{{ checksum "requirements.txt" }}
 
 
 
@@ -1114,7 +1114,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v1-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            - v2-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Install dependencies.
       - run:
@@ -1129,7 +1129,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            v1-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            v2-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Publish it, if there is anything to publish!
       - run:
@@ -1152,7 +1152,7 @@ jobs:
       - restore_cache:
           keys:
             # Specify the unique identifier for the cache.
-            - v1-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            - v2-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Install dependencies.
       - run:
@@ -1167,7 +1167,7 @@ jobs:
           paths:
             - ./venv
           key: >-
-            v1-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            v2-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
 
       # Fake publish, just to make sure everything works after merging a PR and
       # before actual release jos run.
