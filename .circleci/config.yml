@@ -546,7 +546,7 @@ jobs:
       - subtree_pull:
           subtree: PyDynamic
           upstream_url: git@github.com:PTB-M4D/PyDynamic.git
-          branch: master
+          branch: main
       - subtree_pull:
           subtree: PySensorNetwork
           upstream_url: git@github.com:Met4FoF/PySensorNetwork.git
