@@ -39,7 +39,7 @@ click==8.1.2
     #   mesa
 cloudpickle==2.0.0
     # via osbrain
-cookiecutter==1.7.3
+cookiecutter==2.1.1
     # via mesa
 cycler==0.11.0
     # via matplotlib
