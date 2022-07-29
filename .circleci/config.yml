@@ -598,7 +598,7 @@ jobs:
       - subtree_pull:
           subtree: ZeMA_testbed_Bayesian_machine_learning
           upstream_url: git@github.com:Met4FoF/ZeMA_testbed_Bayesian_machine_learning.git
-          branch: master
+          branch: main
       - run:
           name: Abort if no new commit was added
           command: |
