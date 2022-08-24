@@ -30,12 +30,10 @@ executors:
 workflows:
 
   pull_subtrees_and_recompile_deps:
-    triggers:
-      - schedule:
-          cron: "0 0 1 * *"
-          filters:
-            branches:
-              only: /main/
+    when:
+      and:
+        - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+        - equal: [ "Pull subtrees", << pipeline.schedule.name >> ]
     jobs:
       - pull_subtrees:
           new_branch: most_recent_subtree_pulls
@@ -43,6 +41,9 @@ workflows:
             - Docker pulls
 
   check_for_upgraded_deps:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - recompile_deps:
           filters:
@@ -58,12 +59,10 @@ workflows:
             - GitHub pushes to BjoernLudwigPTB's public_repos
 
   nightly_test:
-    triggers:
-      - schedule:
-          cron: "0 0 8,15,22 * *"
-          filters:
-            branches:
-              only: /main/
+    when:
+      and:
+        - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+        - equal: [ "Weekly nightly tests", << pipeline.schedule.name >> ]
     jobs:
       - build_and_test_conda_env:
           context:
@@ -173,6 +172,9 @@ workflows:
             - Docker pulls
 
   build_and_test_virtual_environments:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - build_and_test_conda_env:
           context:
