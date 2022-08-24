@@ -20,3 +20,5 @@
 # -c file:tutorials/PyDynamic_tutorials/requirements/requirements.in
 -c tutorials/ZeMA-machine-learning-tutorials/requirements.txt
 -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
+# Due to a strange bug starting from version v7.29.0 we have to pin here .
+python-semantic-release<=7.28.1

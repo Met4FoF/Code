@@ -393,7 +393,6 @@ packaging==21.3
     #   -c agentMET4FOF/requirements.txt
     #   nbconvert
     #   pytest
-    #   python-semantic-release
     #   sphinx
     #   tox
 pandas==1.4.3
@@ -515,10 +514,11 @@ python-dateutil==2.8.2
     #   pandas
 python-gitlab==3.8.1
     # via python-semantic-release
-python-semantic-release==7.31.4
+python-semantic-release==7.28.1
     # via
     #   -c time-series-metadata/requirements/dev-requirements.in
     #   -r agentMET4FOF/dev-requirements.in
+    #   -r requirements.in
 python-slugify==6.1.2
     # via
     #   -c agentMET4FOF/requirements.txt
@@ -673,7 +673,7 @@ tomli==2.0.1
     #   black
     #   coverage
     #   pytest
-tomlkit==0.11.4
+tomlkit==0.10.2
     # via python-semantic-release
 #torch==1.12.1
     # via
