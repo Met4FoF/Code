@@ -22,7 +22,7 @@ executors:
   gh_releaser:
     working_directory: ~/repo
     docker:
-      - image: cimg/base:2021.04
+      - image: cimg/base:current
         auth:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD
