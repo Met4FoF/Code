@@ -46,12 +46,10 @@ executors:
 workflows:
 
   check_for_upgraded_deps:
-    triggers:
-      - schedule:
-          cron: "0 0 1 * *"
-          filters:
-            branches:
-              only: /main/
+    when:
+      and:
+        - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+        - equal: [ "Recompile and test deps", << pipeline.schedule.name >> ]
     jobs:
       - test_with_updated_deps:
           name: "test_with_updated_deps_py37"
@@ -88,6 +86,9 @@ workflows:
             - GitHub pushes to BjoernLudwigPTB's public_repos
 
   test_and_deploy:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - test:
           name: "test_python3.7"
@@ -170,7 +171,7 @@ commands:
         command: |
           python3 -m venv << parameters.pyenv >>
           source << parameters.pyenv >>/bin/activate
-          pip install --upgrade pip==21.3.0 setuptools
+          pip install --upgrade pip setuptools
 
   # Reusable command to install development dependencies.
   install__development_deps:
@@ -249,7 +250,8 @@ jobs:
       tag: << parameters.tag >>
 
     steps:
-      - create_folders_and_venv
+      - create_folders_and_venv:
+          pyenv: << parameters.pyenv >>
       - run:
           name: Recompile and sync deps
           command: |
@@ -317,10 +319,10 @@ jobs:
             gh pr list --head=$NEW_BRANCH | grep $NEW_BRANCH
             if [ $? -eq 1 ]; then
                 set -e
-                gh pr create --base=master --title "Update deps" \
+                gh pr create --base=main --title "Update deps" \
                   --body "This PR provides recompiled deps for all outdated \
-                  package versions. It was opened after the commited deps \
-                  were succesfully compiled and all tests passed with the \
+                  package versions. It was opened after the committed deps \
+                  were successfully compiled and all tests passed with the \
                   new versions. It should be merged as soon as possible to \
                   avoid any security issues due to outdated dependencies."
             else
