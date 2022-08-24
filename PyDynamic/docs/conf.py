@@ -144,7 +144,7 @@ root_doc = "index"
 # General information about the project.
 project = "PyDynamic"
 copyright = (
-    "2021, S. Eichstädt (PTB), M. Gruber (PTB), B. Ludwig (PTB), "
+    "2022, S. Eichstädt (PTB), M. Gruber (PTB), B. Ludwig (PTB), "
     "T. Bruns (PTB), I. Smith (NPL)"
 )
 author = "S. Eichstädt, M. Gruber, B. Ludwig, T. Bruns, M. Weber, I. Smith"
@@ -154,7 +154,7 @@ author = "S. Eichstädt, M. Gruber, B. Ludwig, T. Bruns, M. Weber, I. Smith"
 # built documents.K
 #
 # The short X.Y version.
-version = "2.2.0"
+version = "2.3.0"
 # The full version, including alpha/beta/rc tags.
 # release = "1.3.1"
 
@@ -163,7 +163,7 @@ version = "2.2.0"
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
