@@ -2,6 +2,12 @@
 
 <!--next-version-placeholder-->
 
+## v0.18.0 (2022-08-24)
+### :sparkles:
+* :sparkles: Update PyDynamic to 2.3.0 with new rms feature ([`14efba8`](https://github.com/Met4FoF/Code/commit/14efba8851b4ce383d6416da2949c8518bada85c))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.17.0...v0.18.0)**
+
 ## v0.17.0 (2022-04-22)
 ### :sparkles:
 * :sparkles: Update PyDynamic to 2.2.0 with new convolution feature  ([`8108dbf`](https://github.com/Met4FoF/Code/commit/8108dbff259573ce9523fc4ded0d6a18bd05a058))
