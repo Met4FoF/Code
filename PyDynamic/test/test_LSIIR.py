@@ -10,6 +10,7 @@ from numpy.testing import assert_almost_equal, assert_equal
 
 from PyDynamic import grpdelay, isstable, mapinside, sos_FreqResp
 from PyDynamic.model_estimation import fit_filter
+from PyDynamic.model_estimation.fit_filter import _rms_is_required
 
 
 @hst.composite
@@ -132,7 +133,7 @@ def provide_former_fitIIR():
         exponent = -1 if _inv else 1
         Ea = _E[:, 1 : _Na + 1]
         Eb = _E[:, : _Nb + 1]
-        Htau = np.exp(-1j * _omega * _tau) * _H ** exponent
+        Htau = np.exp(-1j * _omega * _tau) * _H**exponent
         HEa = np.dot(np.diag(Htau), Ea)
         D = np.hstack((HEa, -Eb))
         Tmp1 = np.real(np.dot(np.conj(D.T), D))
@@ -277,9 +278,11 @@ def test_fitIIR_results_against_former_implementations(
 ):
     """This takes the implementation prior to the rewrite and compares results."""
     if inv:
-        # Make sure there are non-zero frequency responses. Otherwise fitting to
+        # Make sure there are non-zero frequency responses. Otherwise, fitting to
         # reciprocal of frequency response means dividing by zero.
-        assume(not np.all(lsiir_base_params["H"] == 0))
+        assume(
+            not np.all(np.absolute(lsiir_base_params["H"]) < np.finfo(np.float64).eps)
+        )
 
     # Initialize parameters.
     fit_params = {
@@ -348,3 +351,14 @@ def test_fit_iir_with_uncertainty():
     UH = np.diag(1 + np.random.rand(2 * N))
 
     fit_filter.LSIIR(H=H, UH=UH, Nb=3, Na=6, f=f, Fs=Fs, tau=2, mc_runs=2)
+
+
+@given(LSIIR_parameters())
+def test_LSIIR_rms_output_format(parameters):
+    _, _, _, _, rms = fit_filter.LSIIR(**parameters, return_rms=True)
+    assert isinstance(rms, float)
+
+
+@given(hst.booleans(), hst.booleans())
+def test_rms_is_required(return_rms, verbose):
+    assert_equal(_rms_is_required(return_rms, verbose), return_rms or verbose)
