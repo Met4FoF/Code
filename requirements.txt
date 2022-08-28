@@ -158,7 +158,7 @@ dill==0.3.5.1
     #   -c agentMET4FOF/requirements.txt
     #   multiprocess
     #   osbrain
-distlib==0.3.5
+distlib==0.3.6
     # via virtualenv
 docutils==0.17.1
     # via
@@ -512,7 +512,7 @@ python-dateutil==2.8.2
     #   jupyter-client
     #   matplotlib
     #   pandas
-python-gitlab==3.8.1
+python-gitlab==3.9.0
     # via python-semantic-release
 python-semantic-release==7.28.1
     # via
