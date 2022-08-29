@@ -87,7 +87,7 @@ pygments==2.13.0
     # via
     #   -c requirements.txt
     #   readme-renderer
-python-gitlab==3.8.1
+python-gitlab==3.9.0
     # via
     #   -c requirements.txt
     #   python-semantic-release
