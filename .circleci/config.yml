@@ -604,7 +604,7 @@ jobs:
       - run:
           name: Abort if no new commit was added
           command: |
-            if [ $(git rev-parse HEAD) == ${CIRCLE_SHA1}]; then
+            if [ $(git rev-parse HEAD) == ${CIRCLE_SHA1} ]; then
                 circleci-agent step halt
             fi
       - run: git push -fu origin << parameters.new_branch >>
