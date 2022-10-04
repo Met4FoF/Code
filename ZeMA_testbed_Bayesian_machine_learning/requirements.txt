@@ -46,7 +46,7 @@ idna==3.3
     # via
     #   -r requirements.in
     #   requests
-joblib==1.1.0
+joblib==1.2.0
     # via
     #   -r requirements.in
     #   scikit-learn
