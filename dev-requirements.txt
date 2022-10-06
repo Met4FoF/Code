@@ -57,16 +57,16 @@ idna==3.3
     # via
     #   -c requirements.txt
     #   requests
-importlib-metadata==4.12.0
+importlib-metadata==5.0.0
     # via
     #   -c requirements.txt
     #   keyring
     #   twine
-invoke==1.7.1
+invoke==1.7.3
     # via
     #   -c requirements.txt
     #   python-semantic-release
-jaraco-classes==3.2.2
+jaraco-classes==3.2.3
     # via
     #   -c requirements.txt
     #   keyring
@@ -75,7 +75,7 @@ jeepney==0.8.0
     #   -c requirements.txt
     #   keyring
     #   secretstorage
-keyring==23.9.1
+keyring==23.9.3
     # via
     #   -c requirements.txt
     #   twine
@@ -95,7 +95,7 @@ pygments==2.13.0
     # via
     #   -c requirements.txt
     #   readme-renderer
-python-gitlab==3.9.0
+python-gitlab==3.10.0
     # via
     #   -c requirements.txt
     #   python-semantic-release
@@ -103,7 +103,7 @@ python-semantic-release==7.28.1
     # via
     #   -c requirements.txt
     #   -r dev-requirements.in
-readme-renderer==37.1
+readme-renderer==37.2
     # via
     #   -c requirements.txt
     #   twine
