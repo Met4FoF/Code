@@ -60,7 +60,7 @@ binaryornot==0.4.4
     # via
     #   -c agentMET4FOF/requirements.txt
     #   cookiecutter
-black[jupyter]==22.8.0
+black[jupyter]==22.10.0
     # via -r agentMET4FOF/dev-requirements.in
 bleach==5.0.1
     # via
@@ -202,9 +202,9 @@ future==0.18.2
     #   uncertainties
 gitdb==4.0.9
     # via gitpython
-gitpython==3.1.27
+gitpython==3.1.28
     # via python-semantic-release
-hypothesis==6.55.0
+hypothesis==6.56.1
     # via -r agentMET4FOF/dev-requirements.in
 idna==3.3
     # via
@@ -220,7 +220,7 @@ importlib-metadata==5.0.0
     #   nbconvert
     #   sphinx
     #   twine
-importlib-resources==5.9.0
+importlib-resources==5.10.0
     # via jsonschema
 iniconfig==1.1.1
     # via pytest
@@ -567,7 +567,7 @@ requests==2.28.1
     #   requests-toolbelt
     #   sphinx
     #   twine
-requests-toolbelt==0.9.1
+requests-toolbelt==0.10.0
     # via
     #   python-gitlab
     #   twine
@@ -668,7 +668,7 @@ tinycss2==1.1.1
     # via
     #   -c agentMET4FOF/requirements.txt
     #   nbconvert
-tokenize-rt==4.2.1
+tokenize-rt==5.0.0
     # via black
 tomli==2.0.1
     # via
@@ -710,7 +710,7 @@ traitlets==5.3.0
     #   nbsphinx
 twine==3.8.0
     # via python-semantic-release
-typing-extensions==4.3.0
+typing-extensions==4.4.0
     # via
     #   -c ZeMA_testbed_Bayesian_machine_learning/requirements.in
     #   black
@@ -746,7 +746,7 @@ werkzeug==2.2.2
     #   flask
 wheel==0.37.1
     # via python-semantic-release
-zipp==3.8.1
+zipp==3.9.0
     # via
     #   importlib-metadata
     #   importlib-resources
