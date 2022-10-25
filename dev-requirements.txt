@@ -79,7 +79,7 @@ keyring==23.9.3
     # via
     #   -c requirements.txt
     #   twine
-more-itertools==8.14.0
+more-itertools==9.0.0
     # via
     #   -c requirements.txt
     #   jaraco-classes
