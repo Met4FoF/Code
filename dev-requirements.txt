@@ -29,7 +29,7 @@ click-log==0.4.0
     # via
     #   -c requirements.txt
     #   python-semantic-release
-colorama==0.4.5
+colorama==0.4.6
     # via
     #   -c requirements.txt
     #   twine
@@ -95,7 +95,7 @@ pygments==2.13.0
     # via
     #   -c requirements.txt
     #   readme-renderer
-python-gitlab==3.10.0
+python-gitlab==3.11.0
     # via
     #   -c requirements.txt
     #   python-semantic-release
@@ -114,7 +114,7 @@ requests==2.28.1
     #   python-semantic-release
     #   requests-toolbelt
     #   twine
-requests-toolbelt==0.10.0
+requests-toolbelt==0.10.1
     # via
     #   -c requirements.txt
     #   python-gitlab
@@ -164,7 +164,7 @@ wheel==0.37.1
     # via
     #   -c requirements.txt
     #   python-semantic-release
-zipp==3.9.0
+zipp==3.10.0
     # via
     #   -c requirements.txt
     #   importlib-metadata
