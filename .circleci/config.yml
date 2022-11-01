@@ -67,7 +67,7 @@ workflows:
       - build_and_test_conda_env:
           context:
             - Docker pulls
-      - build_and_test_venv_env:
+      - build_and_test_pip_env:
           context:
             - Docker pulls
       - test_against_conda:
@@ -179,7 +179,7 @@ workflows:
       - build_and_test_conda_env:
           context:
             - Docker pulls
-      - build_and_test_venv_env:
+      - build_and_test_pip_env:
           context:
             - Docker pulls
       - test_against_conda:
@@ -287,7 +287,7 @@ workflows:
           # to preview publishing actions and the new changelog.
           requires:
               - build_and_test_conda_env
-              - build_and_test_venv_env
+              - build_and_test_pip_env
               - test_agentMET4FOF_ml_against_conda
               - test_agentMET4FOF_ml_against_venv
 #              - test_agentMET4FOF_anomaly_detection_against_conda
@@ -334,34 +334,14 @@ workflows:
 
 commands:
   # Reusable command to prepare the environment for testing.
-  install_and_cache_venv_dependencies:
-    description: "Install pip dependencies of all packages."
+  install_pip_dependencies:
     steps:
-    # Download and cache dependencies.
-    - restore_cache:
-        keys:
-          # Specify the unique identifier for the cache.
-          - v2-venv-dependencies-{{ checksum "requirements.txt" }}
-          # Fallback to using the latest cache if no exact match is found.
-          - v2-venv-dependencies-
-
-    # Install dependencies.
     - run:
         name: Install dependencies
         command: |
-          python3 -m venv venv
-          source venv/bin/activate
-          pip install --upgrade pip pip-tools
-          pip install --upgrade numpy scipy uncertainties
-          pip-sync requirements.txt
-
-    - save_cache:
-        paths:
-          - ./venv
-        key: >-
-          v2-venv-dependencies-{{ checksum "requirements.txt" }}
-
-
+          python -m pip install --upgrade pip pip-tools
+          python -m pip install --upgrade numpy scipy uncertainties
+          python -m piptools sync requirements.txt
 
   # Reusable command to prepare the environment for testing.
   install_and_cache_conda_dependencies:
@@ -446,9 +426,8 @@ commands:
     - run:
         name: Run tests
         command: |
-          source venv/bin/activate
-          pytest -v --junitxml=test-results/junit.xml \
-          << parameters.subtree >> | tee test-results/pytest.log
+          python -m pytest -v --junitxml=test-results/junit.xml \
+            << parameters.subtree >> | tee test-results/pytest.log
 
     - store_test_artifacts_and_results:
         subtree: << parameters.subtree >>
@@ -618,7 +597,7 @@ jobs:
       - run:
           name: Recompile and sync deps
           command: |
-            pip install --upgrade pip pip-tools numpy uncertainties
+            python -m pip install --upgrade pip pip-tools numpy uncertainties
             python -m piptools compile --upgrade
             python -m piptools compile --upgrade dev-requirements.in
             sed -i "s/torch==/#torch==/" requirements.txt
@@ -716,7 +695,7 @@ jobs:
                 command: |
                   source $HOME/conda/etc/profile.d/conda.sh
                   conda activate Met4FoF_Code
-                  pip uninstall --yes << parameters.uninstalls >>
+                  python -m pip uninstall --yes << parameters.uninstalls >>
 
       # Run tests! We use pytest's test-runner.
       - run_conda_tests:
@@ -744,7 +723,7 @@ jobs:
       - checkout
       - create_result_folder:
           subfolder: << parameters.subtree >>
-      - install_and_cache_venv_dependencies
+      - install_pip_dependencies
 
       # Uninstall packages.
       - when:
@@ -755,8 +734,7 @@ jobs:
             - run:
                 name: Uninstall packages
                 command: |
-                  source venv/bin/activate
-                  pip uninstall --yes << parameters.uninstalls >>
+                  python -m pip uninstall --yes << parameters.uninstalls >>
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -771,12 +749,12 @@ jobs:
       - install_and_cache_conda_dependencies
 
 
-  build_and_test_venv_env:
+  build_and_test_pip_env:
     executor: tester
 
     steps:
       - checkout
-      - install_and_cache_venv_dependencies
+      - install_pip_dependencies
 
 
   test_PyDynamic:
@@ -789,42 +767,25 @@ jobs:
       - checkout
       - create_result_folder
 
-      # Download and cache dependencies.
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - PyDynamic-v4-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - PyDynamic-v4
-
       # Install dependencies and Codecov reporter if necessary.
       - run:
           name: Install dependencies
           command: |
-            python3 -m venv venv
-            source venv/bin/activate
             cd PyDynamic
-            pip install --upgrade pip pip-tools
-            pip-sync requirements/requirements-py38.txt \
+            python -m pip install --upgrade pip pip-tools
+            python -m piptools sync requirements/requirements-py38.txt \
                 requirements/dev-requirements-py38.txt
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: >-
-            PyDynamic-v4-{{ checksum "PyDynamic/requirements/requirements-py38.txt" }}-{{ checksum "PyDynamic/requirements/dev-requirements-py38.txt" }}
 
       # Run tests! We use pytest's test-runner.
       - run:
           name: Run tests
           no_output_timeout: 60m
           command: |
-            source venv/bin/activate
             cd PyDynamic
             TEST_FILES=$(circleci tests glob "test/**/test_*.py" | \
               circleci tests split --split-by=timings)
-            pytest -v --junitxml=$CIRCLE_WORKING_DIRECTORY/test-results/junit.xml \
-              $TEST_FILES
+            python -m pytest -v \
+              --junitxml=$CIRCLE_WORKING_DIRECTORY/test-results/junit.xml $TEST_FILES
 
       - store_artifacts:
           path: test-results
@@ -841,27 +802,12 @@ jobs:
       - create_result_folder:
           subfolder: agentMET4FOF
 
-      # Download and cache dependencies.
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - agentMET4FOF-v4-{{ checksum "agentMET4FOF/requirements.txt" }}-{{ checksum "agentMET4FOF/dev-requirements.txt" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - agentMET4FOF-v4
-
       # Install dependencies and Codecov reporter if necessary.
       - run:
          name: Install dependencies
          command: |
-           python3 -m venv venv
-           source venv/bin/activate
-           pip install --upgrade pip -r agentMET4FOF/requirements.txt -r agentMET4FOF/dev-requirements.txt
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: >-
-            agentMET4FOF-v4-{{ checksum "agentMET4FOF/requirements.txt" }}-{{ checksum "agentMET4FOF/dev-requirements.txt" }}
+           python -m pip install --upgrade pip -r agentMET4FOF/requirements.txt \
+             -r agentMET4FOF/dev-requirements.txt
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -875,29 +821,14 @@ jobs:
       - create_result_folder:
           subfolder: tutorials/agentMET4FOF_anomaly_detection
 
-      # Download and cache dependencies.
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - agentMET4FOF_anomaly_detection-v3-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - agentMET4FOF_anomaly_detection-v3
-
       # Install dependencies and Codecov reporter if necessary.
       - run:
          name: Install dependencies
          command: |
-           python3 -m venv venv
-           source venv/bin/activate
-           pip install --upgrade pip setuptools pip-tools numpy
-           pip-sync tutorials/agentMET4FOF_anomaly_detection/dev-requirements.txt tutorials/agentMET4FOF_anomaly_detection/requirements.txt
-
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: >-
-            agentMET4FOF_anomaly_detection-v3-{{ checksum "tutorials/agentMET4FOF_anomaly_detection/requirements.txt" }}
+           python -m pip install --upgrade pip setuptools pip-tools numpy
+           python -m piptools sync \
+             tutorials/agentMET4FOF_anomaly_detection/dev-requirements.txt \
+             tutorials/agentMET4FOF_anomaly_detection/requirements.txt
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -911,34 +842,16 @@ jobs:
       - create_result_folder:
           subfolder: tutorials/agentMET4FOF_sensors
 
-      # Download and cache dependencies.
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - agentMET4FOF_sensors-v3-{{ checksum "tutorials/agentMET4FOF_sensors/requirements.txt" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - agentMET4FOF_sensors-v3
-
       # Install dependencies. Suddenly since 2021-08-27 we observed an error with
       # previously successful configurations. That is why we introduced the gcc flag
       # as proposed by https://forum.manjaro.org/t/pip-install-rpi-gpio-fail/25788.
-      # The error can be viewed here:
-      # https://app.circleci.com/pipelines/github/Met4FoF/Code/455/workflows/81c97c42-a5a6-464e-9347-bee5bae44d9a/jobs/3662
       - run:
          name: Install dependencies
          command: |
-           python3 -m venv venv
-           source venv/bin/activate
-           pip install --upgrade pip pip-tools
-           CFLAGS="-fcommon" pip-sync tutorials/agentMET4FOF_sensors/requirements.txt
-           pip install --upgrade pytest
-
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: >-
-            agentMET4FOF_sensors-v3-{{ checksum "tutorials/agentMET4FOF_sensors/requirements.txt" }}
+           python -m pip install --upgrade pip pip-tools
+           CFLAGS="-fcommon" python -m piptools sync \
+             tutorials/agentMET4FOF_sensors/requirements.txt
+           python -m pip install --upgrade pytest
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -958,29 +871,12 @@ jobs:
           command: |
             mkdir test-reports
 
-      # Download and cache dependencies.
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - agentMET4FOF_ml-v4-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - agentMET4FOF_ml-v4
-
       # Install dependencies and Codecov reporter if necessary.
       - run:
          name: Install dependencies
          command: |
-           python3 -m venv venv
-           source venv/bin/activate
-           pip install --upgrade pip numpy pytest
-           pip install -r tutorials/agentMET4FOF_ml/requirements.txt
-
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: >-
-            agentMET4FOF_ml-v4-{{ checksum "tutorials/agentMET4FOF_ml/requirements.txt" }}
+           python -m pip install --upgrade pip numpy pytest
+           python -m pip install -r tutorials/agentMET4FOF_ml/requirements.txt
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -1000,29 +896,12 @@ jobs:
           command: |
             mkdir test-reports
 
-      # Download and cache dependencies.
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - time-series-buffer-v3-{{ checksum "time-series-buffer/requirements.txt" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - time-series-buffer-v3
-
       # Install dependencies and Codecov reporter if necessary.
       - run:
          name: Install dependencies
          command: |
-           python3 -m venv venv
-           source venv/bin/activate
-           pip install --upgrade pip pytest
-           pip install -r time-series-buffer/requirements.txt
-
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: >-
-            time-series-buffer-v3-{{ checksum "time-series-buffer/requirements.txt" }}
+           python -m pip install --upgrade pip pytest
+           python -m pip install -r time-series-buffer/requirements.txt
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -1042,30 +921,14 @@ jobs:
           command: |
             mkdir test-reports
 
-      # Download and cache dependencies.
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - time-series-metadata-v3-{{ checksum "time-series-metadata/requirements/dev-requirements-py38.txt" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - time-series-metadata-v3
-
       # Install dependencies and Codecov reporter if necessary.
       - run:
          name: Install dependencies
          command: |
-           python3 -m venv venv
-           source venv/bin/activate
-           pip install --upgrade pip pip-tools
-           pip install time-series-metadata/.
-           pip-sync time-series-metadata/requirements/dev-requirements-py38.txt
-
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: >-
-            time-series-metadata-v3-{{ checksum "time-series-metadata/requirements/dev-requirements-py38.txt" }}
+           python -m pip install --upgrade pip pip-tools
+           python -m pip install time-series-metadata/.
+           python -m piptools sync \
+             time-series-metadata/requirements/dev-requirements-py38.txt
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -1079,27 +942,13 @@ jobs:
       - create_result_folder:
           subfolder: Met4FoF-redundancy
 
-      # Download and cache dependencies.
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - Met4FoF-redundancy-v4-{{ checksum "Met4FoF-redundancy/requirements/requirements.txt" }}-{{ checksum "Met4FoF-redundancy/requirements/dev-requirements.txt" }}
-            # Fallback to using the latest cache if no exact match is found.
-            - Met4FoF-redundancy-v4
-
       # Install dependencies and Codecov reporter if necessary.
       - run:
          name: Install dependencies
          command: |
-           python3 -m venv venv
-           source venv/bin/activate
-           pip install --upgrade pip -r Met4FoF-redundancy/requirements/requirements.txt -r Met4FoF-redundancy/requirements/dev-requirements.txt
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: >-
-            Met4FoF-redundancy-v4-{{ checksum "Met4FoF-redundancy/requirements/requirements.txt" }}-{{ checksum "Met4FoF-redundancy/requirements/dev-requirements.txt" }}
+           python -m pip install --upgrade pip \
+             -r Met4FoF-redundancy/requirements/requirements.txt \
+             -r Met4FoF-redundancy/requirements/dev-requirements.txt
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -1112,35 +961,20 @@ jobs:
       # Checkout code.
       - checkout
 
-      # Download and cache dependencies.
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - v2-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
-
       # Install dependencies.
       - run:
           name: Install dependencies
           command: |
-            python3 -m venv venv
-            source venv/bin/activate
-            pip install --upgrade pip pip-tools
-            pip-sync dev-requirements.txt
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: >-
-            v2-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            python -m pip install --upgrade pip pip-tools
+            python -m piptools sync dev-requirements.txt
 
       # Publish it, if there is anything to publish!
       - run:
           name: Run semantic-release publish
           command: |
-            source venv/bin/activate
             git config --global user.name "semantic-release (via CircleCI)"
             git config --global user.email "bjoern.ludwig@ptb.de"
-            semantic-release publish
+            python -m semantic_release publish
 
 
   preview_release:
@@ -1150,26 +984,12 @@ jobs:
       # Checkout code.
       - checkout
 
-      # Download and cache dependencies.
-      - restore_cache:
-          keys:
-            # Specify the unique identifier for the cache.
-            - v2-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
-
       # Install dependencies.
       - run:
           name: Install dependencies
           command: |
-            python3 -m venv venv
-            source venv/bin/activate
-            pip install --upgrade pip pip-tools
-            pip-sync dev-requirements.txt
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: >-
-            v2-publisher-dependencies-{{ checksum "dev-requirements.txt" }}
+            python -m pip install --upgrade pip pip-tools
+            python -m piptools sync dev-requirements.txt
 
       # Fake publish, just to make sure everything works after merging a PR and
       # before actual release jos run.
@@ -1179,10 +999,9 @@ jobs:
             unset CIRCLE_PULL_REQUEST CIRCLE_PULL_REQUESTS CI_PULL_REQUEST \
               CI_PULL_REQUESTS
             export CIRCLE_BRANCH=main
-            source venv/bin/activate
             git config --global user.name "semantic-release (via CircleCI)"
             git config --global user.email "bjoern.ludwig@ptb.de"
             echo "The changelog of the next release will contain:"
-            semantic-release --unreleased changelog
+            python -m semantic_release --unreleased changelog
             echo "The output of 'semantic-release --noop publish' is:"
-            semantic-release --noop publish
+            python -m semantic_release --noop publish
