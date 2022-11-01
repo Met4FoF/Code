@@ -339,9 +339,9 @@ commands:
     - run:
         name: Install dependencies
         command: |
-          pip install --upgrade pip pip-tools
-          pip install --upgrade numpy scipy uncertainties
-          pip-sync requirements.txt
+          python -m pip install --upgrade pip pip-tools
+          python -m pip install --upgrade numpy scipy uncertainties
+          python -m piptools sync requirements.txt
 
   # Reusable command to prepare the environment for testing.
   install_and_cache_conda_dependencies:
@@ -426,8 +426,8 @@ commands:
     - run:
         name: Run tests
         command: |
-          pytest -v --junitxml=test-results/junit.xml \
-          << parameters.subtree >> | tee test-results/pytest.log
+          python -m pytest -v --junitxml=test-results/junit.xml \
+            << parameters.subtree >> | tee test-results/pytest.log
 
     - store_test_artifacts_and_results:
         subtree: << parameters.subtree >>
@@ -597,7 +597,7 @@ jobs:
       - run:
           name: Recompile and sync deps
           command: |
-            pip install --upgrade pip pip-tools numpy uncertainties
+            python -m pip install --upgrade pip pip-tools numpy uncertainties
             python -m piptools compile --upgrade
             python -m piptools compile --upgrade dev-requirements.in
             sed -i "s/torch==/#torch==/" requirements.txt
@@ -695,7 +695,7 @@ jobs:
                 command: |
                   source $HOME/conda/etc/profile.d/conda.sh
                   conda activate Met4FoF_Code
-                  pip uninstall --yes << parameters.uninstalls >>
+                  python -m pip uninstall --yes << parameters.uninstalls >>
 
       # Run tests! We use pytest's test-runner.
       - run_conda_tests:
@@ -734,7 +734,7 @@ jobs:
             - run:
                 name: Uninstall packages
                 command: |
-                  pip uninstall --yes << parameters.uninstalls >>
+                  python -m pip uninstall --yes << parameters.uninstalls >>
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -772,8 +772,8 @@ jobs:
           name: Install dependencies
           command: |
             cd PyDynamic
-            pip install --upgrade pip pip-tools
-            pip-sync requirements/requirements-py38.txt \
+            python -m pip install --upgrade pip pip-tools
+            python -m piptools sync requirements/requirements-py38.txt \
                 requirements/dev-requirements-py38.txt
 
       # Run tests! We use pytest's test-runner.
@@ -784,8 +784,8 @@ jobs:
             cd PyDynamic
             TEST_FILES=$(circleci tests glob "test/**/test_*.py" | \
               circleci tests split --split-by=timings)
-            pytest -v --junitxml=$CIRCLE_WORKING_DIRECTORY/test-results/junit.xml \
-              $TEST_FILES
+            python -m pytest -v \
+              --junitxml=$CIRCLE_WORKING_DIRECTORY/test-results/junit.xml $TEST_FILES
 
       - store_artifacts:
           path: test-results
@@ -806,7 +806,8 @@ jobs:
       - run:
          name: Install dependencies
          command: |
-           pip install --upgrade pip -r agentMET4FOF/requirements.txt -r agentMET4FOF/dev-requirements.txt
+           python -m pip install --upgrade pip -r agentMET4FOF/requirements.txt \
+             -r agentMET4FOF/dev-requirements.txt
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -824,8 +825,10 @@ jobs:
       - run:
          name: Install dependencies
          command: |
-           pip install --upgrade pip setuptools pip-tools numpy
-           pip-sync tutorials/agentMET4FOF_anomaly_detection/dev-requirements.txt tutorials/agentMET4FOF_anomaly_detection/requirements.txt
+           python -m pip install --upgrade pip setuptools pip-tools numpy
+           python -m piptools sync \
+             tutorials/agentMET4FOF_anomaly_detection/dev-requirements.txt \
+             tutorials/agentMET4FOF_anomaly_detection/requirements.txt
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -845,9 +848,10 @@ jobs:
       - run:
          name: Install dependencies
          command: |
-           pip install --upgrade pip pip-tools
-           CFLAGS="-fcommon" pip-sync tutorials/agentMET4FOF_sensors/requirements.txt
-           pip install --upgrade pytest
+           python -m pip install --upgrade pip pip-tools
+           CFLAGS="-fcommon" python -m piptools sync \
+             tutorials/agentMET4FOF_sensors/requirements.txt
+           python -m pip install --upgrade pytest
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -871,8 +875,8 @@ jobs:
       - run:
          name: Install dependencies
          command: |
-           pip install --upgrade pip numpy pytest
-           pip install -r tutorials/agentMET4FOF_ml/requirements.txt
+           python -m pip install --upgrade pip numpy pytest
+           python -m pip install -r tutorials/agentMET4FOF_ml/requirements.txt
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -896,8 +900,8 @@ jobs:
       - run:
          name: Install dependencies
          command: |
-           pip install --upgrade pip pytest
-           pip install -r time-series-buffer/requirements.txt
+           python -m pip install --upgrade pip pytest
+           python -m pip install -r time-series-buffer/requirements.txt
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -921,9 +925,10 @@ jobs:
       - run:
          name: Install dependencies
          command: |
-           pip install --upgrade pip pip-tools
-           pip install time-series-metadata/.
-           pip-sync time-series-metadata/requirements/dev-requirements-py38.txt
+           python -m pip install --upgrade pip pip-tools
+           python -m pip install time-series-metadata/.
+           python -m piptools sync \
+             time-series-metadata/requirements/dev-requirements-py38.txt
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -941,7 +946,9 @@ jobs:
       - run:
          name: Install dependencies
          command: |
-           pip install --upgrade pip -r Met4FoF-redundancy/requirements/requirements.txt -r Met4FoF-redundancy/requirements/dev-requirements.txt
+           python -m pip install --upgrade pip \
+             -r Met4FoF-redundancy/requirements/requirements.txt \
+             -r Met4FoF-redundancy/requirements/dev-requirements.txt
 
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
@@ -958,8 +965,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            pip install --upgrade pip pip-tools
-            pip-sync dev-requirements.txt
+            python -m pip install --upgrade pip pip-tools
+            python -m piptools sync dev-requirements.txt
 
       # Publish it, if there is anything to publish!
       - run:
@@ -981,8 +988,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            pip install --upgrade pip pip-tools
-            pip-sync dev-requirements.txt
+            python -m pip install --upgrade pip pip-tools
+            python -m piptools sync dev-requirements.txt
 
       # Fake publish, just to make sure everything works after merging a PR and
       # before actual release jos run.
