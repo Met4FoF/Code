@@ -974,7 +974,7 @@ jobs:
           command: |
             git config --global user.name "semantic-release (via CircleCI)"
             git config --global user.email "bjoern.ludwig@ptb.de"
-            semantic-release publish
+            python -m semantic-release publish
 
 
   preview_release:
@@ -1002,6 +1002,6 @@ jobs:
             git config --global user.name "semantic-release (via CircleCI)"
             git config --global user.email "bjoern.ludwig@ptb.de"
             echo "The changelog of the next release will contain:"
-            semantic-release --unreleased changelog
+            python -m semantic-release --unreleased changelog
             echo "The output of 'semantic-release --noop publish' is:"
-            semantic-release --noop publish
+            python -m semantic-release --noop publish
