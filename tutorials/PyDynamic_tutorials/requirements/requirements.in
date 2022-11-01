@@ -4,7 +4,7 @@ ipywidgets
 h5py
 holoviews[recommended]
 notebook
-numpy < 1.22.0 # This pinning is needed for Python 3.7
+numpy < 1.23.0 # This pinning is needed for Python 3.7
 matplotlib
 pandas < 1.4.0 # This pinning is needed for Python 3.7
 plotly

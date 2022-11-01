@@ -39,7 +39,7 @@ decorator==5.1.1
 defusedxml==0.7.1
     # via nbconvert
 download==0.3.5
-    # via -r requirements/requirements.in
+    # via -r requirements.in
 entrypoints==0.4
     # via jupyter-client
 fastjsonschema==2.16.2
@@ -49,33 +49,25 @@ fonttools==4.37.4
 future==0.18.2
     # via uncertainties
 h5py==3.7.0
-    # via -r requirements/requirements.in
+    # via -r requirements.in
 holoviews[recommended]==1.15.0
-    # via -r requirements/requirements.in
+    # via -r requirements.in
 idna==3.4
     # via requests
-importlib-metadata==4.12.0
-    # via
-    #   jsonschema
-    #   markdown
-    #   nbconvert
-    #   nbformat
-importlib-resources==5.9.0
-    # via jsonschema
 ipykernel==6.16.0
     # via
     #   ipywidgets
     #   notebook
 ipython==7.34.0
     # via
-    #   -r requirements/requirements.in
+    #   -r requirements.in
     #   holoviews
     #   ipykernel
     #   ipywidgets
 ipython-genutils==0.2.0
     # via notebook
 ipywidgets==8.0.2
-    # via -r requirements/requirements.in
+    # via -r requirements.in
 jedi==0.18.1
     # via ipython
 jinja2==3.1.2
@@ -112,7 +104,7 @@ markupsafe==2.1.1
     #   nbconvert
 matplotlib==3.5.3
     # via
-    #   -r requirements/requirements.in
+    #   -r requirements.in
     #   holoviews
     #   pydynamic
 matplotlib-inline==0.1.6
@@ -140,11 +132,11 @@ nest-asyncio==1.5.6
     #   notebook
 notebook==6.4.12
     # via
-    #   -r requirements/requirements.in
+    #   -r requirements.in
     #   holoviews
-numpy==1.21.6
+numpy==1.22.0
     # via
-    #   -r requirements/requirements.in
+    #   -r requirements.in
     #   bokeh
     #   h5py
     #   holoviews
@@ -163,7 +155,7 @@ packaging==21.3
     #   nbconvert
 pandas==1.3.5
     # via
-    #   -r requirements/requirements.in
+    #   -r requirements.in
     #   holoviews
     #   pydynamic
 pandocfilters==1.5.0
@@ -187,10 +179,8 @@ pillow==9.2.0
     # via
     #   bokeh
     #   matplotlib
-pkgutil-resolve-name==1.3.10
-    # via jsonschema
 plotly==5.10.0
-    # via -r requirements/requirements.in
+    # via -r requirements.in
 prometheus-client==0.14.1
     # via notebook
 prompt-toolkit==3.0.31
@@ -208,7 +198,7 @@ pyct==0.4.8
     #   colorcet
     #   panel
 pydynamic==2.3.0
-    # via -r requirements/requirements.in
+    # via -r requirements.in
 pygments==2.13.0
     # via
     #   ipython
@@ -289,11 +279,7 @@ traitlets==5.4.0
     #   notebook
 typing-extensions==4.3.0
     # via
-    #   argon2-cffi
     #   bokeh
-    #   importlib-metadata
-    #   jsonschema
-    #   kiwisolver
     #   panel
 uncertainties==3.1.7
     # via time-series-buffer
@@ -307,10 +293,6 @@ webencodings==0.5.1
     #   tinycss2
 widgetsnbextension==4.0.3
     # via ipywidgets
-zipp==3.8.1
-    # via
-    #   importlib-metadata
-    #   importlib-resources
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
