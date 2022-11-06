@@ -33,7 +33,7 @@ colorama==0.4.6
     # via
     #   -c requirements.txt
     #   twine
-cryptography==38.0.1
+cryptography==38.0.3
     # via
     #   -c requirements.txt
     #   secretstorage
@@ -75,7 +75,7 @@ jeepney==0.8.0
     #   -c requirements.txt
     #   keyring
     #   secretstorage
-keyring==23.9.3
+keyring==23.11.0
     # via
     #   -c requirements.txt
     #   twine
@@ -103,7 +103,7 @@ python-semantic-release==7.28.1
     # via
     #   -c requirements.txt
     #   -r dev-requirements.in
-readme-renderer==37.2
+readme-renderer==37.3
     # via
     #   -c requirements.txt
     #   twine
@@ -160,7 +160,7 @@ webencodings==0.5.1
     # via
     #   -c requirements.txt
     #   bleach
-wheel==0.37.1
+wheel==0.38.2
     # via
     #   -c requirements.txt
     #   python-semantic-release

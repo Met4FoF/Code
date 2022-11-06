@@ -46,7 +46,7 @@ attrs==22.1.0
     #   hypothesis
     #   jsonschema
     #   pytest
-babel==2.10.3
+babel==2.11.0
     # via sphinx
 backcall==0.2.0
     # via
@@ -114,7 +114,7 @@ cookiecutter==2.1.1
     #   mesa
 coverage[toml]==6.5.0
     # via pytest-cov
-cryptography==38.0.1
+cryptography==38.0.3
     # via secretstorage
 cycler==0.11.0
     # via
@@ -173,7 +173,7 @@ entrypoints==0.4
     # via
     #   -c agentMET4FOF/requirements.txt
     #   jupyter-client
-exceptiongroup==1.0.0
+exceptiongroup==1.0.1
     # via
     #   hypothesis
     #   pytest
@@ -283,7 +283,7 @@ jupyterlab-pygments==0.2.2
     # via
     #   -c agentMET4FOF/requirements.txt
     #   nbconvert
-keyring==23.9.3
+keyring==23.11.0
     # via twine
 kiwisolver==1.4.4
     # via
@@ -557,7 +557,7 @@ pyzmq==23.2.1
     #   -c agentMET4FOF/requirements.txt
     #   jupyter-client
     #   osbrain
-readme-renderer==37.2
+readme-renderer==37.3
     # via twine
 recommonmark==0.7.1
     # via
@@ -641,7 +641,7 @@ sphinx==5.3.0
     #   nbsphinx
     #   recommonmark
     #   sphinx-rtd-theme
-sphinx-rtd-theme==1.0.0
+sphinx-rtd-theme==1.1.1
     # via
     #   -c time-series-metadata/requirements/dev-requirements.in
     #   -r agentMET4FOF/dev-requirements.in
@@ -755,7 +755,7 @@ werkzeug==2.2.2
     # via
     #   -c agentMET4FOF/requirements.txt
     #   flask
-wheel==0.37.1
+wheel==0.38.2
     # via
     #   nvidia-cublas-cu11
     #   nvidia-cuda-runtime-cu11
