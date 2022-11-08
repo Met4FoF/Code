@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import sinetools.SineTools as st
@@ -9,7 +10,7 @@ from scipy.signal import correlate
 from scipy.signal import correlation_lags
 from scipy.ndimage import gaussian_filter
 import h5py as h5py
-
+import functools
 
 # importing copy module
 import copy
@@ -19,6 +20,17 @@ def gaus(x,a,sigma):
 
 def logGisticPICaped(x,k,x0,L):
     return L/(1+np.exp(-k*(x-x0)))
+
+def align_yaxis(ax1, v1, ax2, v2):
+    """adjust ax2 ylimit so that v2 in ax2 is aligned to v1 in ax1
+    https://stackoverflow.com/questions/10481990/matplotlib-axis-with-two-scales-shared-origin/10482477#10482477
+    """
+    _, y1 = ax1.transData.transform((0, v1))
+    _, y2 = ax2.transData.transform((0, v2))
+    inv = ax2.transData.inverted()
+    _, dy = inv.transform((0, 0)) - inv.transform((0, y1-y2))
+    miny, maxy = ax2.get_ylim()
+    ax2.set_ylim(miny+dy, maxy+dy)
 
 plt.rc('font', family='serif')
 plt.rc('text', usetex=True)
@@ -41,24 +53,54 @@ plt.rc("figure", titlesize=BIGGER_SIZE)  # fontsize of the figure title
 class realWordJitterGen:
     def __rpr__(self):
         return str(self.title)+' fs= '+str(self.fs)+' Hz'
-    def __init__(self,HDfFile,sensorName,title,nominalfreq=0,offset=[40000,10000]):
+    def __init__(self,HDfFile,sensorName,title,nominalfreq=0,offset=[40000,10000],pollingFreq=None):
+        try:
+            self.floatType=np.float128
+        except AttributeError as e:
+            print ("Your system moast likely Windows does not support float128 with numpy switching back to float64")
+            print(e)
+            self.floatType=np.float64
         self.datafile=HDfFile
         self.title=title
         self.Dataset=self.datafile['RAWDATA/'+sensorName+'/Absolutetime']
         self.dataPoints=self.datafile['RAWDATA/'+sensorName].attrs['Data_point_number']# use only valide points
         self.AbsoluteTime = self.Dataset[0, 0 + offset[0]:self.dataPoints - offset[1]] - self.Dataset[0, offset[0]]
-        self.timeData=((self.AbsoluteTime-self.AbsoluteTime[0])/1e9).astype(np.float128)
+        self.timeData=((self.AbsoluteTime-self.AbsoluteTime[0])/1e9).astype(self.floatType)
         #self.timeData=(self.Dataset[0,0+offset[0]:self.dataPoints-offset[1]]-self.Dataset[0,offset[0]])/1e9# substract first point to avoid precisionlos with f64 the divide by 1e9 to ahve seconds
         self.relSampleNumber = (self.datafile['RAWDATA/'+sensorName+'/Sample_number'][0, 0 + offset[0]:self.dataPoints-offset[1]] - self.datafile['RAWDATA/'+sensorName+'/Sample_number'][0, offset[0]])
         if nominalfreq==0:
-            self.fs =  (self.relSampleNumber[-1].astype(np.float128))/self.timeData[-1].astype(np.float128)  # calculate smaple freq
+            self.fs =  (self.relSampleNumber[-1].astype(self.floatType))/self.timeData[-1].astype(self.floatType)  # calculate smaple freq
         else:
             self.fs = nominalfreq
         #self.deltaT=self.length/(self.dataPoints-1)
         self.deltaT = 1.0/self.fs
         print("Sample frequency is "+str(self.fs)+' Hz')
-        self.expectedTime=self.relSampleNumber.astype(np.float128)*self.deltaT
+        self.expectedTime=self.relSampleNumber.astype(self.floatType)*self.deltaT
         self.deviationFromNominal=self.timeData-self.expectedTime#calulate deviation from Expected Mean
+        if pollingFreq!=None:
+            self.PollDT=1.0/pollingFreq
+            self.pollingTimes=np.arange(int(self.timeData[-1]/self.PollDT))*self.PollDT
+            self.pollingTimeDiffFromNom=np.zeros_like(self.pollingTimes)
+            lastDataIdx=0
+            lastTime=0
+            for i in range(self.pollingTimes.size-1):
+                while self.timeData[lastDataIdx]-self.pollingTimes[i]<0:
+                    lastDataIdx+=1
+                self.pollingTimeDiffFromNom[i]=self.pollingTimes[i]-self.timeData[lastDataIdx-1]
+            self.pollingTimeDiffFromNom[0]=0.0
+            self.deviationFromNominal=self.pollingTimeDiffFromNom
+            self.expectedTime=self.pollingTimes
+
+            self.fs=pollingFreq
+
+            """
+            if pollingFreq<self.fs:
+                raise RuntimeError("Polling Freq smaller than sensor Frequency this is not supportet yet!")
+            else:
+                self.pollingDT=1/pollingFreq
+                self.deviationFromNominal=(self.timeData % self.pollingDT)
+            """
+
         self.meandeviationFromNominal=np.mean(self.deviationFromNominal)
         self.std = np.std(self.deviationFromNominal)
         # INTERPOLATE MISSING DATA WITH NEAREST NIGBOUR
@@ -96,19 +138,19 @@ class realWordJitterGen:
             ax=axs[0]
             ax2=axs[1]
         if lengthInS ==None:
-            length=self.timeData.size
+            length=self.expectedTime.size
         else:
             length=int(lengthInS*self.fs)
 
         if correctLinFreqDrift:
             tmp=self.deviationFromNominal[:length]
             correctedTimeDev=tmp-np.arange(length)*(tmp[-1]/length)-tmp[0]
-            correctedTime=self.timeData[:length]-np.arange(length)*(tmp[-1]/length)
+            correctedTime=self.expectedTime[:length]-np.arange(length)*(tmp[-1]/length)
             line=ax.plot(correctedTime, correctedTimeDev * 1e9, label=self.title, lw=lw)
             ax2.plot(correctedTime, correctedTimeDev/self.deltaT, label=self.title, lw=lw,color=line[0].get_color(),ls='--')
         else:
-            line=ax.plot(self.timeData[:length], self.deviationFromNominal[:length]*1e9, label=self.title,lw=lw)
-            ax2.plot(self.timeData[:length], self.deviationFromNominal[:length] / self.deltaT, label=self.title, lw=lw, color=line[0].get_color(),ls='--')
+            line=ax.plot(self.expectedTime[:length], self.deviationFromNominal[:length]*1e9, label=self.title,lw=lw)
+            ax2.plot(self.expectedTime[:length], self.deviationFromNominal[:length] / self.deltaT, label=self.title, lw=lw, color=line[0].get_color(),ls='--')
         #ax.plot(np.arange(self.interpolatedDeviationFromNominal.size)*self.deltaT,self.interpolatedDeviationFromNominal)
         if show:
             ax.set_xlabel(r"\textbf{Relative time in s}")
@@ -117,6 +159,7 @@ class realWordJitterGen:
             ax.ticklabel_format(axis='both',style='plain')
             ax.legend(loc='upper left')
             ax2.legend(loc='upper right')
+            align_yaxis(ax, 0.0, ax2, 0.0)
             ax.grid()
             #fig.tight_layout()
             fig.show()
@@ -124,7 +167,7 @@ class realWordJitterGen:
     def getrandomDeviations(self,length,reytryes=1000):
         isContinousDataSliceRetryCount=0
         while isContinousDataSliceRetryCount<reytryes:
-            idx=np.random.randint(self.deviationFromNominal.size-(length+1))
+            idx=np.random.randint(self.relSampleNumber.size-(length+1))
             if self.relSampleNumber[idx+length]-self.relSampleNumber[idx]==length:
                 break
             else:
@@ -208,7 +251,7 @@ class realWordJitterGen:
         fig.tight_layout()
         fig.show()
 
-    def plotPhaseNoise(self,sampleFreq=None,fftlength=1048576,plotRaw=True,plotQuanatisationNoise=0,fig=None,ax=None,filterWidth=5):
+    def plotPhaseNoise(self,sampleFreq=None,fftlength=1048576,plotRaw=True,plotQuanatisationNoise=0,fig=None,ax=None,filterWidth=5,show=False):
         if sampleFreq==None:
             sampleFreq=self.fs
         nnumOFSlices=int(np.floor(self.interpolatedDeviationFromNominal.shape[0]/fftlength))
@@ -222,7 +265,7 @@ class realWordJitterGen:
         sliceFFTResultsAbs=np.zeros([nnumOFSlices,freqs.size])
         for i in range(nnumOFSlices):
             print("FFT "+str(i/nnumOFSlices*100)+"% done")
-            tmp=(copy.deepcopy(self.interpolatedDeviationFromNominal[(fftlength*i):(fftlength+fftlength*i)])+np.arange(fftlength)*1/sampleFreq).astype(np.float128)
+            tmp=(copy.deepcopy(self.interpolatedDeviationFromNominal[(fftlength*i):(fftlength+fftlength*i)])+np.arange(fftlength)*1/sampleFreq).astype(self.floatType)
             simuSin=np.sin(tmp*sampleFreq*2*np.pi)
             fftresult = np.fft.rfft(simuSin)
             sliceFFTResultsAbs[i]=abs(fftresult)/(2*fftlength)
@@ -231,58 +274,27 @@ class realWordJitterGen:
                     label=r'\textbf{'+self.title+'}', )
         if plotRaw:
             for i in range(nnumOFSlices):
-                ax.plot(freqs,20*np.log10(sliceFFTResultsAbs[i]),alpha=1/nnumOFSlices,label=r'\textbf{'+self.title+'}',color=p[0].get_color())
+                ax.plot(freqs/(sampleFreq),20*np.log10(sliceFFTResultsAbs[i]),alpha=1/nnumOFSlices,label=r'\textbf{'+self.title+'}',color=p[0].get_color())
         if plotQuanatisationNoise!=0:
             quantNoise = np.random.uniform(size=fftlength) * plotQuanatisationNoise
             quantNoise = quantNoise - plotQuanatisationNoise/2
             fft_QuantNoise = np.fft.rfft(quantNoise)
             p = ax.plot(freqs, 20 * np.log10(gaussian_filter(fft_QuantNoise, filterWidth*10)),
                         label=r'\textbf{Quantisation noise}', )
-        ax.set_ylabel(r'\textbf{Phase noise in} $\frac{\mathrm{dBc}}{\mathrm{Hz}}$')
-        ax.set_xlabel(r'$\frac{{Offset~frequency}}{Signal~frequency}$ \textbf{in} $\frac{\mathrm{Hz}}{\mathrm{Hz}}$')
-        ax.grid(True, which="both")
-        ax.legend()
-        #ax.set_ylim([-220,0])
-        fig.tight_layout()
-        fig.show()
+        if show:
+            ax.set_ylabel(r'\textbf{Phase noise in} $\frac{\mathrm{dBc}}{\mathrm{Hz}}$')
+            ax.set_xlabel(r'$\frac{{Offset~frequency}}{Signal~frequency}$ \textbf{in} $\frac{\mathrm{Hz}}{\mathrm{Hz}}$')
+            ax.grid(True, which="both")
+            ax.legend()
+            #ax.set_ylim([-220,0])
+            fig.tight_layout()
+            fig.show()
         return fig,ax
 
 
 
-#dataFile = h5py.File('/home/benedikt/Downloads/jitter_recording.hfd5', 'r')
-#sensorName = '0x39f50100_STM32_GPIO_Input'
-sensorName = '0x60ad0100_STM32_GPIO_Input'
-dataFileEXTREF = h5py.File('/home/benedikt/repos/datareceiver/extRev_single_GPS_1KHz_Edges_copy.hfd5','r')
-dataFileINTREF = h5py.File('/home/benedikt/repos/datareceiver/intRev_multi_GPS_1KHz_Edges.hfd5','r')
-dataFileMPU9250 = h5py.File('/home/benedikt/tmp/MPU9250PTB_v5.hdf5','r')
-dataFileBMA280 = h5py.File('/home/benedikt/tmp/BMA280PTB.hdf5','r')
-dataFileLSM6DSRX = h5py.File('/home/benedikt/tmp/ST_sensor_test_1667Hz_noTimeGlittCorr.hfd5','r')
-dataFileLSM6DSRX6667Hz= h5py.File('/home/benedikt/tmp/ST_sensor_test_6667Hz_2.hfd5','r')
-"""
-timeDiffDF1=dataFile1['RAWDATA/0x39f50100_STM32_GPIO_Input/Absolutetime'][0,9990-14:20000-24].astype(np.int64)-dataFile1['RAWDATA/0x60ad0100_STM32_GPIO_Input/Absolutetime'][0,10000:20000].astype(np.int64)
-ticksDiffDF1=dataFile1['RAWDATA/0x39f50100_STM32_GPIO_Input/Time_Ticks'][0,9990-14:20000-24].astype(np.int64)-dataFile1['RAWDATA/0x60ad0100_STM32_GPIO_Input/Time_Ticks'][0,10000:20000].astype(np.int64)
-ticksDiffDF1=ticksDiffDF1-ticksDiffDF1[0]
-dataFile2 = h5py.File('/home/benedikt/repos/datareceiver/intRev_multi_GPS_1KHz_Edges.hfd5','r')
-timeDiffDF2=dataFile2['RAWDATA/0x39f50100_STM32_GPIO_Input/Absolutetime'][0,10000:20000].astype(np.int64)-dataFile2['RAWDATA/0x60ad0100_STM32_GPIO_Input/Absolutetime'][0,11999:21999].astype(np.int64)
-ticksDiffDF2 = dataFile2['RAWDATA/0x39f50100_STM32_GPIO_Input/Time_Ticks'][0,10000:20000].astype(np.int64)-dataFile2['RAWDATA/0x60ad0100_STM32_GPIO_Input/Time_Ticks'][0,0,11999:21999].astype(np.int64)
-ticksDiffDF2=ticksDiffDF2-np.mean(ticksDiffDF2)
 
-dataFile3 = h5py.File('/home/benedikt/repos/datareceiver/datalossTest.hfd5','r')
-timeDiffDF3=dataFile3['RAWDATA/0x39f50100_STM32_GPIO_Input/Absolutetime'][0,10013:20013].astype(np.int64)-dataFile3['RAWDATA/0x60ad0100_STM32_GPIO_Input/Absolutetime'][0,12020:22020].astype(np.int64)
-ticksDiffDF3=dataFile3['RAWDATA/0x39f50100_STM32_GPIO_Input/Time_Ticks'][0,10013:20013].astype(np.int64)-dataFile3['RAWDATA/0x60ad0100_STM32_GPIO_Input/Time_Ticks'][0,12020:22020].astype(np.int64)
-ticksDiffDF2=ticksDiffDF2-np.mean(ticksDiffDF3)
-"""
-jitterGen1 = realWordJitterGen(dataFileINTREF, '0x39f50100_STM32_GPIO_Input',r"\textbf{Board 1 int. clock}")#nominalfreq=1000)
-jitterGen2 = realWordJitterGen(dataFileINTREF, '0x60ad0100_STM32_GPIO_Input',"Board 2 int. clock 1000 Hz")#nominalfreq=1000)
-jitterGen3 = realWordJitterGen(dataFileEXTREF, '0x39f50100_STM32_GPIO_Input',r"\textbf{Board 1 ext. clock")# 1000 Hz}")#nominalfreq=1000)
-jitterGen4 = realWordJitterGen(dataFileEXTREF, '0x60ad0100_STM32_GPIO_Input',"Board 2 ext. clock")#nominalfreq=1000)
-jitterGenMPU9250 = realWordJitterGen(dataFileMPU9250,'0x1fe40000_MPU_9250',r"\textbf{MPU9250}")# $f_s=$ \textbf{1001.0388019191 Hz}")
-jitterGenBMA280= realWordJitterGen(dataFileBMA280,'0x1fe40000_BMA_280',     r"\textbf{BMA280}")# $f_s=$ \textbf{2064.9499858147 Hz} ",)#offset=[100000,1560000+13440562+20])
-jitterGenLSM6DSRX=realWordJitterGen(dataFileLSM6DSRX,'0x60ad0000_LSM6DSRX',r"\textbf{LSM6DSRX $f_s$=1.667~kHz}")
-jitterGenLSM6DSRX6667Hz=realWordJitterGen(dataFileLSM6DSRX6667Hz,'0x60ad0000_LSM6DSRX',r"\textbf{LSM6DSRX $f_s$=6.667~kHz}")
-
-jitterGensForSimulations=[jitterGenBMA280,jitterGenMPU9250,jitterGen3,jitterGenLSM6DSRX,jitterGenLSM6DSRX6667Hz]#jitterGen1,jitterGen3
-def generateFitWithPhaseNoise(freq,fs=1000,t_jitter=100e-9,lengthInS=0.1,jitterGens=jitterGensForSimulations,A0=1,phi0=0,linearFreqCorrection=True):
+def generateFitWithPhaseNoise(freq,fs=1000,t_jitter=100e-9,lengthInS=0.1,jitterGens=[],A0=1,phi0=0,linearFreqCorrection=True):
     #TODO change interface
     if t_jitter <= 0:
         fs=jitterGens[int(-1*t_jitter)].fs
@@ -301,14 +313,14 @@ def generateFitWithPhaseNoise(freq,fs=1000,t_jitter=100e-9,lengthInS=0.1,jitterG
     fitparams=st.threeparsinefit(Signal,timeWJitter,freq)
     return st.phase(fitparams)-phi0,st.amplitude(fitparams)/A0
 
-def getmuAndSTdForFreq(testparams,numOfruns=1000):
+def getmuAndSTdForFreq(testparams,jittergens=[],numOfruns=1000):
     freq=testparams[0]
     t_jitter=testparams[1]
     length = testparams[2]
     FitPhases=np.zeros(numOfruns)
     FitMags=np.zeros(numOfruns)
     for i in range(numOfruns):
-        FitPhases[i],FitMags[i]=generateFitWithPhaseNoise(freq,t_jitter=t_jitter,lengthInS=length)
+        FitPhases[i],FitMags[i]=generateFitWithPhaseNoise(freq,jittergens=jittergens,t_jitter=t_jitter,lengthInS=length)
     ampPercentiles=np.percentile(FitMags, np.array([5,32,50,68,95]))
     phasePercentiles=np.percentile(FitPhases, np.array([5,32,50,68,95]))
     return np.std(FitPhases),\
@@ -329,8 +341,76 @@ def getmuAndSTdForFreq(testparams,numOfruns=1000):
 
 
 if __name__ == "__main__":
-    deviationPlotlength=10
-    figDviation,axDeviation=jitterGen1.plotDeviation(lengthInS=deviationPlotlength,lw=1)
+    WORKER_NUMBER=4
+    # dataFile = h5py.File('/home/benedikt/Downloads/jitter_recording.hfd5', 'r')
+    # sensorName = '0x39f50100_STM32_GPIO_Input'
+    sensorName = '0x60ad0100_STM32_GPIO_Input'
+    pathPrefix = r'C:\Users\seeger01\PTBbox\data'
+    dataFileEXTREF = h5py.File(os.path.join(pathPrefix, 'extRev_single_GPS_1KHz_Edges.hfd5'), 'r')
+    dataFileLSM6DSRX = h5py.File(os.path.join(pathPrefix, 'ST_sensor_test_1667Hz_noTimeGlittCorr.hfd5'), 'r')
+
+    dataFileINTREF = h5py.File(os.path.join(pathPrefix,'intRev_multi_GPS_1KHz_Edges.hfd5'),'r')
+    dataFileMPU9250 = h5py.File(os.path.join(pathPrefix,'MPU9250PTB_v5.hdf5'),'r')
+    dataFileBMA280 = h5py.File(os.path.join(pathPrefix,'BMA280PTB.hdf5'),'r')
+    dataFileLSM6DSRX = h5py.File(os.path.join(pathPrefix,'ST_sensor_test_1667Hz_noTimeGlittCorr.hfd5'),'r')
+    dataFileLSM6DSRXlongTerm = h5py.File(os.path.join(pathPrefix, 'ST_sensor_test_1667Hz_noTimeGlittCorr_antenneDraussen_1.hfd5'), 'r')
+    dataFileLSM6DSRX6667Hz= h5py.File(os.path.join(pathPrefix,'ST_sensor_test_6667Hz_2.hfd5'),'r')
+
+    """
+    timeDiffDF1=dataFile1['RAWDATA/0x39f50100_STM32_GPIO_Input/Absolutetime'][0,9990-14:20000-24].astype(np.int64)-dataFile1['RAWDATA/0x60ad0100_STM32_GPIO_Input/Absolutetime'][0,10000:20000].astype(np.int64)
+    ticksDiffDF1=dataFile1['RAWDATA/0x39f50100_STM32_GPIO_Input/Time_Ticks'][0,9990-14:20000-24].astype(np.int64)-dataFile1['RAWDATA/0x60ad0100_STM32_GPIO_Input/Time_Ticks'][0,10000:20000].astype(np.int64)
+    ticksDiffDF1=ticksDiffDF1-ticksDiffDF1[0]
+    dataFile2 = h5py.File('/home/benedikt/repos/datareceiver/intRev_multi_GPS_1KHz_Edges.hfd5','r')
+    timeDiffDF2=dataFile2['RAWDATA/0x39f50100_STM32_GPIO_Input/Absolutetime'][0,10000:20000].astype(np.int64)-dataFile2['RAWDATA/0x60ad0100_STM32_GPIO_Input/Absolutetime'][0,11999:21999].astype(np.int64)
+    ticksDiffDF2 = dataFile2['RAWDATA/0x39f50100_STM32_GPIO_Input/Time_Ticks'][0,10000:20000].astype(np.int64)-dataFile2['RAWDATA/0x60ad0100_STM32_GPIO_Input/Time_Ticks'][0,0,11999:21999].astype(np.int64)
+    ticksDiffDF2=ticksDiffDF2-np.mean(ticksDiffDF2)
+
+    dataFile3 = h5py.File('/home/benedikt/repos/datareceiver/datalossTest.hfd5','r')
+    timeDiffDF3=dataFile3['RAWDATA/0x39f50100_STM32_GPIO_Input/Absolutetime'][0,10013:20013].astype(np.int64)-dataFile3['RAWDATA/0x60ad0100_STM32_GPIO_Input/Absolutetime'][0,12020:22020].astype(np.int64)
+    ticksDiffDF3=dataFile3['RAWDATA/0x39f50100_STM32_GPIO_Input/Time_Ticks'][0,10013:20013].astype(np.int64)-dataFile3['RAWDATA/0x60ad0100_STM32_GPIO_Input/Time_Ticks'][0,12020:22020].astype(np.int64)
+    ticksDiffDF2=ticksDiffDF2-np.mean(ticksDiffDF3)
+    """
+    jitterGensForSimulations=[]
+
+    jitterGen1 = realWordJitterGen(dataFileINTREF, '0x39f50100_STM32_GPIO_Input',r"\textbf{Board 1 int. clock}")#nominalfreq=1000)
+    jitterGensForSimulations.append(jitterGen1)
+    """
+    jitterGen2 = realWordJitterGen(dataFileINTREF, '0x60ad0100_STM32_GPIO_Input',"Board 2 int. clock 1000 Hz")#nominalfreq=1000)
+    jitterGen3 = realWordJitterGen(dataFileEXTREF, '0x39f50100_STM32_GPIO_Input',r"\textbf{Board 1 ext. clock")# 1000 Hz}")#nominalfreq=1000)
+    jitterGen4 = realWordJitterGen(dataFileEXTREF, '0x60ad0100_STM32_GPIO_Input',"Board 2 ext. clock")#nominalfreq=1000)
+    
+    jitterGenMPU9250 = realWordJitterGen(dataFileMPU9250,'0x1fe40000_MPU_9250',r"\textbf{MPU9250}")# $f_s=$ \textbf{1001.0388019191 Hz}")
+    jitterGensForSimulations.append(jitterGenMPU9250)
+
+    jitterGenBMA280= realWordJitterGen(dataFileBMA280,'0x1fe40000_BMA_280',     r"\textbf{BMA280}")# $f_s=$ \textbf{2064.9499858147 Hz} ",)#offset=[100000,1560000+13440562+20])
+    jitterGensForSimulations.append(jitterGenBMA280)
+
+    jitterGenLSM6DSRX = realWordJitterGen(dataFileLSM6DSRX, '0x60ad0000_LSM6DSRX', r"\textbf{LSM6DSRX $f_s$=1.667~kHz}")
+    jitterGensForSimulations.append(jitterGenLSM6DSRX)
+    """
+    jitterGenLSM6DSRXPolled2KHz = realWordJitterGen(dataFileLSM6DSRX, '0x60ad0000_LSM6DSRX', r"\textbf{LSM6DSRX polled}", pollingFreq=2000.0)
+    jitterGensForSimulations.append(jitterGenLSM6DSRXPolled2KHz)
+
+    jitterGenLSM6DSRXLongTerm = realWordJitterGen(dataFileLSM6DSRXlongTerm, '0x60ad0000_LSM6DSRX', r"\textbf{LSM6DSRX long observation time}")
+    jitterGensForSimulations.append(jitterGenLSM6DSRXLongTerm)
+
+    """
+    jitterGenLSM6DSRX6667Hz=realWordJitterGen(dataFileLSM6DSRX6667Hz,'0x60ad0000_LSM6DSRX',r"\textbf{LSM6DSRX $f_s$=6.667~kHz}")
+    jitterGensForSimulations.append(jitterGenLSM6DSRX6667Hz)
+
+    """
+    deviationPlotlength=100
+    figDviation,axDeviation=jitterGensForSimulations[0].plotDeviation(lengthInS=deviationPlotlength,lw=1)
+    figDviationUnCorr, axDeviationUnCorr = jitterGensForSimulations[0].plotDeviation(lengthInS=deviationPlotlength, lw=1,correctLinFreqDrift=False)
+    figPhaseNoise, axPhaseNoise = jitterGensForSimulations[0].plotPhaseNoise(plotRaw=True)
+    show=False
+    for i in range(len(jitterGensForSimulations)-1):
+        if i==len(jitterGensForSimulations)-2:
+            show=True #show only on last loop iteration
+        jitterGensForSimulations[i+1].plotDeviation(fig=figDviation, axs=axDeviation, lengthInS=deviationPlotlength,show=show)
+        jitterGensForSimulations[i+1].plotDeviation(fig=figDviationUnCorr, axs=axDeviationUnCorr, lengthInS=deviationPlotlength,
+                                                  show=show,correctLinFreqDrift=False)
+        jitterGensForSimulations[i+1].plotPhaseNoise(fig=figPhaseNoise, ax=axPhaseNoise, plotRaw=True,show=show)
     """
     jitterGen2.plotDeviation(fig=figDviation,ax=axDeviation,length=150000,lw=1)
     
@@ -346,19 +426,16 @@ if __name__ == "__main__":
                      label="Time difference single GNSS ext. clock",lw=2.5)
     jitterGen3.plotDeviation(fig=figDviation,ax=axDeviation,length=150000,lw=2.5)
     jitterGen4.plotDeviation(fig=figDviation, ax=axDeviation,length=150000,show=True,lw=2.5)
-    """
     jitterGenMPU9250.plotDeviation(fig=figDviation, axs=axDeviation,lengthInS=deviationPlotlength)
     jitterGenBMA280.plotDeviation(fig=figDviation, axs=axDeviation,lengthInS=deviationPlotlength, show=True)
     jitterGenLSM6DSRX.plotDeviation(fig=figDviation, axs=axDeviation,lengthInS=deviationPlotlength, show=True)
     jitterGenLSM6DSRX6667Hz.plotDeviation(fig=figDviation, axs=axDeviation,lengthInS=deviationPlotlength, show=True)
-
     figPhaseNoise,axPhaseNoise=jitterGen1.plotPhaseNoise(plotRaw=False)
     #jitterGen4.plotPhaseNoise(fig=figPhaseNoise,ax=axPhaseNoise,plotRaw=False)
     jitterGenMPU9250.plotPhaseNoise(fig=figPhaseNoise,ax=axPhaseNoise,plotRaw=False)
     jitterGenBMA280.plotPhaseNoise(fig=figPhaseNoise, ax=axPhaseNoise, plotRaw=False)
     jitterGenLSM6DSRX.plotPhaseNoise(fig=figPhaseNoise, ax=axPhaseNoise, plotRaw=False)
     jitterGenLSM6DSRX6667Hz.plotPhaseNoise(fig=figPhaseNoise, ax=axPhaseNoise, plotRaw=False)
-    """
     """
     #jitterGen1.plotAkf()
     #jitterGen.plotFFT()
@@ -384,8 +461,8 @@ if __name__ == "__main__":
         noiseLevel[i * freqPoints:(i + 1) * freqPoints] = tmpNoiseLevel
     length=np.ones(freqs.size)*lengthInS
     testparams=np.array([freqs,noiseLevel,length]).transpose()
-
-    results=process_map(getmuAndSTdForFreq, testparams, max_workers=15,chunksize=1)
+    partial_getMuAndSTD=functools.partial(getmuAndSTdForFreq, jitterGens=jitterGensForSimulations)
+    results=process_map(partial_getMuAndSTD, testparams, max_workers=WORKER_NUMBER,chunksize=1)
     results=np.array(results)
     bw=np.ones(SimuPoints)
 
@@ -518,7 +595,7 @@ if __name__ == "__main__":
         noiseLevel[i * freqPoints:(i + 1) * freqPoints] = tmpNoiseLevel
         length[i * freqPoints:(i + 1) * freqPoints]=StartLength/((i+1)*(i+1))
     testparams=np.array([freqs,noiseLevel,length]).transpose()
-    results=process_map(getmuAndSTdForFreq, testparams, max_workers=7)
+    results=process_map(getmuAndSTdForFreq, testparams, max_workers=WORKER_NUMBER)
     results=np.array(results)
 
 
