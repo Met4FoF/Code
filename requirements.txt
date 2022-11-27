@@ -202,11 +202,11 @@ future==0.18.2
     # via
     #   -c agentMET4FOF/requirements.txt
     #   uncertainties
-gitdb==4.0.9
+gitdb==4.0.10
     # via gitpython
 gitpython==3.1.29
     # via python-semantic-release
-hypothesis==6.58.0
+hypothesis==6.58.1
     # via -r agentMET4FOF/dev-requirements.in
 idna==3.3
     # via
@@ -215,7 +215,7 @@ idna==3.3
     #   requests
 imagesize==1.4.1
     # via sphinx
-importlib-metadata==5.0.0
+importlib-metadata==5.1.0
     # via
     #   flask
     #   keyring
@@ -760,7 +760,7 @@ wheel==0.38.4
     #   nvidia-cublas-cu11
     #   nvidia-cuda-runtime-cu11
     #   python-semantic-release
-zipp==3.10.0
+zipp==3.11.0
     # via
     #   importlib-metadata
     #   importlib-resources
