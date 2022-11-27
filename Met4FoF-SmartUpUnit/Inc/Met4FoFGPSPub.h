@@ -11,14 +11,12 @@
 
 #include "NMEAPraser.h"
 
-class Met4FoFGPSPub: public Met4FoFSensor{
+class Met4FoFGPSPub: public Met4FoFSensors::Met4FoFSensor{
   public:
   Met4FoFGPSPub(struct tref * GPS_ref,uint32_t BaseID);
   int getData(DataMessage * Message,uint64_t RawTimeStamp);
   int getDescription(DescriptionMessage * Message,DescriptionMessage_DESCRIPTION_TYPE DESCRIPTION_TYPE);
-  uint32_t getSampleCount();
   void increaseCaptureCountWORead(){_SampleCount++;return ;};
-  int setBaseID(uint32_t BaseID);
   float getNominalSamplingFreq(){return 0.0;};
   private:
   uint32_t _ID;
