@@ -45,7 +45,7 @@ dotty-dict==1.3.1
     # via
     #   -c requirements.txt
     #   python-semantic-release
-gitdb==4.0.9
+gitdb==4.0.10
     # via
     #   -c requirements.txt
     #   gitpython
@@ -57,7 +57,7 @@ idna==3.3
     # via
     #   -c requirements.txt
     #   requests
-importlib-metadata==5.0.0
+importlib-metadata==5.1.0
     # via
     #   -c requirements.txt
     #   keyring
@@ -164,7 +164,7 @@ wheel==0.38.4
     # via
     #   -c requirements.txt
     #   python-semantic-release
-zipp==3.10.0
+zipp==3.11.0
     # via
     #   -c requirements.txt
     #   importlib-metadata
