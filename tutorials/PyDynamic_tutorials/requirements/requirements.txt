@@ -37,7 +37,7 @@ colorcet==3.0.1
     # via holoviews
 cycler==0.11.0
     # via matplotlib
-debugpy==1.6.3
+debugpy==1.6.4
     # via ipykernel
 decorator==5.1.1
     # via ipython
@@ -55,13 +55,13 @@ future==0.18.2
     # via uncertainties
 h5py==3.7.0
     # via -r requirements/requirements.in
-holoviews[recommended]==1.15.1
+holoviews[recommended]==1.15.2
     # via -r requirements/requirements.in
 idna==3.4
     # via
     #   anyio
     #   requests
-importlib-metadata==5.0.0
+importlib-metadata==5.1.0
     # via
     #   jsonschema
     #   markdown
@@ -86,7 +86,7 @@ ipython-genutils==0.2.0
     #   notebook
 ipywidgets==8.0.2
     # via -r requirements/requirements.in
-jedi==0.18.1
+jedi==0.18.2
     # via ipython
 jinja2==3.1.2
     # via
@@ -95,24 +95,25 @@ jinja2==3.1.2
     #   nbclassic
     #   nbconvert
     #   notebook
-jsonschema==4.16.0
+jsonschema==4.17.3
     # via nbformat
-jupyter-client==7.4.4
+jupyter-client==7.4.7
     # via
     #   ipykernel
     #   jupyter-server
     #   nbclassic
     #   nbclient
     #   notebook
-jupyter-core==4.11.2
+jupyter-core==4.12.0
     # via
     #   jupyter-client
     #   jupyter-server
     #   nbclassic
+    #   nbclient
     #   nbconvert
     #   nbformat
     #   notebook
-jupyter-server==1.21.0
+jupyter-server==1.23.3
     # via
     #   nbclassic
     #   notebook-shim
@@ -141,11 +142,11 @@ mistune==2.0.4
     # via nbconvert
 mpmath==1.2.1
     # via sympy
-nbclassic==0.4.7
+nbclassic==0.4.8
     # via notebook
-nbclient==0.7.0
+nbclient==0.7.2
     # via nbconvert
-nbconvert==7.2.3
+nbconvert==7.2.5
     # via
     #   jupyter-server
     #   nbclassic
@@ -162,13 +163,12 @@ nest-asyncio==1.5.6
     #   ipykernel
     #   jupyter-client
     #   nbclassic
-    #   nbclient
     #   notebook
 notebook==6.5.2
     # via
     #   -r requirements/requirements.in
     #   holoviews
-notebook-shim==0.2.0
+notebook-shim==0.2.2
     # via nbclassic
 numpy==1.21.6
     # via
@@ -224,9 +224,9 @@ prometheus-client==0.15.0
     #   jupyter-server
     #   nbclassic
     #   notebook
-prompt-toolkit==3.0.31
+prompt-toolkit==3.0.33
     # via ipython
-psutil==5.9.3
+psutil==5.9.4
     # via ipykernel
 ptyprocess==0.7.0
     # via
@@ -248,7 +248,7 @@ pyparsing==3.0.9
     # via
     #   matplotlib
     #   packaging
-pyrsistent==0.19.1
+pyrsistent==0.19.2
     # via jsonschema
 python-dateutil==2.8.2
     # via
@@ -318,7 +318,7 @@ tqdm==4.64.1
     # via
     #   download
     #   panel
-traitlets==5.5.0
+traitlets==5.6.0
     # via
     #   ipykernel
     #   ipython
@@ -343,7 +343,7 @@ typing-extensions==4.4.0
     #   panel
 uncertainties==3.1.7
     # via time-series-buffer
-urllib3==1.26.12
+urllib3==1.26.13
     # via requests
 wcwidth==0.2.5
     # via prompt-toolkit
@@ -351,11 +351,11 @@ webencodings==0.5.1
     # via
     #   bleach
     #   tinycss2
-websocket-client==1.4.1
+websocket-client==1.4.2
     # via jupyter-server
 widgetsnbextension==4.0.3
     # via ipywidgets
-zipp==3.10.0
+zipp==3.11.0
     # via
     #   importlib-metadata
     #   importlib-resources

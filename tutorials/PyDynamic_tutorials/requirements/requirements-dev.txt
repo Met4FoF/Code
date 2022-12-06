@@ -25,7 +25,7 @@ attrs==22.1.0
     #   -c requirements/requirements.txt
     #   jsonschema
     #   pytest
-babel==2.10.3
+babel==2.11.0
     # via sphinx
 backcall==0.2.0
     # via
@@ -59,7 +59,7 @@ commonmark==0.9.1
     # via recommonmark
 coverage==6.5.0
     # via nbval
-debugpy==1.6.3
+debugpy==1.6.4
     # via
     #   -c requirements/requirements.txt
     #   ipykernel
@@ -81,7 +81,7 @@ entrypoints==0.4
     # via
     #   -c requirements/requirements.txt
     #   jupyter-client
-exceptiongroup==1.0.0
+exceptiongroup==1.0.4
     # via pytest
 fastjsonschema==2.16.2
     # via
@@ -94,7 +94,7 @@ idna==3.4
     #   requests
 imagesize==1.4.1
     # via sphinx
-importlib-metadata==5.0.0
+importlib-metadata==5.1.0
     # via
     #   -c requirements/requirements.txt
     #   click
@@ -120,14 +120,13 @@ ipython==7.34.0
     # via
     #   -c requirements/requirements.txt
     #   ipykernel
-    #   jupyter-latex-envs
 ipython-genutils==0.2.0
     # via
     #   -c requirements/requirements.txt
     #   jupyter-contrib-nbextensions
     #   nbclassic
     #   notebook
-jedi==0.18.1
+jedi==0.18.2
     # via
     #   -c requirements/requirements.txt
     #   ipython
@@ -140,11 +139,11 @@ jinja2==3.1.2
     #   nbsphinx
     #   notebook
     #   sphinx
-jsonschema==4.16.0
+jsonschema==4.17.3
     # via
     #   -c requirements/requirements.txt
     #   nbformat
-jupyter-client==7.4.4
+jupyter-client==7.4.7
     # via
     #   -c requirements/requirements.txt
     #   ipykernel
@@ -153,34 +152,32 @@ jupyter-client==7.4.4
     #   nbclient
     #   nbval
     #   notebook
-jupyter-contrib-core==0.4.0
+jupyter-contrib-core==0.4.2
     # via
     #   jupyter-contrib-nbextensions
     #   jupyter-nbextensions-configurator
-jupyter-contrib-nbextensions==0.5.1
+jupyter-contrib-nbextensions==0.7.0
     # via -r requirements/requirements-dev.in
-jupyter-core==4.11.2
+jupyter-core==4.12.0
     # via
     #   -c requirements/requirements.txt
     #   jupyter-client
     #   jupyter-contrib-core
     #   jupyter-contrib-nbextensions
-    #   jupyter-latex-envs
     #   jupyter-nbextensions-configurator
     #   jupyter-server
     #   nbclassic
+    #   nbclient
     #   nbconvert
     #   nbformat
     #   notebook
 jupyter-highlight-selected-word==0.2.0
     # via jupyter-contrib-nbextensions
-jupyter-latex-envs==1.4.6
-    # via jupyter-contrib-nbextensions
-jupyter-nbextensions-configurator==0.5.0
+jupyter-nbextensions-configurator==0.6.1
     # via
     #   -r requirements/requirements-dev.in
     #   jupyter-contrib-nbextensions
-jupyter-server==1.21.0
+jupyter-server==1.23.3
     # via
     #   -c requirements/requirements.txt
     #   nbclassic
@@ -207,19 +204,18 @@ mistune==2.0.4
     #   nbconvert
 mypy-extensions==0.4.3
     # via black
-nbclassic==0.4.7
+nbclassic==0.4.8
     # via
     #   -c requirements/requirements.txt
     #   notebook
-nbclient==0.7.0
+nbclient==0.7.2
     # via
     #   -c requirements/requirements.txt
     #   nbconvert
-nbconvert==7.2.3
+nbconvert==7.2.5
     # via
     #   -c requirements/requirements.txt
     #   jupyter-contrib-nbextensions
-    #   jupyter-latex-envs
     #   jupyter-server
     #   nbclassic
     #   nbsphinx
@@ -234,7 +230,7 @@ nbformat==5.7.0
     #   nbsphinx
     #   nbval
     #   notebook
-nbsphinx==0.8.9
+nbsphinx==0.8.10
     # via -r requirements/requirements-dev.in
 nbval==0.9.6
     # via -r requirements/requirements-dev.in
@@ -244,16 +240,14 @@ nest-asyncio==1.5.6
     #   ipykernel
     #   jupyter-client
     #   nbclassic
-    #   nbclient
     #   notebook
 notebook==6.5.2
     # via
     #   -c requirements/requirements.txt
     #   jupyter-contrib-core
     #   jupyter-contrib-nbextensions
-    #   jupyter-latex-envs
     #   jupyter-nbextensions-configurator
-notebook-shim==0.2.0
+notebook-shim==0.2.2
     # via
     #   -c requirements/requirements.txt
     #   nbclassic
@@ -273,7 +267,7 @@ parso==0.8.3
     # via
     #   -c requirements/requirements.txt
     #   jedi
-pathspec==0.10.1
+pathspec==0.10.2
     # via black
 pexpect==4.8.0
     # via
@@ -287,7 +281,7 @@ pkgutil-resolve-name==1.3.10
     # via
     #   -c requirements/requirements.txt
     #   jsonschema
-platformdirs==2.5.2
+platformdirs==2.5.4
     # via black
 pluggy==1.0.0
     # via pytest
@@ -297,11 +291,11 @@ prometheus-client==0.15.0
     #   jupyter-server
     #   nbclassic
     #   notebook
-prompt-toolkit==3.0.31
+prompt-toolkit==3.0.33
     # via
     #   -c requirements/requirements.txt
     #   ipython
-psutil==5.9.3
+psutil==5.9.4
     # via
     #   -c requirements/requirements.txt
     #   ipykernel
@@ -324,7 +318,7 @@ pyparsing==3.0.9
     # via
     #   -c requirements/requirements.txt
     #   packaging
-pyrsistent==0.19.1
+pyrsistent==0.19.2
     # via
     #   -c requirements/requirements.txt
     #   jsonschema
@@ -341,7 +335,6 @@ pytz==2022.6
 pyyaml==6.0
     # via
     #   -c requirements/requirements.txt
-    #   jupyter-contrib-nbextensions
     #   jupyter-nbextensions-configurator
 pyzmq==24.0.1
     # via
@@ -385,7 +378,7 @@ sphinx==5.3.0
     #   nbsphinx
     #   recommonmark
     #   sphinx-rtd-theme
-sphinx-rtd-theme==1.0.0
+sphinx-rtd-theme==1.1.1
     # via -r requirements/requirements-dev.in
 sphinxcontrib-applehelp==1.0.2
     # via sphinx
@@ -425,7 +418,7 @@ tornado==6.2
     #   nbclassic
     #   notebook
     #   terminado
-traitlets==5.5.0
+traitlets==5.6.0
     # via
     #   -c requirements/requirements.txt
     #   ipykernel
@@ -434,7 +427,6 @@ traitlets==5.5.0
     #   jupyter-contrib-core
     #   jupyter-contrib-nbextensions
     #   jupyter-core
-    #   jupyter-latex-envs
     #   jupyter-nbextensions-configurator
     #   jupyter-server
     #   matplotlib-inline
@@ -454,7 +446,7 @@ typing-extensions==4.4.0
     #   black
     #   importlib-metadata
     #   jsonschema
-urllib3==1.26.12
+urllib3==1.26.13
     # via
     #   -c requirements/requirements.txt
     #   requests
@@ -467,11 +459,11 @@ webencodings==0.5.1
     #   -c requirements/requirements.txt
     #   bleach
     #   tinycss2
-websocket-client==1.4.1
+websocket-client==1.4.2
     # via
     #   -c requirements/requirements.txt
     #   jupyter-server
-zipp==3.10.0
+zipp==3.11.0
     # via
     #   -c requirements/requirements.txt
     #   importlib-metadata
