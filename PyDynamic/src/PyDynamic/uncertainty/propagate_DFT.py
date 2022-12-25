@@ -67,7 +67,7 @@ def GUM_DFT(
     window: Optional[np.ndarray] = None,
     CxCos: Optional[np.ndarray] = None,
     CxSin: Optional[np.ndarray] = None,
-    returnC: Optional[bool] = False,
+    returnC: bool = False,
     mask: Optional[np.ndarray] = None,
 ) -> Union[
     Tuple[np.ndarray, Union[Tuple[np.ndarray, np.ndarray, np.ndarray], np.ndarray]],
@@ -197,9 +197,9 @@ def GUM_DFT(
         UFCS = np.dot(CxCos, np.dot(Ux, CxSin.T))
         UFSS = np.dot(CxSin, np.dot(Ux, CxSin.T))
         try:
-            UF = np.vstack(
-                (np.hstack((UFCC, UFCS)), np.hstack((UFCS.T, UFSS)))
-            )  # type: Union[Tuple[np.ndarray, np.ndarray, np.ndarray], np.ndarray]
+            UF: Union[
+                Tuple[np.ndarray, np.ndarray, np.ndarray], np.ndarray
+            ] = np.vstack((np.hstack((UFCC, UFCS)), np.hstack((UFCS.T, UFSS))))
         except MemoryError:
             print("Could not put covariance matrix together due to memory constraints.")
             print(
@@ -207,8 +207,11 @@ def GUM_DFT(
                 "[B.T,C]] instead."
             )
             # Return blocks only because of lack of memory.
-            UF = (UFCC, UFCS, UFSS)  # type:
-            # Union[Tuple[np.ndarray, np.ndarray, np.ndarray], np.ndarray]
+            UF: Union[Tuple[np.ndarray, np.ndarray, np.ndarray], np.ndarray] = (
+                UFCC,
+                UFCS,
+                UFSS,
+            )
 
     if returnC:
         # Return sensitivities if requested.
@@ -246,7 +249,7 @@ def _apply_window(
         assert Ux.shape[0] == Ux.shape[1] and Ux.shape[0] == len(x)
     xw = x.copy() * window
     if isinstance(Ux, float):
-        Uxw = Ux * window ** 2
+        Uxw = Ux * window**2
     else:
         Uxw = _prod(window, _prod(Ux, window))
     return xw, Uxw
@@ -332,7 +335,7 @@ def GUM_iDFT(
     Nx: Optional[int] = None,
     Cc: Optional[np.ndarray] = None,
     Cs: Optional[np.ndarray] = None,
-    returnC: Optional[bool] = False,
+    returnC: bool = False,
 ) -> Union[
     Tuple[np.ndarray, np.ndarray],
     Tuple[
@@ -429,9 +432,9 @@ def GUM_iDFT(
         Ux = np.dot(Cc, _prod(RR, Cc.T)) + np.dot(Cs, _prod(II, Cs.T))
 
     if returnC:
-        return x, Ux / N ** 2, {"Cc": Cc, "Cs": Cs}
+        return x, Ux / N**2, {"Cc": Cc, "Cs": Cs}
     else:
-        return x, Ux / N ** 2
+        return x, Ux / N**2
 
 
 def GUM_DFTfreq(N, dt=1):
@@ -460,9 +463,9 @@ def GUM_DFTfreq(N, dt=1):
 def DFT2AmpPhase(
     F: np.ndarray,
     UF: np.ndarray,
-    keep_sparse: Optional[bool] = False,
-    tol: Optional[float] = 1.0,
-    return_type: Optional[str] = "separate",
+    keep_sparse: bool = False,
+    tol: float = 1.0,
+    return_type: str = "separate",
 ) -> Union[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray, np.ndarray]]:
     """Transformation from real and imaginary parts to magnitude and phase
 
@@ -512,7 +515,7 @@ def DFT2AmpPhase(
     R = F[: N // 2 + 1]
     i = F[N // 2 + 1 :]
 
-    A = np.sqrt(R ** 2 + i ** 2)  # absolute value
+    A = np.sqrt(R**2 + i**2)  # absolute value
     P = np.arctan2(i, R)  # phase value
     if len(UF.shape) == 1:
         uF = 0.5 * (
@@ -532,15 +535,15 @@ def DFT2AmpPhase(
         )
     aR = R / A  # sensitivities
     aI = i / A
-    pR = -i / A ** 2
-    pI = R / A ** 2
+    pR = -i / A**2
+    pI = R / A**2
 
     if len(UF.shape) == 1:  # uncertainty calculation of zero correlation
         URR = UF[: N // 2 + 1]
         UII = UF[N // 2 + 1 :]
-        U11 = URR * aR ** 2 + UII * aI ** 2
+        U11 = URR * aR**2 + UII * aI**2
         U12 = aR * URR * pR + aI * UII * pI
-        U22 = URR * pR ** 2 + UII * pI ** 2
+        U22 = URR * pR**2 + UII * pI**2
         UAP = sparse.diags([np.r_[U11, U22], U12, U12], [0, N // 2 + 1, -(N // 2 + 1)])
         if not keep_sparse:
             UAP = UAP.toarray()
@@ -575,7 +578,7 @@ def DFT2AmpPhase(
 
 
 def AmpPhase2DFT(
-    A: np.ndarray, P: np.ndarray, UAP: np.ndarray, keep_sparse: Optional[bool] = False
+    A: np.ndarray, P: np.ndarray, UAP: np.ndarray, keep_sparse: bool = False
 ) -> Tuple[np.ndarray, np.ndarray]:
     """Transformation from magnitude and phase to real and imaginary parts
 
@@ -651,9 +654,9 @@ def AmpPhase2DFT(
             Uap = diags[1][offset[1] : nrows + offset[1]]
             Upp = diags[0][N:]
 
-            U11 = Uaa * CRA ** 2 + CRP * Uap * CRA + CRA * Uap * CRP + Upp * CRP ** 2
+            U11 = Uaa * CRA**2 + CRP * Uap * CRA + CRA * Uap * CRP + Upp * CRP**2
             U12 = CRA * Uaa * CIA + CRP * Uap * CIA + CRA * Uap * CIA + CRP * Upp * CIP
-            U22 = Uaa * CIA ** 2 + CIP * Uap * CIA + CIA * Uap * CIP + Upp * CIP ** 2
+            U22 = Uaa * CIA**2 + CIP * Uap * CIA + CIA * Uap * CIP + Upp * CIP**2
 
             UF = sparse.diags(
                 [np.r_[U11, U22], U12, U12], [0, N, -N]
@@ -866,7 +869,7 @@ def AmpPhase2Time(
                 + np.dot(Cs, np.dot(PP, Cs.T))
             )
 
-    return x, Ux / N ** 2
+    return x, Ux / N**2
 
 
 def DFT_transferfunction(X, Y, UX, UY):
@@ -974,19 +977,19 @@ def DFT_deconv(
 
     Yc = Y[: N // 2 + 1] + 1j * Y[N // 2 + 1 :]
     Hc = H[: N // 2 + 1] + 1j * H[N // 2 + 1 :]
-    X = np.r_[np.real(Yc / Hc), np.imag(Yc / Hc)]  # type: np.ndarray
+    X: np.ndarray = np.r_[np.real(Yc / Hc), np.imag(Yc / Hc)]
 
     # sensitivities
-    norm = rH ** 2 + iH ** 2
+    norm = rH**2 + iH**2
     RY = np.r_[rH / norm, iH / norm]
     IY = np.r_[-iH / norm, rH / norm]
     RH = np.r_[
-        (-rY * rH ** 2 + rY * iH ** 2 - 2 * iY * iH * rH) / norm ** 2,
-        (iY * rH ** 2 - iY * iH ** 2 - 2 * rY * rH * iH) / norm ** 2,
+        (-rY * rH**2 + rY * iH**2 - 2 * iY * iH * rH) / norm**2,
+        (iY * rH**2 - iY * iH**2 - 2 * rY * rH * iH) / norm**2,
     ]
     IH = np.r_[
-        (-iY * rH ** 2 + iY * iH ** 2 + 2 * rY * iH * rH) / norm ** 2,
-        (-rY * rH ** 2 + rY * iH ** 2 - 2 * iY * rH * iH) / norm ** 2,
+        (-iY * rH**2 + iY * iH**2 + 2 * rY * iH * rH) / norm**2,
+        (-rY * rH**2 + rY * iH**2 - 2 * iY * rH * iH) / norm**2,
     ]
     # calculate blocks of uncertainty matrix
     URRX = _matprod(UY, RY, RY) + _matprod(UH, RH, RH)
@@ -994,22 +997,20 @@ def DFT_deconv(
     UIIX = _matprod(UY, IY, IY) + _matprod(UH, IH, IH)
 
     try:
-        UX = np.vstack((np.hstack((URRX, URIX)), np.hstack((URIX.T, UIIX))))  # type:
-        # np.ndarray
+        UX: np.ndarray = np.vstack((np.hstack((URRX, URIX)), np.hstack((URIX.T, UIIX))))
     except MemoryError:
         print(
             "DFT_deconv: Could not put covariance matrix together due to memory "
             "constraints.\nReturning the three blocks (A,B,C) such that U = [[A,B],"
             "[B.T,C]] instead."
         )
-        UX = (URRX, URIX, UIIX)
-        # type: Union[Tuple[np.ndarray, np.ndarray, np.ndarray], np.ndarray]
+        UX: Tuple[np.ndarray, np.ndarray, np.ndarray] = (URRX, URIX, UIIX)
 
     return X, UX
 
 
 def _matprod(
-    M: np.ndarray, V: np.ndarray, W: np.ndarray, return_as_matrix: Optional[bool] = True
+    M: np.ndarray, V: np.ndarray, W: np.ndarray, return_as_matrix: bool = True
 ) -> np.ndarray:
     """Calculate the matrix-matrix-matrix product (V1,V2)M(W1,W2)
 
