@@ -8,7 +8,7 @@ bleach==5.0.1
     # via
     #   -c requirements.txt
     #   readme-renderer
-certifi==2022.6.15
+certifi==2022.12.7
     # via
     #   -c requirements.txt
     #   requests
@@ -53,15 +53,19 @@ gitpython==3.1.29
     # via
     #   -c requirements.txt
     #   python-semantic-release
-idna==3.3
+idna==3.4
     # via
     #   -c requirements.txt
     #   requests
-importlib-metadata==5.1.0
+importlib-metadata==5.2.0
     # via
     #   -c requirements.txt
     #   keyring
     #   twine
+importlib-resources==5.10.1
+    # via
+    #   -c requirements.txt
+    #   keyring
 invoke==1.7.3
     # via
     #   -c requirements.txt
@@ -75,7 +79,7 @@ jeepney==0.8.0
     #   -c requirements.txt
     #   keyring
     #   secretstorage
-keyring==23.11.0
+keyring==23.13.1
     # via
     #   -c requirements.txt
     #   twine
@@ -143,7 +147,7 @@ tomlkit==0.10.2
     # via
     #   -c requirements.txt
     #   python-semantic-release
-tqdm==4.64.0
+tqdm==4.64.1
     # via
     #   -c requirements.txt
     #   twine
@@ -151,7 +155,7 @@ twine==3.8.0
     # via
     #   -c requirements.txt
     #   python-semantic-release
-urllib3==1.26.12
+urllib3==1.26.13
     # via
     #   -c requirements.txt
     #   requests
@@ -168,3 +172,4 @@ zipp==3.11.0
     # via
     #   -c requirements.txt
     #   importlib-metadata
+    #   importlib-resources
