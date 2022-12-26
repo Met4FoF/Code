@@ -84,8 +84,6 @@ entrypoints==0.4
     # via
     #   -c requirements.txt
     #   jupyter-client
-exceptiongroup==1.0.0rc8
-    # via hypothesis
 executing==0.10.0
     # via
     #   -c requirements.txt
@@ -368,10 +366,7 @@ tokenize-rt==4.2.1
 toml==0.10.2
     # via tox
 tomli==2.0.1
-    # via
-    #   black
-    #   coverage
-    #   pytest
+    # via pytest
 tomlkit==0.11.4
     # via python-semantic-release
 tornado==6.2
@@ -413,7 +408,7 @@ webencodings==0.5.1
     #   -c requirements.txt
     #   bleach
     #   tinycss2
-wheel==0.37.1
+wheel==0.38.1
     # via python-semantic-release
 zipp==3.8.1
     # via importlib-metadata
