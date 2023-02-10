@@ -107,11 +107,15 @@ workflows:
           subtree: Met4FoF-redundancy
           context:
             - Docker pulls
-      - test_against_venv:
-          name: test_agentMET4FOF_ml_against_venv
-          subtree: tutorials/agentMET4FOF_ml
-          context:
-            - Docker pulls
+# Numpy deprecated np.float in v1.20.0 but agentMET4FOF_ml uses scitkit-multiflow,
+# which uses np.float all over the place. This leads to exceptions when importing it in
+# agentMET4FOF_ml.coupled_ML.py. agentMET4FOF_ml is still tested against its
+# own dependencies.
+#      - test_against_venv:
+#          name: test_agentMET4FOF_ml_against_venv
+#          subtree: tutorials/agentMET4FOF_ml
+#          context:
+#            - Docker pulls
 # At some point the installation of torch==1.10.2 started to fail for the big
 # environment, so we deactivated it. agentMET4FOF_anomaly_detection still is tested
 # against its own dependencies.
@@ -181,11 +185,15 @@ workflows:
       - build_and_test_pip_env:
           context:
             - Docker pulls
-      - test_against_conda:
-          name: test_agentMET4FOF_ml_against_conda
-          subtree: tutorials/agentMET4FOF_ml
-          context:
-            - Docker pulls
+# Numpy deprecated np.float in v1.20.0 but agentMET4FOF_ml uses scitkit-multiflow,
+# which uses np.float all over the place. This leads to exceptions when importing it in
+# agentMET4FOF_ml.coupled_ML.py. agentMET4FOF_ml is still tested against its
+# own dependencies.
+#      - test_against_conda:
+#          name: test_agentMET4FOF_ml_against_conda
+#          subtree: tutorials/agentMET4FOF_ml
+#          context:
+#            - Docker pulls
 # At some point the installation of torch==1.10.2 started to fail for the big
 # environment, so we deactivated it. agentMET4FOF_anomaly_detection still is tested
 # against its own dependencies.
