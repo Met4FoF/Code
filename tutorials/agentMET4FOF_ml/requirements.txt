@@ -1,3 +1,5 @@
-numpy
+
+numpy>=1.14.0, <1.20.0
+Mesa <1.0.0
 agentMET4FOF
 scikit-multiflow

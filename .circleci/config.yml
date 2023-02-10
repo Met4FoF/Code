@@ -56,7 +56,6 @@ workflows:
             - recompile_deps
           context:
             - Docker pulls
-            - GitHub pushes to BjoernLudwigPTB's public_repos
 
   nightly_test:
     when:
@@ -504,7 +503,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "0f:4e:bb:cb:6a:fc:0a:23:db:5b:de:7a:3e:34:80:80"
+            - "41:e2:e1:e7:a9:a3:8d:62:d9:19:6f:71:fe:f6:20:c1"
       - checkout
       - set_git_user_name_and_email
       - run: git checkout -b << parameters.new_branch >>
@@ -551,7 +550,7 @@ jobs:
       - subtree_pull:
           subtree: tutorials/agentMET4FOF_ml
           upstream_url: git@github.com:Met4FoF/agentMET4FOF_ml.git
-          branch: master
+          branch: main
       - subtree_pull:
           subtree: tutorials/agentMET4FOF_sensors
           upstream_url: git@github.com:Met4FoF/agentMET4FOF_sensors.git
@@ -616,7 +615,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "0f:4e:bb:cb:6a:fc:0a:23:db:5b:de:7a:3e:34:80:80"
+            - "41:e2:e1:e7:a9:a3:8d:62:d9:19:6f:71:fe:f6:20:c1"
       - checkout
       - attach_workspace:
           at: .
