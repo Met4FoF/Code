@@ -550,7 +550,7 @@ jobs:
       - subtree_pull:
           subtree: tutorials/agentMET4FOF_ml
           upstream_url: git@github.com:Met4FoF/agentMET4FOF_ml.git
-          branch: master
+          branch: main
       - subtree_pull:
           subtree: tutorials/agentMET4FOF_sensors
           upstream_url: git@github.com:Met4FoF/agentMET4FOF_sensors.git
