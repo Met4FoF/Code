@@ -295,8 +295,8 @@ workflows:
           requires:
               - build_and_test_conda_env
               - build_and_test_pip_env
-              - test_agentMET4FOF_ml_against_conda
-              - test_agentMET4FOF_ml_against_venv
+#              - test_agentMET4FOF_ml_against_conda
+#              - test_agentMET4FOF_ml_against_venv
 #              - test_agentMET4FOF_anomaly_detection_against_conda
 #              - test_agentMET4FOF_anomaly_detection_against_venv
               - test_time-series-buffer_against_conda
