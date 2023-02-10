@@ -1,18 +1,19 @@
 import os
 from inspect import getmodule, stack
 from math import ceil
-from typing import Any, Callable, Dict, NamedTuple, Optional, Tuple
+from typing import Any, Callable, cast, Dict, NamedTuple, Optional, Tuple
 
 import numpy as np
 import pytest
 import scipy.stats as stats
 from hypothesis import assume, HealthCheck, settings, strategies as hst
 from hypothesis.extra import numpy as hnp
-from hypothesis.strategies import composite, SearchStrategy
+from hypothesis.strategies import composite, DrawFn, SearchStrategy
 from numpy.linalg import LinAlgError
+from scipy.signal import correlate
+
 from PyDynamic import make_semiposdef
 from PyDynamic.misc.tools import normalize_vector_or_matrix
-from scipy.signal import correlate
 
 
 def _check_for_ci_to_switch_off_performance_related_healthchecks():
@@ -148,8 +149,8 @@ def hypothesis_dimension(
         if min_value is not None and min_value == max_value
         else draw(
             hst.one_of(
-                hypothesis_even_dimension(min_value, max_value),
-                hypothesis_odd_dimension(min_value, max_value),
+                hypothesis_even_dimension(min_value=min_value, max_value=max_value),
+                hypothesis_odd_dimension(min_value=min_value, max_value=max_value),
             )
         )
     )
@@ -208,8 +209,8 @@ def hypothesis_odd_dimension(
 @composite
 def hypothesis_two_dimensional_array_shape(
     draw: Callable,
-    ensure_even_second_dimension: Optional[bool] = False,
-    ensure_odd_second_dimension: Optional[bool] = False,
+    ensure_even_second_dimension: bool = False,
+    ensure_odd_second_dimension: bool = False,
 ):
     if ensure_even_second_dimension:
         second_dimension = draw(hypothesis_even_dimension())
@@ -267,11 +268,11 @@ def hypothesis_float_square_matrix(
 
 @composite
 def hypothesis_nonzero_complex_vector(
-    draw: Callable,
+    draw: DrawFn,
     length: Optional[int] = None,
-    min_magnitude: Optional[float] = 1e-4,
-    max_magnitude: Optional[float] = 1e4,
-) -> np.ndarray:
+    min_magnitude: float = 1e-4,
+    max_magnitude: float = 1e4,
+) -> SearchStrategy[np.ndarray]:
     number_of_elements = draw(hypothesis_dimension(min_value=length, max_value=length))
     complex_vector = draw(
         hnp.arrays(
@@ -286,7 +287,7 @@ def hypothesis_nonzero_complex_vector(
         )
     )
     assume(np.all(np.real(complex_vector) != 0))
-    return complex_vector
+    return cast(SearchStrategy[np.ndarray], complex_vector)
 
 
 @pytest.fixture
@@ -299,34 +300,37 @@ def random_complex_vector() -> Callable:
 
 @composite
 def hypothesis_float_vector(
-    draw: Callable,
+    draw: DrawFn,
     length: Optional[int] = None,
     min_value: Optional[float] = None,
     max_value: Optional[float] = None,
-    exclude_min: Optional[bool] = False,
-    exclude_max: Optional[bool] = False,
-) -> np.ndarray:
+    exclude_min: bool = False,
+    exclude_max: bool = False,
+) -> SearchStrategy[np.ndarray]:
     number_of_elements = draw(hypothesis_dimension(min_value=length, max_value=length))
-    return draw(
-        hnp.arrays(
-            dtype=float,
-            elements=hst.floats(
-                min_value=min_value,
-                max_value=max_value,
-                exclude_min=exclude_min,
-                exclude_max=exclude_max,
-                allow_infinity=False,
-                allow_nan=False,
-            ),
-            shape=number_of_elements,
-        )
+    return cast(
+        SearchStrategy[np.ndarray],
+        draw(
+            hnp.arrays(
+                dtype=float,
+                elements=hst.floats(
+                    min_value=min_value,
+                    max_value=max_value,
+                    exclude_min=exclude_min,
+                    exclude_max=exclude_max,
+                    allow_infinity=False,
+                    allow_nan=False,
+                ),
+                shape=number_of_elements,
+            )
+        ),
     )
 
 
 def hypothesis_not_negative_float_strategy(
     max_value: Optional[float] = None,
-    allow_nan: Optional[bool] = False,
-    allow_infinity: Optional[bool] = False,
+    allow_nan: bool = False,
+    allow_infinity: bool = False,
 ) -> SearchStrategy:
     return hst.floats(
         min_value=0,
@@ -339,9 +343,9 @@ def hypothesis_not_negative_float_strategy(
 def hypothesis_bounded_float_strategy(
     min_value: Optional[float] = None,
     max_value: Optional[float] = None,
-    exclude_min: Optional[bool] = False,
-    exclude_max: Optional[bool] = False,
-    allow_infinity: Optional[bool] = False,
+    exclude_min: bool = False,
+    exclude_max: bool = False,
+    allow_infinity: bool = False,
 ) -> SearchStrategy:
     return hst.floats(
         min_value=min_value,
@@ -354,45 +358,51 @@ def hypothesis_bounded_float_strategy(
 
 @composite
 def hypothesis_not_negative_float(
-    draw: Callable,
+    draw: DrawFn,
     max_value: Optional[float] = None,
-    allow_nan: Optional[bool] = False,
-    allow_infinity: Optional[bool] = False,
-) -> float:
-    return draw(
-        hypothesis_not_negative_float_strategy(
-            max_value=max_value, allow_nan=allow_nan, allow_infinity=allow_infinity
-        )
+    allow_nan: bool = False,
+    allow_infinity: bool = False,
+) -> SearchStrategy[float]:
+    return cast(
+        SearchStrategy[float],
+        draw(
+            hypothesis_not_negative_float_strategy(
+                max_value=max_value, allow_nan=allow_nan, allow_infinity=allow_infinity
+            )
+        ),
     )
 
 
 @composite
 def hypothesis_bounded_float(
-    draw: Callable,
+    draw: DrawFn,
     min_value: Optional[float] = None,
     max_value: Optional[float] = None,
-    exclude_min: Optional[bool] = False,
-    exclude_max: Optional[bool] = False,
-    allow_infinity: Optional[float] = False,
-) -> float:
-    return draw(
-        hypothesis_bounded_float_strategy(
-            min_value=min_value,
-            max_value=max_value,
-            exclude_min=exclude_min,
-            exclude_max=exclude_max,
-            allow_infinity=allow_infinity,
-        )
+    exclude_min: bool = False,
+    exclude_max: bool = False,
+    allow_infinity: bool = False,
+) -> SearchStrategy[float]:
+    return cast(
+        SearchStrategy[float],
+        draw(
+            hypothesis_bounded_float_strategy(
+                min_value=min_value,
+                max_value=max_value,
+                exclude_min=exclude_min,
+                exclude_max=exclude_max,
+                allow_infinity=allow_infinity,
+            )
+        ),
     )
 
 
 @composite
 def hypothesis_covariance_matrix(
-    draw: Callable,
+    draw: DrawFn,
     number_of_rows: Optional[int] = None,
-    min_value: Optional[float] = 0,
-    max_value: Optional[float] = 1,
-) -> np.ndarray:
+    min_value: float = 0.0,
+    max_value: float = 1.0,
+) -> SearchStrategy[np.ndarray]:
     number_of_rows_and_columns = draw(
         hypothesis_dimension(min_value=number_of_rows, max_value=number_of_rows)
     )
@@ -424,24 +434,28 @@ def hypothesis_covariance_matrix(
         nonzero_diagonal_cov, range_min=min_value, range_max=max_value
     )
     assume(np.all(np.linalg.eigvals(scaled_cov) >= 0))
-    return scaled_cov
+    return cast(SearchStrategy[np.ndarray], scaled_cov)
 
 
 @composite
 def ensure_hypothesis_nonzero_diagonal(
-    draw: Callable, square_matrix: np.ndarray
-) -> np.ndarray:
-    return square_matrix + np.diag(
-        draw(
-            hypothesis_float_vector(
-                length=len(square_matrix), min_value=0, exclude_min=True
+    draw: DrawFn, square_matrix: np.ndarray
+) -> SearchStrategy[np.ndarray]:
+    return cast(
+        SearchStrategy[np.ndarray],
+        square_matrix
+        + np.diag(
+            draw(
+                hypothesis_float_vector(
+                    length=len(square_matrix), min_value=0, exclude_min=True
+                )
             )
-        )
+        ),
     )
 
 
 def scale_matrix_or_vector_to_range(
-    array: np.ndarray, range_min: Optional[float] = 0, range_max: Optional[float] = 1
+    array: np.ndarray, range_min: float = 0.0, range_max: float = 1.0
 ) -> np.ndarray:
     return normalize_vector_or_matrix(array) * (range_max - range_min) + range_min
 
@@ -452,20 +466,22 @@ def scale_matrix_or_vector_to_convex_combination(array: np.ndarray) -> np.ndarra
 
 @composite
 def hypothesis_covariance_matrix_with_zero_correlation(
-    draw: Callable, number_of_rows: Optional[int] = None
-) -> np.ndarray:
-    cov = np.diag(np.diag(draw(hypothesis_covariance_matrix(number_of_rows))))
+    draw: DrawFn, number_of_rows: Optional[int] = None
+) -> SearchStrategy[np.ndarray]:
+    cov = np.diag(
+        np.diag(draw(hypothesis_covariance_matrix(number_of_rows=number_of_rows)))
+    )
     assume(np.all(np.linalg.eigvals(cov) >= 0))
-    return cov
+    return cast(SearchStrategy[np.ndarray], cov)
 
 
 @composite
 def hypothesis_covariance_matrix_for_complex_vectors(
-    draw: Callable,
+    draw: DrawFn,
     length: int,
-    min_value: Optional[float] = 0.0,
-    max_value: Optional[float] = 1.0,
-) -> np.ndarray:
+    min_value: float = 0.0,
+    max_value: float = 1.0,
+) -> SearchStrategy[np.ndarray]:
 
     uy_rr = draw(
         hypothesis_covariance_matrix(
@@ -485,10 +501,10 @@ def hypothesis_covariance_matrix_for_complex_vectors(
     uy = np.block([[uy_rr, uy_ri], [uy_ri.T, uy_ii]])
     uy_positive_semi_definite = make_semiposdef(uy)
     assume(np.all(np.linalg.eigvals(uy_positive_semi_definite) >= 0))
-    return uy_positive_semi_definite
+    return cast(SearchStrategy[np.ndarray], uy_positive_semi_definite)
 
 
-def random_covariance_matrix(length: Optional[int]) -> np.ndarray:
+def random_covariance_matrix(length: int) -> np.ndarray:
     """Construct a valid (but random) covariance matrix with good condition number"""
 
     # because np.cov estimates the mean from data, the returned covariance matrix
@@ -531,17 +547,17 @@ def random_covariance_matrix_for_complex_vectors() -> Callable:
 
 @composite
 def hypothesis_positive_powers_of_two(
-    draw: Callable, min_k: Optional[int] = 0, max_k: Optional[int] = None
-) -> int:
+    draw: DrawFn, min_k: int = 0, max_k: Optional[int] = None
+) -> SearchStrategy[int]:
     k = draw(hst.integers(min_value=min_k, max_value=max_k))
     two_to_the_k = 2**k
-    return two_to_the_k
+    return cast(SearchStrategy[int], two_to_the_k)
 
 
 @pytest.fixture
 def corrmatrix() -> Callable:
     def _create_corrmatrix(
-        rho: float, Nx: int, nu: Optional[float] = 0.5, phi: Optional[float] = 0.3
+        rho: float, Nx: int, nu: float = 0.5, phi: float = 0.3
     ) -> np.ndarray:
         """Additional helper function to create a correlation matrix"""
         corrmat = np.zeros((Nx, Nx))

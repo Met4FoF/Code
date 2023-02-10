@@ -57,7 +57,6 @@ workflows:
             - test_with_updated_deps
           context:
             - Docker pulls
-            - GitHub pushes to BjoernLudwigPTB's public_repos
 
   nightly_test:
     when:
@@ -108,20 +107,19 @@ workflows:
           context:
             - Docker pulls
             - pypi.org publishing for agentMET4FOF
-            - GitHub pushes to BjoernLudwigPTB's public_repos
           requires:
             - confirm_previewed_release_actions
       - build_image:
           context:
             - Docker pulls
-            - Docker publishing for agents
+            - Docker agents image specs
           filters:
             tags:
               only: /^v([1-9][0-9]*!)?(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))*((a|b|rc)(0|[1-9][0-9]*))?(\.post(0|[1-9][0-9]*))?(\.dev(0|[1-9][0-9]*))?$/
       - test_image:
           context:
             - Docker pulls
-            - Docker publishing for agents
+            - Docker agents image specs
           requires:
             - build_image
           filters:
@@ -129,7 +127,7 @@ workflows:
               only: /^v([1-9][0-9]*!)?(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))*((a|b|rc)(0|[1-9][0-9]*))?(\.post(0|[1-9][0-9]*))?(\.dev(0|[1-9][0-9]*))?$/
       - retag_and_deploy_image:
           context:
-            - Docker pulls
+            - Docker agents image specs
             - Docker publishing for agents
           requires:
             - test_image
@@ -241,7 +239,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "93:e5:20:36:94:74:6f:e2:33:f6:91:07:4c:b4:89:1a"
+            - "41:e2:e1:e7:a9:a3:8d:62:d9:19:6f:71:fe:f6:20:c1"
       - checkout
       - attach_workspace:
           at: .
@@ -284,8 +282,8 @@ jobs:
                 set -e
                 gh pr create --base=develop --title "Update deps" \
                   --body "This PR provides recompiled deps for all outdated \
-                  package versions. It was opened after the commited deps \
-                  were succesfully compiled and all tests passed with the \
+                  package versions. It was opened after the committed deps \
+                  were successfully compiled and all tests passed with the \
                   new versions. It should be merged as soon as possible to \
                   avoid any security issues due to outdated dependencies."
             else
@@ -394,7 +392,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "93:e5:20:36:94:74:6f:e2:33:f6:91:07:4c:b4:89:1a"
+            - "41:e2:e1:e7:a9:a3:8d:62:d9:19:6f:71:fe:f6:20:c1"
       - checkout
       - install_all_deps
       - run:

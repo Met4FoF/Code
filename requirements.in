@@ -12,7 +12,9 @@
 -r tutorials/agentMET4FOF_anomaly_detection/requirements.in
 -c tutorials/agentMET4FOF_anomaly_detection/dev-requirements.in
 -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt
--r tutorials/agentMET4FOF_ml/requirements.txt
+# Does not work anymore as it is dependent on Numpy < 1.20.0 and due to this
+# mesa < 1.0.0 which contradicts agentMET4FOF requiring mesa==1.1.1
+# -r tutorials/agentMET4FOF_ml/requirements.txt
 -c tutorials/agentMET4FOF_sensors/requirements.in
 -c tutorials/agentMET4FOF_ZeMA_emc/requirements.in
 # Unfortunately we have to comment out PyDynamic_tutorials' deps due to their support
