@@ -584,7 +584,7 @@ tomli==2.0.1
     #   tox
 tomlkit==0.10.2
     # via python-semantic-release
-torch==1.13.1
+#torch==1.13.1
     # via
     #   -c tutorials/agentMET4FOF_bayesian_neural_network_ZeMA/requirements.txt
     #   -r tutorials/agentMET4FOF_anomaly_detection/requirements.in
