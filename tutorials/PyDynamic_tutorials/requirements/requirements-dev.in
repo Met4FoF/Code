@@ -2,9 +2,12 @@
 
 jupyter_contrib_nbextensions
 jupyter_nbextensions_configurator
+ipython
+myst-parser
 black
 sphinx
+sphinxcontrib-applehelp <= 1.0.2  # This pinning is needed for Python 3.7
+sphinxcontrib-htmlhelp <= 2.0.0  # This pinning is needed for Python 3.7
 nbsphinx
-recommonmark
 sphinx_rtd_theme
 nbval
