@@ -56,6 +56,7 @@ workflows:
             - recompile_deps
           context:
             - Docker pulls
+            - GitHub pushes to BjoernLudwigPTB's public_repos
 
   nightly_test:
     when:
