@@ -614,8 +614,8 @@ jobs:
           name: Recompile and sync deps
           command: |
             python -m pip install --upgrade pip pip-tools numpy uncertainties
-            python -m piptools compile --upgrade
-            python -m piptools compile --upgrade dev-requirements.in
+            python -m piptools compile --resolver=backtracking --upgrade
+            python -m piptools compile --resolver=backtracking --upgrade dev-requirements.in
             sed -i "s/torch==/#torch==/" requirements.txt
             python -m piptools sync requirements.txt dev-requirements.txt
       - check_for_new_deps_compilation
