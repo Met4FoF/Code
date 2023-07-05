@@ -351,6 +351,7 @@ jobs:
       - check_for_new_subtrees
       - set_git_user_name_and_email
       - run: echo 'export NEW_BRANCH=most_recent_subtree_pulls' >> $BASH_ENV
+      - run: git checkout -b ${NEW_BRANCH}
       - run:
           name: Install GitHub CLI
           command: |
@@ -370,7 +371,7 @@ jobs:
             gh pr list --head=$NEW_BRANCH | grep $NEW_BRANCH
             if [ $? -eq 1 ]; then
                 set -e
-                gh pr create --base=main --title "Update deps" \
+                gh pr create --base=main --title "Update subtrees" \
                   --body "This PR provides freshly pulled package \
                   versions. It was opened after all subtrees were \
                   successfully updated. If all tests pass with the \
