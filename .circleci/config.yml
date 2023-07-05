@@ -29,7 +29,7 @@ executors:
 
 workflows:
 
-  pull_subtrees_and_recompile_deps:
+  pull_subtrees:
     when:
       and:
         - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
@@ -39,21 +39,9 @@ workflows:
           new_branch: most_recent_subtree_pulls
           context:
             - Docker pulls
-
-  check_for_upgraded_deps:
-    when:
-      not:
-        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
-    jobs:
-      - recompile_deps:
-          filters:
-            branches:
-              only: most_recent_subtree_pulls
-          context:
-            - Docker pulls
       - commit_push_open_pr:
           requires:
-            - recompile_deps
+            - pull_subtrees
           context:
             - Docker pulls
             - GitHub pushes to BjoernLudwigPTB's public_repos
@@ -487,18 +475,17 @@ commands:
             -m "Update $(echo << parameters.subtree >> | sed -e "s|tutorials/||") 
             to most recent version"
 
-  check_for_new_deps_compilation:
+  check_for_new_subtrees:
     description: "Check for any changes."
     steps:
     - run:
-        name: Abort if no new deps were compiled
+        name: Abort if nothing new was pulled
         command: |
-          git add .
           set +e
-          git status | grep modified
+          git diff main | grep diff
           if [ $? -ne 0 ]; then
               set -e
-              echo "No updated subtrees or deps. Nothing to test and commit. We are all 
+              echo "No updated subtrees. Nothing to test and commit. We are all 
                 good."
               circleci-agent step halt
           fi
@@ -608,27 +595,6 @@ jobs:
             fi
       - run: git push -fu origin << parameters.new_branch >>
 
-  recompile_deps:
-    executor:
-      name: tester
-    steps:
-      - checkout
-      - create_result_folder
-      - run:
-          name: Recompile and sync deps
-          command: |
-            python -m pip install --upgrade pip pip-tools numpy uncertainties
-            python -m piptools compile --resolver=backtracking --upgrade
-            python -m piptools compile --resolver=backtracking --upgrade dev-requirements.in
-            sed -i "s/torch==/#torch==/" requirements.txt
-            python -m piptools sync requirements.txt dev-requirements.txt
-      - check_for_new_deps_compilation
-      - persist_to_workspace:
-          root: .
-          paths:
-            - requirements.txt
-            - dev-requirements.txt
-
   commit_push_open_pr:
     executor:
       name: gh_releaser
@@ -640,9 +606,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - check_for_new_deps_compilation
+      - check_for_new_subtrees
       - set_git_user_name_and_email
-      - run: echo 'export NEW_BRANCH=recompile_deps' >> $BASH_ENV
+      - run: echo 'export NEW_BRANCH=new_subtree_content' >> $BASH_ENV
       - run:
           name: Commit and push changes
           command: |
