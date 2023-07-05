@@ -352,6 +352,7 @@ jobs:
       - set_git_user_name_and_email
       - run: echo 'export NEW_BRANCH=most_recent_subtree_pulls' >> $BASH_ENV
       - run: git checkout -b ${NEW_BRANCH}
+      - run: git push -fu origin  ${NEW_BRANCH}
       - run:
           name: Install GitHub CLI
           command: |
