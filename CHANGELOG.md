@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.19.0 (2023-07-05)
+
+### :chart_with_upwards_trend:
+
+* :chart_with_upwards_trend: Ensure long-term maintainability by cleaning repo from outdating elements ([`44e86ae`](https://github.com/Met4FoF/Code/commit/44e86ae97948dd9a3daf9b5c2a4bf1759b4b0de8))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.18.0...v0.19.0)**
+
 ## v0.18.0 (2022-08-24)
 ### :sparkles:
 * :sparkles: Update PyDynamic to 2.3.0 with new rms feature ([`14efba8`](https://github.com/Met4FoF/Code/commit/14efba8851b4ce383d6416da2949c8518bada85c))
