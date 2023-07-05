@@ -12,10 +12,6 @@ certifi==2022.12.7
     # via
     #   -c requirements.txt
     #   requests
-cffi==1.15.1
-    # via
-    #   -c requirements.txt
-    #   cryptography
 charset-normalizer==3.0.1
     # via
     #   -c requirements.txt
@@ -32,11 +28,9 @@ click-log==0.4.0
 colorama==0.4.6
     # via
     #   -c requirements.txt
+    #   click
+    #   tqdm
     #   twine
-cryptography==39.0.1
-    # via
-    #   -c requirements.txt
-    #   secretstorage
 docutils==0.18.1
     # via
     #   -c requirements.txt
@@ -49,7 +43,7 @@ gitdb==4.0.10
     # via
     #   -c requirements.txt
     #   gitpython
-gitpython==3.1.30
+gitpython==3.1.31
     # via
     #   -c requirements.txt
     #   python-semantic-release
@@ -62,7 +56,7 @@ importlib-metadata==6.0.0
     #   -c requirements.txt
     #   keyring
     #   twine
-importlib-resources==5.10.2
+importlib-resources==5.12.0
     # via
     #   -c requirements.txt
     #   keyring
@@ -74,16 +68,11 @@ jaraco-classes==3.2.3
     # via
     #   -c requirements.txt
     #   keyring
-jeepney==0.8.0
-    # via
-    #   -c requirements.txt
-    #   keyring
-    #   secretstorage
-keyring==23.13.1
+keyring==24.2.0
     # via
     #   -c requirements.txt
     #   twine
-more-itertools==9.0.0
+more-itertools==9.1.0
     # via
     #   -c requirements.txt
     #   jaraco-classes
@@ -91,15 +80,11 @@ pkginfo==1.9.6
     # via
     #   -c requirements.txt
     #   twine
-pycparser==2.21
-    # via
-    #   -c requirements.txt
-    #   cffi
-pygments==2.14.0
+pygments==2.15.1
     # via
     #   -c requirements.txt
     #   readme-renderer
-python-gitlab==3.13.0
+python-gitlab==3.15.0
     # via
     #   -c requirements.txt
     #   python-semantic-release
@@ -107,7 +92,11 @@ python-semantic-release==7.28.1
     # via
     #   -c requirements.txt
     #   -r dev-requirements.in
-readme-renderer==37.3
+pywin32-ctypes==0.2.2
+    # via
+    #   -c requirements.txt
+    #   keyring
+readme-renderer==40.0
     # via
     #   -c requirements.txt
     #   twine
@@ -118,7 +107,7 @@ requests==2.28.2
     #   python-semantic-release
     #   requests-toolbelt
     #   twine
-requests-toolbelt==0.10.1
+requests-toolbelt==1.0.0
     # via
     #   -c requirements.txt
     #   python-gitlab
@@ -127,10 +116,6 @@ rfc3986==2.0.0
     # via
     #   -c requirements.txt
     #   twine
-secretstorage==3.3.3
-    # via
-    #   -c requirements.txt
-    #   keyring
 semver==2.13.0
     # via
     #   -c requirements.txt
@@ -164,7 +149,7 @@ webencodings==0.5.1
     # via
     #   -c requirements.txt
     #   bleach
-wheel==0.38.4
+wheel==0.40.0
     # via
     #   -c requirements.txt
     #   python-semantic-release
