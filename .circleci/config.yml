@@ -58,9 +58,6 @@ workflows:
       - test_agentMET4FOF:
           context:
             - Docker pulls
-      - test_agentMET4FOF_ml:
-          context:
-            - Docker pulls
       - test_agentMET4FOF_anomaly_detection:
           context:
             - Docker pulls
@@ -88,9 +85,6 @@ workflows:
       - test_agentMET4FOF:
           context:
             - Docker pulls
-      - test_agentMET4FOF_ml:
-          context:
-            - Docker pulls
       - test_agentMET4FOF_anomaly_detection:
           context:
             - Docker pulls
@@ -112,7 +106,6 @@ workflows:
           requires:
               - test_PyDynamic
               - test_agentMET4FOF
-              - test_agentMET4FOF_ml
               - test_agentMET4FOF_anomaly_detection
               - test_time-series-buffer
               - test_time-series-metadata
@@ -495,31 +488,6 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
           subtree: tutorials/agentMET4FOF_sensors
-
-  test_agentMET4FOF_ml:
-    executor: tester
-
-    steps:
-      - checkout
-      - create_result_folder:
-          subfolder: tutorials/agentMET4FOF_ml
-
-      # Create folder for test results.
-      - run:
-          name: Create test result folder
-          command: |
-            mkdir test-reports
-
-      # Install dependencies and Codecov reporter if necessary.
-      - run:
-         name: Install dependencies
-         command: |
-           python -m pip install --upgrade pip numpy pytest
-           python -m pip install -r tutorials/agentMET4FOF_ml/requirements.txt
-
-      # Run tests! We use pytest's test-runner.
-      - run_venv_tests:
-          subtree: tutorials/agentMET4FOF_ml
 
   test_time-series-buffer:
     executor: tester
