@@ -350,13 +350,7 @@ jobs:
           at: .
       - check_for_new_subtrees
       - set_git_user_name_and_email
-      - run: echo 'export NEW_BRANCH=new_subtree_content' >> $BASH_ENV
-      - run:
-          name: Commit and push changes
-          command: |
-            git checkout -b ${NEW_BRANCH}
-            git commit -am "build(deps): recompile Python (dev) deps on $(date)"
-            git push -fu origin  ${NEW_BRANCH}
+      - run: echo 'export NEW_BRANCH=most_recent_subtree_pulls' >> $BASH_ENV
       - run:
           name: Install GitHub CLI
           command: |
@@ -377,10 +371,9 @@ jobs:
             if [ $? -eq 1 ]; then
                 set -e
                 gh pr create --base=main --title "Update deps" \
-                  --body "This PR provides recompiled deps for all outdated \
-                  package versions. It was opened after all subtrees were \
-                  successfully updated and afterwards the deps \
-                  were successfully compiled. If all tests pass with the \
+                  --body "This PR provides freshly pulled package \
+                  versions. It was opened after all subtrees were \
+                  successfully updated. If all tests pass with the \
                   new versions, it should be merged as soon as possible to \
                   avoid any security issues due to outdated dependencies."
             else
