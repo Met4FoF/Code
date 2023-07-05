@@ -52,10 +52,10 @@ workflows:
         - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
         - equal: [ "Weekly nightly tests", << pipeline.schedule.name >> ]
     jobs:
-      - build_and_test_conda_env:
+      - install_conda_deps:
           context:
             - Docker pulls
-      - build_and_test_pip_env:
+      - install_pip_deps:
           context:
             - Docker pulls
 # Numpy deprecated np.float in v1.20.0 but agentMET4FOF_ml uses scitkit-multiflow,
@@ -174,10 +174,10 @@ workflows:
       not:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
-      - build_and_test_conda_env:
+      - install_conda_deps:
           context:
             - Docker pulls
-      - build_and_test_pip_env:
+      - install_pip_deps:
           context:
             - Docker pulls
 # Numpy deprecated np.float in v1.20.0 but agentMET4FOF_ml uses scitkit-multiflow,
@@ -294,8 +294,8 @@ workflows:
           # Test the 'release' job to avoid trouble when Pull Requests get merged and
           # to preview publishing actions and the new changelog.
           requires:
-              - build_and_test_conda_env
-              - build_and_test_pip_env
+              - install_conda_deps
+              - install_pip_deps
 #              - test_agentMET4FOF_ml_against_conda
 #              - test_agentMET4FOF_ml_against_venv
 #              - test_agentMET4FOF_anomaly_detection_against_conda
@@ -727,7 +727,7 @@ jobs:
           subtree: << parameters.subtree >>
 
 
-  build_and_test_conda_env:
+  install_conda_deps:
     executor: tester
 
     steps:
@@ -735,7 +735,7 @@ jobs:
       - install_and_cache_conda_dependencies
 
 
-  build_and_test_pip_env:
+  install_pip_deps:
     executor: tester
 
     steps:
