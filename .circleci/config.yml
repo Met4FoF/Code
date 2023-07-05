@@ -29,7 +29,7 @@ executors:
 
 workflows:
 
-  pull_subtrees_and_recompile_deps:
+  pull_subtrees:
     when:
       and:
         - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
@@ -39,21 +39,9 @@ workflows:
           new_branch: most_recent_subtree_pulls
           context:
             - Docker pulls
-
-  check_for_upgraded_deps:
-    when:
-      not:
-        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
-    jobs:
-      - recompile_deps:
-          filters:
-            branches:
-              only: most_recent_subtree_pulls
-          context:
-            - Docker pulls
       - commit_push_open_pr:
           requires:
-            - recompile_deps
+            - pull_subtrees
           context:
             - Docker pulls
             - GitHub pushes to BjoernLudwigPTB's public_repos
@@ -64,105 +52,10 @@ workflows:
         - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
         - equal: [ "Weekly nightly tests", << pipeline.schedule.name >> ]
     jobs:
-      - build_and_test_conda_env:
-          context:
-            - Docker pulls
-      - build_and_test_pip_env:
-          context:
-            - Docker pulls
-# Numpy deprecated np.float in v1.20.0 but agentMET4FOF_ml uses scitkit-multiflow,
-# which uses np.float all over the place. This leads to exceptions when importing it in
-# agentMET4FOF_ml.coupled_ML.py. agentMET4FOF_ml is still tested against its
-# own dependencies.
-#      - test_against_conda:
-#          name: test_agentMET4FOF_ml_against_conda
-#          subtree: tutorials/agentMET4FOF_ml
-#          context:
-#            - Docker pulls
-# At some point the installation of torch==1.10.2 started to fail for the big
-# environment, so we deactivated it. agentMET4FOF_anomaly_detection still is tested
-# against its own dependencies.
-#      - test_against_conda:
-#          name: test_agentMET4FOF_anomaly_detection_against_conda
-#          subtree: tutorials/agentMET4FOF_anomaly_detection
-#          context:
-#            - Docker pulls
-      - test_against_conda:
-          name: test_time-series-buffer_against_conda
-          subtree: time-series-buffer
-          context:
-            - Docker pulls
-      - test_against_conda:
-          name: test_time-series-metadata_against_conda
-          subtree: time-series-metadata
-          context:
-            - Docker pulls
-# It is not possible to compile the deps with the most recent version of agentMET4FOF.
-#      - test_against_conda:
-#          name: test_agentMET4FOF_sensors_against_conda
-#          subtree: tutorials/agentMET4FOF_sensors
-#          context:
-#            - Docker pulls
-      - test_against_conda:
-          name: test_agentMET4FOF_against_conda
-          subtree: agentMET4FOF
-          context:
-            - Docker pulls
-      - test_against_conda:
-          name: test_Met4FoF-redundancy_against_conda
-          subtree: Met4FoF-redundancy
-          context:
-            - Docker pulls
-# Numpy deprecated np.float in v1.20.0 but agentMET4FOF_ml uses scitkit-multiflow,
-# which uses np.float all over the place. This leads to exceptions when importing it in
-# agentMET4FOF_ml.coupled_ML.py. agentMET4FOF_ml is still tested against its
-# own dependencies.
-#      - test_against_venv:
-#          name: test_agentMET4FOF_ml_against_venv
-#          subtree: tutorials/agentMET4FOF_ml
-#          context:
-#            - Docker pulls
-# At some point the installation of torch==1.10.2 started to fail for the big
-# environment, so we deactivated it. agentMET4FOF_anomaly_detection still is tested
-# against its own dependencies.
-#      - test_against_venv:
-#          name: test_agentMET4FOF_anomaly_detection_against_venv
-#          subtree: tutorials/agentMET4FOF_anomaly_detection
-#          context:
-#            - Docker pulls
-      - test_against_venv:
-          name: test_time-series-buffer_against_venv
-          subtree: time-series-buffer
-          context:
-            - Docker pulls
-      - test_against_venv:
-          name: test_time-series-metadata_against_venv
-          subtree: time-series-metadata
-          context:
-            - Docker pulls
-# It is not possible to compile the deps with the most recent version of agentMET4FOF.
-#      - test_against_venv:
-#          name: test_agentMET4FOF_sensors_against_venv
-#          subtree: tutorials/agentMET4FOF_sensors
-#          context:
-#            - Docker pulls
-      - test_against_venv:
-          name: test_agentMET4FOF_against_venv
-          subtree: agentMET4FOF
-          context:
-            - Docker pulls
-      - test_against_venv:
-          name: test_Met4FoF-redundancy_against_venv
-          subtree: Met4FoF-redundancy
-          context:
-            - Docker pulls
       - test_PyDynamic:
           context:
             - Docker pulls
       - test_agentMET4FOF:
-          context:
-            - Docker pulls
-      - test_agentMET4FOF_ml:
           context:
             - Docker pulls
       - test_agentMET4FOF_anomaly_detection:
@@ -186,105 +79,10 @@ workflows:
       not:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
-      - build_and_test_conda_env:
-          context:
-            - Docker pulls
-      - build_and_test_pip_env:
-          context:
-            - Docker pulls
-# Numpy deprecated np.float in v1.20.0 but agentMET4FOF_ml uses scitkit-multiflow,
-# which uses np.float all over the place. This leads to exceptions when importing it in
-# agentMET4FOF_ml.coupled_ML.py. agentMET4FOF_ml is still tested against its
-# own dependencies.
-#      - test_against_conda:
-#          name: test_agentMET4FOF_ml_against_conda
-#          subtree: tutorials/agentMET4FOF_ml
-#          context:
-#            - Docker pulls
-# At some point the installation of torch==1.10.2 started to fail for the big
-# environment, so we deactivated it. agentMET4FOF_anomaly_detection still is tested
-# against its own dependencies.
-#      - test_against_conda:
-#          name: test_agentMET4FOF_anomaly_detection_against_conda
-#          subtree: tutorials/agentMET4FOF_anomaly_detection
-#          context:
-#            - Docker pulls
-      - test_against_conda:
-          name: test_time-series-buffer_against_conda
-          subtree: time-series-buffer
-          context:
-            - Docker pulls
-      - test_against_conda:
-          name: test_time-series-metadata_against_conda
-          subtree: time-series-metadata
-          context:
-            - Docker pulls
-# It is not possible to compile the deps with the most recent version of agentMET4FOF.
-#      - test_against_conda:
-#          name: test_agentMET4FOF_sensors_against_conda
-#          subtree: tutorials/agentMET4FOF_sensors
-#          context:
-#            - Docker pulls
-      - test_against_conda:
-          name: test_agentMET4FOF_against_conda
-          subtree: agentMET4FOF
-          context:
-            - Docker pulls
-      - test_against_conda:
-          name: test_Met4FoF-redundancy_against_conda
-          subtree: Met4FoF-redundancy
-          context:
-            - Docker pulls
-# Numpy deprecated np.float in v1.20.0 but agentMET4FOF_ml uses scitkit-multiflow,
-# which uses np.float all over the place. This leads to exceptions when importing it in
-# agentMET4FOF_ml.coupled_ML.py. agentMET4FOF_ml is still tested against its
-# own dependencies.
-#      - test_against_venv:
-#          name: test_agentMET4FOF_ml_against_venv
-#          subtree: tutorials/agentMET4FOF_ml
-#          context:
-#            - Docker pulls
-# At some point the installation of torch==1.10.2 started to fail for the big
-# environment, so we deactivated it. agentMET4FOF_anomaly_detection still is tested
-# against its own dependencies.
-#      - test_against_venv:
-#          name: test_agentMET4FOF_anomaly_detection_against_venv
-#          subtree: tutorials/agentMET4FOF_anomaly_detection
-#          context:
-#            - Docker pulls
-      - test_against_venv:
-          name: test_time-series-buffer_against_venv
-          subtree: time-series-buffer
-          context:
-            - Docker pulls
-      - test_against_venv:
-          name: test_time-series-metadata_against_venv
-          subtree: time-series-metadata
-          context:
-            - Docker pulls
-# It is not possible to compile the deps with the most recent version of agentMET4FOF.
-#      - test_against_venv:
-#          name: test_agentMET4FOF_sensors_against_venv
-#          subtree: tutorials/agentMET4FOF_sensors
- #         context:
- #           - Docker pulls
-      - test_against_venv:
-          name: test_agentMET4FOF_against_venv
-          subtree: agentMET4FOF
-          context:
-            - Docker pulls
-      - test_against_venv:
-          name: test_Met4FoF-redundancy_against_venv
-          subtree: Met4FoF-redundancy
-          context:
-            - Docker pulls
       - test_PyDynamic:
           context:
             - Docker pulls
       - test_agentMET4FOF:
-          context:
-            - Docker pulls
-      - test_agentMET4FOF_ml:
           context:
             - Docker pulls
       - test_agentMET4FOF_anomaly_detection:
@@ -306,25 +104,8 @@ workflows:
           # Test the 'release' job to avoid trouble when Pull Requests get merged and
           # to preview publishing actions and the new changelog.
           requires:
-              - build_and_test_conda_env
-              - build_and_test_pip_env
-#              - test_agentMET4FOF_ml_against_conda
-#              - test_agentMET4FOF_ml_against_venv
-#              - test_agentMET4FOF_anomaly_detection_against_conda
-#              - test_agentMET4FOF_anomaly_detection_against_venv
-              - test_time-series-buffer_against_conda
-              - test_time-series-buffer_against_venv
-              - test_time-series-metadata_against_conda
-              - test_time-series-metadata_against_venv
-#              - test_agentMET4FOF_sensors_against_conda
-#              - test_agentMET4FOF_sensors_against_venv
-              - test_agentMET4FOF_against_conda
-              - test_agentMET4FOF_against_venv
-              - test_Met4FoF-redundancy_against_conda
-              - test_Met4FoF-redundancy_against_venv
               - test_PyDynamic
               - test_agentMET4FOF
-              - test_agentMET4FOF_ml
               - test_agentMET4FOF_anomaly_detection
               - test_time-series-buffer
               - test_time-series-metadata
@@ -353,57 +134,6 @@ workflows:
 
 
 commands:
-  # Reusable command to prepare the environment for testing.
-  install_pip_dependencies:
-    steps:
-    - run:
-        name: Install dependencies
-        command: |
-          python -m pip install --upgrade pip pip-tools
-          python -m pip install --upgrade numpy scipy uncertainties
-          python -m piptools sync requirements.txt
-
-  # Reusable command to prepare the environment for testing.
-  install_and_cache_conda_dependencies:
-    description: "Install Miniconda and conda dependencies of all packages."
-    steps:
-    - run:
-        name: Install Miniconda
-        command: |
-          wget "https://repo.anaconda.com/miniconda/\
-          Miniconda3-latest-Linux-x86_64.sh" -O $HOME/miniconda.sh
-          mkdir -p $HOME/.conda
-          bash $HOME/miniconda.sh -b -p /home/circleci/conda
-          source $HOME/conda/etc/profile.d/conda.sh
-          hash -r
-          conda config --set always_yes yes --set changeps1 no
-          conda update -q conda
-          echo 'export PATH=$HOME/conda/bin:$PATH' >> $BASH_ENV
-
-    # Download and cache dependencies.
-    - restore_cache:
-        keys:
-          # Specify the unique identifier for the cache.
-          - v2-conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}
-          # Fallback to using the latest cache if no exact match is found.
-          - v2-conda-dependencies-
-
-    # Create environment.
-    - run:
-        name: Create or update environment
-        command: |
-          if [ -d "$HOME/conda/envs/" ]; then
-              conda env update --prune --file environment.yml
-          else
-              conda env create -f environment.yml
-          fi
-
-    - save_cache:
-        paths:
-          - /home/circleci/conda/envs/
-        key: >-
-          v2-conda-dependencies-{{ checksum "environment.yml" }}-{{ checksum "requirements.txt" }}
-
   create_result_folder:
     description: "Create test-result folder."
     parameters:
@@ -487,18 +217,17 @@ commands:
             -m "Update $(echo << parameters.subtree >> | sed -e "s|tutorials/||") 
             to most recent version"
 
-  check_for_new_deps_compilation:
+  check_for_new_subtrees:
     description: "Check for any changes."
     steps:
     - run:
-        name: Abort if no new deps were compiled
+        name: Abort if nothing new was pulled
         command: |
-          git add .
           set +e
-          git status | grep modified
+          git diff main | grep diff
           if [ $? -ne 0 ]; then
               set -e
-              echo "No updated subtrees or deps. Nothing to test and commit. We are all 
+              echo "No updated subtrees. Nothing to test and commit. We are all 
                 good."
               circleci-agent step halt
           fi
@@ -608,27 +337,6 @@ jobs:
             fi
       - run: git push -fu origin << parameters.new_branch >>
 
-  recompile_deps:
-    executor:
-      name: tester
-    steps:
-      - checkout
-      - create_result_folder
-      - run:
-          name: Recompile and sync deps
-          command: |
-            python -m pip install --upgrade pip pip-tools numpy uncertainties
-            python -m piptools compile --resolver=backtracking --upgrade
-            python -m piptools compile --resolver=backtracking --upgrade dev-requirements.in
-            sed -i "s/torch==/#torch==/" requirements.txt
-            python -m piptools sync requirements.txt dev-requirements.txt
-      - check_for_new_deps_compilation
-      - persist_to_workspace:
-          root: .
-          paths:
-            - requirements.txt
-            - dev-requirements.txt
-
   commit_push_open_pr:
     executor:
       name: gh_releaser
@@ -640,15 +348,11 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - check_for_new_deps_compilation
+      - check_for_new_subtrees
       - set_git_user_name_and_email
-      - run: echo 'export NEW_BRANCH=recompile_deps' >> $BASH_ENV
-      - run:
-          name: Commit and push changes
-          command: |
-            git checkout -b ${NEW_BRANCH}
-            git commit -am "build(deps): recompile Python (dev) deps on $(date)"
-            git push -fu origin  ${NEW_BRANCH}
+      - run: echo 'export NEW_BRANCH=most_recent_subtree_pulls' >> $BASH_ENV
+      - run: git checkout -b ${NEW_BRANCH}
+      - run: git push -fu origin  ${NEW_BRANCH}
       - run:
           name: Install GitHub CLI
           command: |
@@ -668,11 +372,10 @@ jobs:
             gh pr list --head=$NEW_BRANCH | grep $NEW_BRANCH
             if [ $? -eq 1 ]; then
                 set -e
-                gh pr create --base=main --title "Update deps" \
-                  --body "This PR provides recompiled deps for all outdated \
-                  package versions. It was opened after all subtrees were \
-                  successfully updated and afterwards the deps \
-                  were succesfully compiled. If all tests pass with the \
+                gh pr create --base=main --title "Update subtrees" \
+                  --body "This PR provides freshly pulled package \
+                  versions. It was opened after all subtrees were \
+                  successfully updated. If all tests pass with the \
                   new versions, it should be merged as soon as possible to \
                   avoid any security issues due to outdated dependencies."
             else
@@ -680,102 +383,6 @@ jobs:
                 echo "There already was a PR opened earlier. The 
                   current changes were used to update the existing branch."
             fi
-
-  # Define one 'test' job with parameters to deal with all subtrees and let them
-  # run their test suites against the installed dependencies from the environment.yml.
-  test_against_conda:
-    # The parameter subtree is mandatory and requires the relative path of the
-    # subtree under test from the repository root.
-    parameters:
-      subtree:
-        type: string
-    # The parameter uninstalls is needed, whenever there is a package
-    # installed in the requirements, which is provided by the subtree under test
-    # itself.
-      uninstalls:
-        type: string
-        default: ""
-
-    executor: tester
-
-    steps:
-      - checkout
-      - create_result_folder:
-          subfolder: << parameters.subtree >>
-      - install_and_cache_conda_dependencies
-
-      # Uninstall packages.
-      - when:
-          condition:
-            not:
-              equal: [ "", << parameters.uninstalls >> ]
-          steps:
-            - run:
-                name: Uninstall packages
-                command: |
-                  source $HOME/conda/etc/profile.d/conda.sh
-                  conda activate Met4FoF_Code
-                  python -m pip uninstall --yes << parameters.uninstalls >>
-
-      # Run tests! We use pytest's test-runner.
-      - run_conda_tests:
-          subtree: << parameters.subtree >>
-
-  # Define one 'test' job with parameters to deal with all subtrees and let them
-  # run their test suites against the installed dependencies from the requirements
-  # files.
-  test_against_venv:
-    parameters:
-    # The parameter subtree is mandatory and requires the relative path of the
-    # subtree under test from the repository root.
-      subtree:
-        type: string
-    # The parameter uninstalls is needed, whenever there is a package
-    # installed in the requirements, which is provided by the subtree under test
-    # itself.
-      uninstalls:
-        type: string
-        default: ""
-
-    executor: tester
-
-    steps:
-      - checkout
-      - create_result_folder:
-          subfolder: << parameters.subtree >>
-      - install_pip_dependencies
-
-      # Uninstall packages.
-      - when:
-          condition:
-            not:
-              equal: [ "", << parameters.uninstalls >> ]
-          steps:
-            - run:
-                name: Uninstall packages
-                command: |
-                  python -m pip uninstall --yes << parameters.uninstalls >>
-
-      # Run tests! We use pytest's test-runner.
-      - run_venv_tests:
-          subtree: << parameters.subtree >>
-
-
-  build_and_test_conda_env:
-    executor: tester
-
-    steps:
-      - checkout
-      - install_and_cache_conda_dependencies
-
-
-  build_and_test_pip_env:
-    executor: tester
-
-    steps:
-      - checkout
-      - install_pip_dependencies
-
 
   test_PyDynamic:
     executor: tester
@@ -876,31 +483,6 @@ jobs:
       # Run tests! We use pytest's test-runner.
       - run_venv_tests:
           subtree: tutorials/agentMET4FOF_sensors
-
-  test_agentMET4FOF_ml:
-    executor: tester
-
-    steps:
-      - checkout
-      - create_result_folder:
-          subfolder: tutorials/agentMET4FOF_ml
-
-      # Create folder for test results.
-      - run:
-          name: Create test result folder
-          command: |
-            mkdir test-reports
-
-      # Install dependencies and Codecov reporter if necessary.
-      - run:
-         name: Install dependencies
-         command: |
-           python -m pip install --upgrade pip numpy pytest
-           python -m pip install -r tutorials/agentMET4FOF_ml/requirements.txt
-
-      # Run tests! We use pytest's test-runner.
-      - run_venv_tests:
-          subtree: tutorials/agentMET4FOF_ml
 
   test_time-series-buffer:
     executor: tester
