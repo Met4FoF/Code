@@ -38,8 +38,9 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "sphinx.ext.todo",
+    "myst_parser",
     "nbsphinx",
-    "recommonmark",
+    "IPython.sphinxext.ipython_console_highlighting",
 ]
 
 nbsphinx_allow_errors = True
@@ -95,7 +96,7 @@ for path_dict in path_dicts:
         for dr in dirs:
             os.mkdir(os.path.join(root.replace(source_folder, dest_folder), dr))
         for fil in files:
-            if os.path.splitext(fil)[1] in [".ipynb", ".md", ".rst"]:
+            if os.path.splitext(fil)[1] == ".ipynb":
                 source_filename = os.path.join(root, fil)
                 dest_filename = source_filename.replace(source_folder, dest_folder)
                 shutil.copyfile(source_filename, dest_filename)
@@ -117,8 +118,8 @@ master_doc = "index"
 
 # General information about the project.
 project = "PyDynamic_tutorials"
-copyright = "2020, Sascha Eichstädt, Björn Ludwig"
-author = "Sascha Eichstädt, Björn Ludwig"
+copyright = "2023, Sascha Eichstädt, Björn Ludwig, Maximilian Gruber"
+author = "Sascha Eichstädt, Björn Ludwig, Maximilian Gruber"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -134,7 +135,7 @@ author = "Sascha Eichstädt, Björn Ludwig"
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = "en"
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:

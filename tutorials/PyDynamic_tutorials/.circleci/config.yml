@@ -107,25 +107,25 @@ workflows:
           tag: "3.7"
           pyenv: "py37"
           context:
-            - Docker publishing as bludoc
+            - Docker pulling as bludoc
       - test_with_updated_deps:
           name: "test_with_updated_deps_py38"
           tag: "3.8"
           pyenv: "py38"
           context:
-            - Docker publishing as bludoc
+            - Docker pulling as bludoc
       - test_with_updated_deps:
           name: "test_with_updated_deps_py39"
           tag: "3.9"
           pyenv: "py39"
           context:
-            - Docker publishing as bludoc
+            - Docker pulling as bludoc
       - test_with_updated_deps:
           name: "test_with_updated_deps_py310"
           tag: "3.10"
           pyenv: "py310"
           context:
-            - Docker publishing as bludoc
+            - Docker pulling as bludoc
       - commit_push_open_pr:
           requires:
             - test_with_updated_deps_py37
@@ -133,7 +133,7 @@ workflows:
             - test_with_updated_deps_py39
             - test_with_updated_deps_py310
           context:
-            - Docker publishing as bludoc
+            - Docker pulling as bludoc
             - GitHub pushes to BjoernLudwigPTB's public_repos
 
   test:
@@ -146,28 +146,28 @@ workflows:
           tag: "3.7"
           pyenv: "py37"
           context:
-            - Docker publishing as bludoc
+            - Docker pulling as bludoc
       - test:
           name: "test_python38"
           tag: "3.8"
           pyenv: "py38"
           context:
-            - Docker publishing as bludoc
+            - Docker pulling as bludoc
       - test:
           name: "test_python39"
           tag: "3.9"
           pyenv: "py39"
           context:
-            - Docker publishing as bludoc
+            - Docker pulling as bludoc
       - test:
           name: "test_python310"
           tag: "3.10"
           pyenv: "py310"
           context:
-            - Docker publishing as bludoc
+            - Docker pulling as bludoc
       - test_conda310:
           context:
-            - Docker publishing as bludoc
+            - Docker pulling as bludoc
 
 jobs:
 
@@ -373,7 +373,8 @@ jobs:
           command: |
             source $HOME/conda/etc/profile.d/conda.sh
             conda activate PyDynamic_tutorials
-            pytest --nbval --current-env --sanitize-with nbval_sanitization | \
+            pytest --nbval --nbval-current-env \
+              --nbval-sanitize-with nbval_sanitization | \
               tee --append test-results/pytest.log
 
       - store_results
