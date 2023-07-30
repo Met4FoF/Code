@@ -4,3 +4,11 @@ venv/
 __pycache__/
 
 tools/tmp/
+
+*.pdf
+
+*.png
+
+*.svg
+
+bokeh.log
