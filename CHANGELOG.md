@@ -2,6 +2,14 @@
 
 <!--next-version-placeholder-->
 
+## v0.20.0 (2023-08-03)
+
+### :sparkles:
+
+* :sparkles: Update subtrees and especially PyDynamic to new minor 2.4.1 ([`062ea1b`](https://github.com/Met4FoF/Code/commit/062ea1bd2b63a9a55d02ae94f4d205ab331a374f))
+
+**[See all commits in this version](https://github.com/Met4FoF/Code/compare/v0.19.0...v0.20.0)**
+
 ## v0.19.0 (2023-07-05)
 
 ### :chart_with_upwards_trend:
