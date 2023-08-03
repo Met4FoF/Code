@@ -43,6 +43,7 @@ For the *PyDynamic_tutorials* homepage go to
    PyDynamic_tutorials/uncertainty/01 Basic measurement data pre-processing.ipynb
    PyDynamic_tutorials/uncertainty/02 Basic interpolation.ipynb
    PyDynamic_tutorials/uncertainty/03 Basic extrapolation.ipynb
+   PyDynamic_tutorials/uncertainty/04 Spline interpolation with Monte Carlo validation.ipynb
 
 Indices and tables
 ------------------

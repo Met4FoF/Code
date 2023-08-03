@@ -1,11 +1,19 @@
+contourpy <= 1.0.6  # This pinning is needed for Python 3.7
 download
-ipython < 8.0 # This pinning is needed for Python 3.7
+ipykernel <= 6.16.2  # This pinning is needed for Python 3.7
+ipython < 8.0  # This pinning is needed for Python 3.7
 ipywidgets
+jupyter-client < 8.0.0  # This pinning is needed for Python 3.7
+jupyter-core <= 4.12.0  # This pinning is needed for Python 3.7
+jupyter-server <= 1.23.5  # This pinning is needed for Python 3.7
 h5py
 holoviews[recommended]
 notebook
-numpy < 1.22.0 # This pinning is needed for Python 3.7
-matplotlib
-pandas < 1.4.0 # This pinning is needed for Python 3.7
+numpy < 1.22.0  # This pinning is needed for Python 3.7
+matplotlib <= 3.5.3  # This pinning is needed for Python 3.7
+pandas < 1.4.0  # This pinning is needed for Python 3.7
 plotly
 PyDynamic
+pywavelets <= 1.4.0  # This pinning is needed for Python 3.7
+scipy <= 1.7.3  # This pinning is needed for Python 3.7
+sympy <= 1.10.1  # This pinning is needed for Python 3.7
