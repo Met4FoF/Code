@@ -224,7 +224,7 @@ commands:
         name: Abort if nothing new was pulled
         command: |
           set +e
-          git diff main | grep diff
+          git diff main HEAD | grep diff
           if [ $? -ne 0 ]; then
               set -e
               echo "No updated subtrees. Nothing to test and commit. We are all 
