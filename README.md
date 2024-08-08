@@ -57,7 +57,7 @@ cd nanopb/
 mkdir messages
 cp ../protobuff_deps/messages.proto messages/
 cp generator/proto/nanopb.proto ./
-protoc -o message.pb messages/messages.proto
+protoc -I=generator/proto -I=messages -I=. --proto_path=generator/proto/google/protobuf --proto_path=generator/proto/nanopb --proto_path=generator/proto -o message.pb messages/messages.proto
 python generator/nanopb_generator.py message.pb
 cp message.* ../protobuff_deps/
 cd ./generator/proto
