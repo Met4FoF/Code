@@ -54,12 +54,7 @@ setup(
     install_requires=[
         "numpy",
         "scipy",
-        "matplotlib<3.3.0",  # Version 3.3 caused an error. Details you can find in
-        # docs/matplotlib3.3_pytest_error_log
-        # Actually the mpl_to_plotly feature is considered
-        # deprecated from version 3.3 on. See
-        # https://github.com/plotly/plotly.py/issues/1568
-        # for more details.
+        "matplotlib",
         "pandas",
         "osbrain",
         "dash",
@@ -73,7 +68,36 @@ setup(
         "multiprocess",
         "visdcc",
     ],
-    extras_require={"tutorials": ["notebook", "PyDynamic", "ipython<=8.13.0"]},
+    extras_require={
+        "tutorials": ["notebook", "PyDynamic"],
+        "dev": [
+            "black[jupyter]",
+            "pytest",
+            "pytest-cov",
+            "pytest-timeout",
+            "pywin32 ; platform_system=='Windows'",
+            "pywin32-ctypes ; platform_system=='Windows'",
+            "pywinpty ; platform_system=='Windows'",
+            "requests",
+            "psutil",
+            "sphinx",
+            "nbsphinx",
+            "recommonmark",
+            "sphinx_rtd_theme",
+            "ipython",
+            "tox",
+            "python-semantic-release<8",
+            "hypothesis",
+        ],
+        "docs": [
+            "sphinx",
+            "nbsphinx",
+            "recommonmark",
+            "sphinx_rtd_theme",
+            "ipython",
+            "docutils",
+        ],
+    },
     python_requires=">=3.8",
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -87,6 +111,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Operating System :: OS Independent",
     ],
 )

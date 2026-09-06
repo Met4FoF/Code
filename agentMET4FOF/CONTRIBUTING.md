@@ -66,7 +66,7 @@ you have everything at your hands:
 
 ### Coding style
 
-As long as the readability of mathematical formulations is not impaired, our code shoulds
+As long as the readability of mathematical formulations is not impaired, our code should
 follow [PEP8](https://www.python.org/dev/peps/pep-0008/). We know we can improve on this
 requirement for the existing code base as well, but all code added should already
 conform to PEP8. For automating this uniform formatting task we use the Python package
@@ -125,22 +125,22 @@ needed starting from the third line. Each line should not exceed 100 characters.
 #### BREAKING CHANGEs
 
 Since agentMET4FOF is not yet considered stable, we do not mark BREAKING CHANGES. As a
-consequence, at any time commits may changes parts of agentMET4FOF's public interface so
+consequence, at any time commits may change parts of agentMET4FOF's public interface so
 that previously written code may no longer be executable. If this occurs we try though,
 to mention migration strategies in the corresponding release descriptions.
 
 #### Commit message examples
 
-For examples please checkout the
+For examples please check out the
 [Git Log](https://github.com/Met4FoF/agentMET4FOF/commits/develop).
 
 ###  Testing
 
-We strive to increase [our code coverage](https://codecov.io/gh/Met4FoF/agentMET4FOF)
-with every change introduced. This requires that every new feature and every change to 
-existing features is accompanied by appropriate _pytest_ testing. We test the basic
-components for correctness and, if necessary, the integration into the big picture.
-It is usually sufficient to create [appropriately named](https://docs.pytest.org/en/latest/goodpractices.html#conventions-for-python-test-discovery)
+We strive to increase our code coverage with every change introduced. This requires 
+that every new feature and every change to existing features is accompanied by 
+appropriate _pytest_ testing. We test the basic components for correctness and, if 
+necessary, the integration into the big picture. It is usually sufficient to create 
+[appropriately named](https://docs.pytest.org/en/latest/goodpractices.html#conventions-for-python-test-discovery)
 methods in one of the existing modules in the subfolder test. If necessary add a new
 module that is appropriately named.
 
@@ -149,7 +149,7 @@ module that is appropriately named.
 In case you add a new feature you generally follow the pattern:
 
 - read through and follow this contribution advices and tips, especially regarding 
-  the [advised tool](#advised-toolset) set and [coding style](#coding-style)
+  the [advised tool set](#advised-toolset) and [coding style](#coding-style)
 - open an according issue to submit a feature request and get in touch with other
   agentMET4FOF developers and users
 - fork the repository or update the _develop_ branch of your fork and create an
@@ -157,7 +157,7 @@ In case you add a new feature you generally follow the pattern:
 - decide which package and module your feature should be integrated into
 - if there is no suitable package or module, create a new one and a corresponding
   module in the _tests_ subdirectory with the same name prefixed by _test__
-- if new dependencies are introduced, add them to _setup.py_ or _dev-requirements.in_
+- if new dependencies are introduced, add them to _setup.py_
 - during development write tests in alignment with existing test modules, for example
   [_test_addremove_metrological_agents_](https://github.com/Met4FoF/agentMET4FOF/blob/develop/tests/test_addremove_metrological_agents.py)
 - write docstrings in the
@@ -218,10 +218,10 @@ Regarding comments in the code we recommend to invest 45 minutes for the PyCon D
 
 We use [_pip-tools_](https://pypi.org/project/pip-tools/) for dependency management.
 The root folder contains a _requirements.txt_ and a _dev-requirements.txt_
-for the supported Python version. _pip-tools_' command `pip-compile` finds
-the right versions from the dependencies listed in _setup.py_ and the
-_dev-requirements.in_ and is manually run by the maintainers regularly.
+for Python 3.11. _pip-tools_' command `pip-compile` finds the right versions from the
+dependencies listed in _setup.py_ and is manually run by the maintainers regularly.
 
 ## Licensing
 
-All contributions are released under agentMET4FOF's [GNU Lesser General Public License v3.0](https://github.com/Met4FoF/agentMET4FOF/blob/develop/licence.md).
+All contributions are released under agentMET4FOF's [GNU Lesser General Public License
+v3.0](https://github.com/Met4FoF/agentMET4FOF/blob/develop/licence.md).
