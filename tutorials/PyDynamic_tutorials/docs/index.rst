@@ -8,10 +8,16 @@
 PyDynamic_tutorials - Assistance in understanding uncertainty propagation with PyDynamic
 ========================================================================================
 
-*PyDynamic_tutorials* is a collection of tutorials based on Jupyter notebooks which are
-designed to simplify the handling of PyDynamic. The tutorials range from introductory
-examples to more in-depth use cases in the context of `our work at PTB <https://www
-.ptb.de/cms/en/ptb/ptb-management/pstab/pst-1-coordination-digitalization.html>`_.
+Archived
+--------
+
+This accompanying selection of tutorials and examples is archived as well as the
+upstream project is.
+
+Previously this was meant as a collection of tutorials and examples to document,
+explain and illustrate the possibilities offered by
+`PyDynamic <https://github.com/PTB-M4D/PyDynamic>`_. As such it is still relevant
+for its latest release.
 
 For the *PyDynamic_tutorials* homepage go to
 `GitHub <https://github.com/PTB-M4D/PyDynamic_tutorials>`_.
