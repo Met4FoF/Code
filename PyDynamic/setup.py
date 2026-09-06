@@ -1,4 +1,5 @@
 """Install PyDynamic in Python path and provide all packaging metadata."""
+
 import codecs
 import os
 from os import path
@@ -141,10 +142,26 @@ setup(
     ],
     extras_require={
         "examples": ["notebook"],
+        "dev": [
+            "black[jupyter]",
+            "hypothesis",
+            "ipykernel",
+            "ipython",
+            "myst-parser",
+            "nbsphinx",
+            "pytest",
+            "pytest-cov",
+            "pytest-custom-exit-code",
+            "python-semantic-release<8",
+            "sphinx",
+            "sphinx-rtd-theme",
+            "tox",
+            "tweepy",
+        ],
     },
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 7 - Inactive",
         "Topic :: Utilities",
         "Topic :: Scientific/Engineering",
         "Topic :: Software Development :: Libraries :: Python Modules",
@@ -153,10 +170,10 @@ setup(
         "License :: OSI Approved :: GNU Lesser General Public License v3 or "
         "later (LGPLv3+)",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Operating System :: OS Independent",
         "Typing :: Typed",
     ],

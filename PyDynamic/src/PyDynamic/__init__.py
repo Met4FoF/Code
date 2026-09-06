@@ -6,7 +6,8 @@
      -uptake-of-nmi-calibrations-of-dynamic-force-torque-and/>`_
    - `GitHub website <https://www.github.com/PTB-M4D/PyDynamic>`_
 """
-__version__ = "2.4.1"
+
+__version__ = "2.5.1"
 
 __all__ = [
     "LSFIR",
@@ -71,8 +72,20 @@ __all__ = [
     "separate_real_imag_of_mc_samples",
     "separate_real_imag_of_vector",
     "complex_2_real_imag",
+    "hadamar_product",
+    "window_application",
 ]
+
+import warnings
 
 from .misc import *
 from .model_estimation import *
 from .uncertainty import *
+
+warnings.warn(
+    "This project is archived since May 2024. It will not receive any security "
+    "related or other patches anymore and we cannot guarantee any form of support in "
+    "the future.",
+    DeprecationWarning,
+    stacklevel=2,
+)

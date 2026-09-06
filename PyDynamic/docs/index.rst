@@ -1,10 +1,16 @@
 :github_url: https://github.com/PTB-M4D/PyDynamic
 
-.. image:: https://raw.githubusercontent.com/PTB-M4D/PyDynamic/main/docs/PyDynamic_logo.svg
+.. image:: https://raw.githubusercontent.com/PTB-M4D/PyDynamic/main/docs/PyDynamic_logo.png
   :alt: PyDynamic logo
 
 Python library for the analysis of dynamic measurements
 =======================================================
+
+Archived
+--------
+
+This project is archived since May 2024. It will not receive any security related or
+other patches anymore and we cannot guarantee any form of support in the future.
 
 .. toctree::
    :maxdepth: 2
