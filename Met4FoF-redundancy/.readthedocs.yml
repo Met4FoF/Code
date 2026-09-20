@@ -13,9 +13,9 @@ build:
 
 # Python environment to build the docs for and install the package in
 python:
-  version: 3.7
+  version: 3.8
   install:
-    - requirements: requirements/requirements.txt
+    - requirements: requirements/dev-requirements.txt
     #- method: pip
     #  path: .
     #- method: setuptools
