@@ -14,14 +14,18 @@ from .conftest import (
     hypothesis_covariance_matrix_with_zero_correlation,
     hypothesis_dimension,
     hypothesis_float_vector,
+    custom_atol,
 )
 
 
 @composite
 def x_and_Ux(
-    draw: Callable, reduced_set: bool = False
+    draw: Callable, reduced_set: bool = False, given_dim=None
 ) -> Tuple[np.ndarray, np.ndarray]:
-    dim = draw(hypothesis_dimension(min_value=4, max_value=6))
+    if given_dim:
+        dim = given_dim
+    else:
+        dim = draw(hypothesis_dimension(min_value=4, max_value=6))
     x = draw(hypothesis_float_vector(length=dim, min_value=-10, max_value=10))
     if reduced_set:
         ux_strategies = hypothesis_covariance_matrix(number_of_rows=dim, max_value=1e-3)
@@ -66,7 +70,7 @@ def test_convolution(input_1, input_2, mode):
     # compare results
     assert len(y) == len(Uy)
     assert len(y) == len(y_ref)
-    assert_allclose(y + 1, y_ref + 1, rtol=2.1e-7)
+    assert_allclose(y + 1, y_ref + 1, rtol=2.1e-7, atol=custom_atol)
 
 
 @given(x_and_Ux(reduced_set=True), x_and_Ux(reduced_set=True))

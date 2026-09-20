@@ -2,6 +2,39 @@
 
 <!--next-version-placeholder-->
 
+## v2.5.1 (2024-05-31)
+### Fix
+* Merge pull request #335 from PTB-M4D/chore/archive-pydynamic ([`ba5ff10`](https://github.com/PTB-M4D/PyDynamic/commit/ba5ff10da6854a415740bf8049584e7ecbe85437))
+
+### Documentation
+* **RTD:** Introduce archived message ([`ab489c6`](https://github.com/PTB-M4D/PyDynamic/commit/ab489c60621d8671c950fa16d71ebf9b19c842ca))
+
+**[See all commits in this version](https://github.com/PTB-M4D/PyDynamic/compare/v2.5.0...v2.5.1)**
+
+## v2.5.0 (2024-04-18)
+
+### Feature
+
+* **propagate_multiplication:** Addition of multiplication-based operations ([`ef5e8d6`](https://github.com/PTB-M4D/PyDynamic/commit/ef5e8d604f19e2f937178b4766499252f952f4ab))
+
+### Documentation
+
+* **propagate_multiplication:** Enable docs of new submodule ([`3cf2270`](https://github.com/PTB-M4D/PyDynamic/commit/3cf2270c3ec0514b7a24a8840918147b01cb0029))
+
+**[See all commits in this version](https://github.com/PTB-M4D/PyDynamic/compare/v2.4.2...v2.5.0)**
+
+## v2.4.2 (2023-08-11)
+
+### Fix
+
+* **Python versions:** Ensure PyDynamic only gets used with compatible versions as documented ([`88bb993`](https://github.com/PTB-M4D/PyDynamic/commit/88bb9930c0b254df6e2eee0332c721d6ac67e994))
+
+### Documentation
+
+* **README:** Include badge with compatible Python versions into header ([`bce77e1`](https://github.com/PTB-M4D/PyDynamic/commit/bce77e14ae789f941e272284a3075f4ac8f28779))
+
+**[See all commits in this version](https://github.com/PTB-M4D/PyDynamic/compare/v2.4.1...v2.4.2)**
+
 ## v2.4.1 (2023-07-27)
 
 ### Fix
