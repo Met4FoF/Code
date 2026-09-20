@@ -3,12 +3,15 @@
 [![CircleCI](https://circleci.com/gh/PTB-M4D/PyDynamic_tutorials.svg?style=shield)](https://circleci.com/gh/PTB-M4D/PyDynamic_tutorials)
 [![Documentation Status](https://readthedocs.org/projects/pydynamic-tutorials/badge/?version=latest)](https://pydynamic-tutorials.readthedocs.io/en/latest/?badge=latest)
 
-We prepared a collection of tutorials and examples to document, explain and illustrate
-the possibilities offered by [_PyDynamic_](https://github.com/PTB-M4D/PyDynamic). We
-will add more and more examples over time, especially those that are currently
-included in _PyDynamic_'s codebase subfolders
-[examples](https://github.com/PTB-M4D/PyDynamic/tree/master/examples) and
-[tutorials](https://github.com/PTB-M4D/PyDynamic/tree/master/tutorials).
+## Currently archived
+
+**This accompanying selection of tutorials and examples is archived as well as the
+upstream project is.**
+
+Previously this was meant as a collection of tutorials and examples to document,
+explain and illustrate the possibilities offered by
+[_PyDynamic_](https://github.com/PTB-M4D/PyDynamic). As such it is still relevant
+for its latest release.
 
 ## Getting started
 
