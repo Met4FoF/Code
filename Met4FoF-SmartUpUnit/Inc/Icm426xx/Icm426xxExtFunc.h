@@ -32,7 +32,9 @@
 #define _INV_ICM426XX_EXTFUNC_H_
 
 #include <stdint.h>
-
+#include "FreeRTOS.h"
+#include "task.h"
+#include "stm32f7xx_hal.h"  // Adjust this include as per your STM32 series
 #ifdef __cplusplus
 extern "C" {
 #endif

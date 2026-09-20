@@ -11,6 +11,7 @@
 #include <list>
 #include "pb.h"
 #include "message.pb.h"
+#include <math.h>
 
 namespace Met4FoFSensors{
 class Met4FoFSensor {
