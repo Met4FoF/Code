@@ -7,10 +7,6 @@
   <a href="https://agentmet4fof.readthedocs.io/">
     <img src="https://readthedocs.org/projects/agentmet4fof/badge/?version=latest" alt="ReadTheDocs badge">
   </a>
-  <!-- CodeCov(erage) -->
-  <a href="https://codecov.io/gh/Met4FoF/agentMET4FOF">
-    <img src="https://codecov.io/gh/Met4FoF/agentMET4FOF/branch/develop/graph/badge.svg?token=ofAPdSudLy" alt="CodeCov badge"/>
-  </a>
   <!-- PyPI Version -->
   <a href="https://pypi.org/project/agentmet4fof">
     <img src="https://img.shields.io/pypi/v/agentmet4fof.svg?label=release&color=blue&style=flat-square" alt="pypi">
@@ -48,7 +44,7 @@ in the section <!--suppress HtmlUnknownAnchorTarget --><a href="#about">About</a
   - [handle both static data sets and online data streams](#tutorials)
   - [consider measurement uncertainties as well as metadata with the provided message system](#tutorials)
 - [installable as a Python package or ready-to-deploy Docker image](#installation)
-- comes bundled with [several introductary and advanced tutorials](#tutorials)
+- comes bundled with [several introductory and advanced tutorials](#tutorials)
 - accompanied by [several use cases with close-to-industry IIoT applications in 
   our GitHub organisation](https://github.com/Met4FoF?q=agentMET4FOF&type=&language=&sort=)
 - comprehensive and ever-growing [documentation](#documentation-and-screencasts)
@@ -166,7 +162,7 @@ dashboard is printed to the console on every launch of an agent network.
 
 The following image is close to what you will find in your browser on execution of
 tutorial 2. For details on the tutorials visit our
-[video tutorial series](#video-tutorial-series).
+[video tutorial series](#screencast-series).
 
 ![](https://raw.githubusercontent.com/Met4FoF/agentMET4FOF/develop/docs/screenshot_met4fof.png)
 
@@ -223,7 +219,7 @@ There are different ways to run agentMET4FOF. Either:
    your browser](https://agentmet4fof.readthedocs.io/en/latest/INSTALL.html#start-a-container-from-the-image-for-local-use)
    or even [deploy it over a proper webserver](https://agentmet4fof.readthedocs.io/en/latest/INSTALL.html#deploy-the-containerized-agents-via-a-webserver).
 
-In the [video tutorials series](#video-tutorial-series)
+In the [video tutorials series](#screencast-series)
 we guide you through every step of option 1. More detailed instructions on both 
 options you can find in the [installation 
 section of the docs](https://agentmet4fof.readthedocs.io/en/latest/INSTALL.html).
@@ -255,8 +251,7 @@ take a look at the [project board](https://github.com/Met4FoF/agentMET4FOF/proje
 ## 🖋Citation
 
 If you publish results obtained with the help of agentMET4FOF, please cite the linked
-[![](https://zenodo.org/badge/DOI/10.5281/zenodo.4560343.svg)
-](https://doi.org/10.5281/zenodo.4560343).
+[![](https://zenodo.org/badge/DOI/10.5281/zenodo.4560343.svg)](https://doi.org/10.5281/zenodo.4560343) and the corresponding [publication](https://doi.org/10.1007/978-3-030-27477-1_19).
 
 ## 💎Acknowledgement
 

@@ -1,14 +1,14 @@
 import csv
+import platform
 import re
 import sys
 from threading import Timer
 from typing import Dict, List, Optional, Set, Tuple, Type, Union
 
 import networkx as nx
-from mesa import Agent as MesaAgent, Model
-from mesa.time import BaseScheduler
-from osbrain import NSProxy, Proxy, run_agent, run_nameserver
 from Pyro4.errors import NamingError
+from mesa import Model as MesaModel
+from osbrain import NSProxy, Proxy, run_agent, run_nameserver
 
 from .agents.base_agents import AgentMET4FOF
 from .dashboard.default_network_stylesheet import default_agent_network_stylesheet
@@ -16,6 +16,15 @@ from .dashboard.default_network_stylesheet import default_agent_network_styleshe
 __all__ = ["AgentNetwork"]
 
 from .utils import Backend
+
+
+def get_default_ip() -> str:
+    """Retrieves the platform OS and returns the localhost IP depending on OS.
+     Returns 12.0.0.1 for Windows and 0.0.0.0 for the rest"""
+    if platform.system() == "Windows":
+        return "127.0.0.1"
+    else:
+        return "0.0.0.0"
 
 
 class AgentNetwork:
@@ -45,8 +54,6 @@ class AgentNetwork:
             self.coalitions = []
             self.log_mode = log_mode
 
-            if backend == Backend.MESA:
-                self.mesa_model = mesa_model
 
         def start_mesa_timer(self, mesa_update_interval):
             class RepeatTimer:
@@ -68,7 +75,7 @@ class AgentNetwork:
 
             self.mesa_update_interval = mesa_update_interval
             self.mesa_timer = RepeatTimer(
-                t=mesa_update_interval, repeat_function=self.mesa_model.step
+                t=mesa_update_interval, repeat_function=self.step_mesa_model
             )
             self.mesa_timer.start()
 
@@ -78,7 +85,7 @@ class AgentNetwork:
                 del self.mesa_timer
 
         def step_mesa_model(self):
-            self.mesa_model.step()
+            self.mesa_model.agents.do("step")
 
         def get_mesa_model(self):
             return self.mesa_model
@@ -130,7 +137,7 @@ class AgentNetwork:
                         f"failed: {e}"
                     )
             else:  # self.backend == Backend.MESA:
-                return self.mesa_model.get_agent(name_to_search_for)
+                return next((x for x in self.mesa_model.agents if x.name == name_to_search_for), None)
 
         def get_agentType_count(self, agent_type: Type[AgentMET4FOF]) -> int:
             num_count = 1
@@ -167,7 +174,7 @@ class AgentNetwork:
                 agent_name
             )  # number of agents with same name
             if agent_copy_count > 1:
-                name += "(" + str(self.get_agent_name_count(agent_name)) + ")"
+                name += "(" + agent_copy_count + ")"
             return name
 
         def add_agent(
@@ -176,13 +183,13 @@ class AgentNetwork:
             agentType: Optional[Type[AgentMET4FOF]] = AgentMET4FOF,
             log_mode: Optional[bool] = True,
             buffer_size: Optional[int] = 1000,
-            ip_addr: Optional[str] = None,
+            ip_addr: Optional[str] = get_default_ip(),
             loop_wait: Optional[float] = None,
             **kwargs,
         ):
             try:
                 if ip_addr is None:
-                    ip_addr = "0.0.0.0"
+                    ip_addr = get_default_ip()
 
                 if name is None:
                     new_name = self.generate_module_name_byType(agentType)
@@ -200,7 +207,7 @@ class AgentNetwork:
                         loop_wait=loop_wait,
                         **kwargs,
                     )
-                elif self.backend == Backend.MESA:
+                else: #if  self.backend == Backend.MESA:
                     # handle osbrain and mesa here
                     new_agent = self._add_mesa_agent(
                         name=self._transform_string_into_valid_name(new_name),
@@ -219,7 +226,7 @@ class AgentNetwork:
             agentType: Optional[Type[AgentMET4FOF]] = AgentMET4FOF,
             log_mode: Optional[bool] = True,
             buffer_size: Optional[int] = 1000,
-            ip_addr: Optional[str] = None,
+            ip_addr: Optional[str] = get_default_ip(),
             loop_wait: Optional[float] = None,
             **kwargs,
         ):
@@ -250,7 +257,7 @@ class AgentNetwork:
             )
             new_agent.init_parameters(**kwargs)
             new_agent.init_agent(buffer_size=buffer_size, log_mode=log_mode)
-            new_agent = self.mesa_model.add_agent(new_agent)
+            self.mesa_model.register_agent(new_agent)
             return new_agent
 
         def get_agents_stylesheets(self, agent_names: List[str]) -> List:
@@ -281,30 +288,23 @@ class AgentNetwork:
             list[str]
                 requested names of agents
             """
+            invisible_agents = ["AgentController", "Logger"]
 
-            def return_osbrain_agents():
-                invisible_agents = ["AgentController", "Logger"]
-
-                def concatenate_exclude_names_with_anyway_invisibles():
-                    if exclude_names is None:
-                        return invisible_agents
-                    else:
-                        return exclude_names + invisible_agents
-
-                return [
-                    name
-                    for name in self.ns.agents()
-                    if name not in concatenate_exclude_names_with_anyway_invisibles()
-                ]
-
-            if self.backend == Backend.OSBRAIN:
-                return return_osbrain_agents()
 
             if exclude_names is None:
-                return self.mesa_model.agents()
+                exclude_names = invisible_agents
+            else:
+                exclude_names += invisible_agents
 
-            return [
-                name for name in self.mesa_model.agents() if name not in exclude_names
+            if self.backend == Backend.OSBRAIN:
+                return  [
+                    name
+                    for name in self.ns.agents()
+                    if name not in exclude_names
+                ]
+            else:
+                return [
+                ag.name for ag in self.mesa_model.agents if ag.name not in exclude_names
             ]
 
         def update_networkx(self):
@@ -459,33 +459,6 @@ class AgentNetwork:
                 except:
                     raise Exception
 
-    class MesaModel(Model):
-        """A MESA Model"""
-
-        def __init__(self):
-            self.schedule = BaseScheduler(self)
-
-        def add_agent(self, agent: MesaAgent):
-            self.schedule.add(agent)
-            return agent
-
-        def get_agent(self, agentName: str) -> Optional[AgentMET4FOF]:
-            agent = next((x for x in self.schedule.agents if x.name == agentName), None)
-            return agent
-
-        def step(self):
-            """Advance the model by one step."""
-            self.schedule.step()
-
-        def agents(self):
-            return [agent.name for agent in self.schedule.agents]
-
-        def shutdown(self):
-            """Shutdown entire MESA model with all agents and schedulers"""
-            for agent in self.agents():
-                agent_obj = self.get_agent(agent)
-                agent_obj.shutdown()
-
     class Coalition:
         """
         A special class for grouping agents.
@@ -516,7 +489,7 @@ class AgentNetwork:
 
     def __init__(
         self,
-        ip_addr="0.0.0.0",
+        ip_addr= get_default_ip(),
         port=3333,
         connect=False,
         log_filename="log_file.csv",
@@ -567,6 +540,7 @@ class AgentNetwork:
             Additional key words to be passed in initialising the dashboard
         """
 
+        self.mesa_model = None
         self.backend = AgentMET4FOF.validate_backend(backend)
         self.ip_addr = ip_addr
         self.port = port
@@ -593,7 +567,8 @@ class AgentNetwork:
                 self.connect(ip_addr, port)
                 if self.ns == 0:
                     self.start_server_osbrain(ip_addr, port)
-        else:  # self.backend == Backend.MESA
+        else: # self.backend == Backend.MESA
+            self.mesa_model = MesaModel()
             self.start_server_mesa()
 
         if isinstance(dashboard_extensions, list) == False:
@@ -631,7 +606,7 @@ class AgentNetwork:
         else:
             self.dashboard_proc = None
 
-    def connect(self, ip_addr: Optional[str] = "127.0.0.1", port: Optional[int] = 3333):
+    def connect(self, ip_addr: Optional[str] = get_default_ip(), port: Optional[int] = 3333):
         """Connects to an existing agent network's name server for osBrain backend
 
         Parameters
@@ -651,7 +626,7 @@ class AgentNetwork:
             self.ns = 0
 
     def start_server_osbrain(
-        self, ip_addr: Optional[str] = "127.0.0.1", port: Optional[int] = 3333
+        self, ip_addr: Optional[str] = get_default_ip(), port: Optional[int] = 3333
     ):
         """Starts a new agent network's name server for osBrain
 
@@ -684,9 +659,8 @@ class AgentNetwork:
 
     def start_server_mesa(self):
         """Starts a new AgentNetwork for Mesa"""
-        self.mesa_model = self.MesaModel()
         self._controller = self._AgentController(
-            name="AgentController", backend=self.backend
+            name="AgentController", backend=self.backend, mesa_model=self.mesa_model
         )
         self._controller.init_parameters(
             backend=self.backend, mesa_model=self.mesa_model
@@ -943,7 +917,7 @@ class AgentNetwork:
         agentType: Optional[Type[AgentMET4FOF]] = AgentMET4FOF,
         log_mode: Optional[bool] = True,
         buffer_size: Optional[int] = 1000,
-        ip_addr: Optional[str] = None,
+        ip_addr: Optional[str] = get_default_ip(),
         loop_wait: Optional[int] = None,
         **kwargs,
     ) -> Type[AgentMET4FOF]:
@@ -980,15 +954,9 @@ class AgentNetwork:
         if ip_addr is None:
             ip_addr = self.ip_addr
 
-        agent = self._get_controller().add_agent(
-            name=name,
-            agentType=agentType,
-            log_mode=log_mode,
-            buffer_size=buffer_size,
-            ip_addr=ip_addr,
-            loop_wait=loop_wait,
-            **kwargs,
-        )
+        agent = self._get_controller().add_agent(name=name, agentType=agentType, log_mode=log_mode,
+                                                 buffer_size=buffer_size, ip_addr=ip_addr, loop_wait=loop_wait,
+                                                 **kwargs)
 
         return agent
 
@@ -1038,7 +1006,7 @@ class AgentNetwork:
             self._get_controller().get_attr("ns").shutdown()
         else:  # self.backend == Backend.MESA
             self._get_controller().stop_mesa_timer()
-            self.mesa_model.shutdown()
+            self.mesa_model.remove_all_agents()
 
         # Shutdown the dashboard if present.
         if self.dashboard_proc is not None:

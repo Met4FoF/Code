@@ -2,6 +2,7 @@ import base64
 import datetime
 import time
 import warnings
+import uuid
 from collections import deque
 from io import BytesIO
 from typing import Any, Callable, Dict, List, Optional, Union
@@ -10,7 +11,7 @@ import matplotlib.figure
 import matplotlib.pyplot as plt
 import mpld3
 import numpy as np
-from mesa import Agent as MesaAgent
+from mesa import Agent as MesaAgent, Model as MesaModel
 from osbrain import Agent as osBrainAgent
 from plotly import tools as tls
 from plotly.graph_objs import Scatter
@@ -61,12 +62,20 @@ class AgentMET4FOF(MesaAgent, osBrainAgent):
             )
 
         elif self.backend == Backend.MESA:
-            MesaAgent.__init__(self, name, mesa_model)
-            self._remove_methods(osBrainAgent)
-            self.init_mesa(name)
-            self.unique_id = name
             self.name = name
-            self.mesa_model = mesa_model
+
+            if mesa_model is None:
+                self.mesa_model = MesaModel()
+                warnings.warn('No Model specified for Mesa agent. Creating new Model', UserWarning)
+            else:
+                self.mesa_model = mesa_model
+
+            # generate unique id for agent using uuid library and initialize mesa agent
+            self.init_mesa(name=name, uid=uuid.uuid4())
+            # the following method uses mesa's internal method to initialize the agent for a given mesa model
+            self.mesa_agent = super().__init__(model=self.mesa_model)
+            self._remove_methods(osBrainAgent)
+            self.name = name
 
     @staticmethod
     def validate_backend(backend: Union[str, Backend]) -> Backend:
@@ -97,11 +106,11 @@ class AgentMET4FOF(MesaAgent, osBrainAgent):
             f"Backend has not been implemented. Valid choices are {tuple(Backend)}."
         )
 
-    def init_mesa(self, name):
+    def init_mesa(self, name, uid):
         # MESA Specific parameters
         self.mesa_message_queue = deque([])
-        self.unique_id = name
         self.name = name
+        self.unique_id = uid
 
     def step(self):
         """
@@ -134,10 +143,9 @@ class AgentMET4FOF(MesaAgent, osBrainAgent):
         return getattr(self, attr)
 
     def init_agent(self, buffer_size=1000, log_mode=True):
-        """
-        Internal initialization to setup the agent: mainly on setting the dictionary
-        of Inputs, Outputs, PubAddr. Calls user-defined `init_parameters()` upon
-        finishing.
+        """Internal initialization to set up the agent
+
+        This mainly sets the dictionaries of inputs, outputs and the public address.
 
         Attributes
         ----------
@@ -414,9 +422,9 @@ class AgentMET4FOF(MesaAgent, osBrainAgent):
         if type(data) == dict:
             dict_keys = data.keys()
             if (
-                "from" in dict_keys
-                and "data" in dict_keys
-                and "senderType" in dict_keys
+                    "from" in dict_keys
+                    and "data" in dict_keys
+                    and "senderType" in dict_keys
             ):
                 return True
         return False
@@ -495,12 +503,14 @@ class AgentMET4FOF(MesaAgent, osBrainAgent):
         if channel not in self.output_channels_info.keys():
             if type(data) == dict:
                 nested_metadata = {
-                    key: {
-                        nested_dict_key: self._get_metadata(nested_dict_val)
-                        for nested_dict_key, nested_dict_val in data[key].items()
-                    }
-                    if isinstance(data[key], dict)
-                    else self._get_metadata(data[key])
+                    key: (
+                        {
+                            nested_dict_key: self._get_metadata(nested_dict_val)
+                            for nested_dict_key, nested_dict_val in data[key].items()
+                        }
+                        if isinstance(data[key], dict)
+                        else self._get_metadata(data[key])
+                    )
                     for key in data.keys()
                 }
                 self.output_channels_info.update({channel: nested_metadata})
@@ -544,7 +554,7 @@ class AgentMET4FOF(MesaAgent, osBrainAgent):
         if message["channel"] == "request-method":
             self.respond_request_method_(message["data"])
         elif (
-            message["channel"] == "reply-attr" or message["channel"] == "set-attr"
+                message["channel"] == "reply-attr" or message["channel"] == "set-attr"
         ) and message["data"] != "NULL":
             self.respond_reply_attr_(message["data"])
         else:
@@ -786,7 +796,7 @@ class AgentMET4FOF(MesaAgent, osBrainAgent):
         return "data:image/png;base64,{}".format(encoded)
 
     def _convert_matplotlib_fig(
-        self, fig: matplotlib.figure.Figure, mode: str = "image"
+            self, fig: matplotlib.figure.Figure, mode: str = "image"
     ):
         """Convert matplotlib figure to be rendered by the dashboard"""
 
@@ -802,9 +812,9 @@ class AgentMET4FOF(MesaAgent, osBrainAgent):
         return fig
 
     def send_plot(
-        self,
-        fig: Union[matplotlib.figure.Figure, Dict[str, matplotlib.figure.Figure]],
-        mode: str = "image",
+            self,
+            fig: Union[matplotlib.figure.Figure, Dict[str, matplotlib.figure.Figure]],
+            mode: str = "image",
     ):
         """
         Sends plot to agents connected to this agent's Output channel.
@@ -876,14 +886,16 @@ class AgentMET4FOF(MesaAgent, osBrainAgent):
             if key not in excludes and type(val).__name__ != "function"
         }
         filtered_attr = {
-            key: val
-            if (
-                type(val) == float
-                or type(val) == int
-                or type(val) == str
-                or key == "output_channels_info"
+            key: (
+                val
+                if (
+                        isinstance(val, float)
+                        or isinstance(val, int)
+                        or isinstance(val, str)
+                        or key == "output_channels_info"
+                )
+                else str(val)
             )
-            else str(val)
             for key, val in filtered_attr.items()
         }
         filtered_attr = {
@@ -895,7 +907,7 @@ class AgentMET4FOF(MesaAgent, osBrainAgent):
         if self.backend == Backend.OSBRAIN:
             osBrainAgent.shutdown(self)
         else:  # self.backend == Backend.MESA:
-            self.mesa_model.schedule.remove(self)
+            self.remove()
             del self
 
 
@@ -909,12 +921,12 @@ class DataStreamAgent(AgentMET4FOF):
     """
 
     def init_parameters(
-        self,
-        stream=DataStreamMET4FOF(),
-        pretrain_size=None,
-        batch_size=1,
-        loop_wait=1,
-        randomize=False,
+            self,
+            stream=DataStreamMET4FOF(),
+            pretrain_size=None,
+            batch_size=1,
+            loop_wait=1,
+            randomize=False,
     ):
         """
         Parameters
@@ -1006,10 +1018,10 @@ class MonitorAgent(AgentMET4FOF):
     """
 
     def init_parameters(
-        self,
-        plot_filter: Optional[List[str]] = None,
-        custom_plot_function: Optional[Callable[..., Scatter]] = None,
-        **kwargs,
+            self,
+            plot_filter: Optional[List[str]] = None,
+            custom_plot_function: Optional[Callable[..., Scatter]] = None,
+            **kwargs,
     ):
         """Initialize the monitor agent's parameters
 
